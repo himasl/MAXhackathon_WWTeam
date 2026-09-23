@@ -58,6 +58,10 @@ class Scenario(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     version: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    # Rules on UserContext that decide who this scenario is for (AND). Empty = everyone.
+    audience: Mapped[list[Any]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
 
     steps: Mapped[list[ScenarioStep]] = relationship(
         back_populates="scenario", cascade="all, delete-orphan", order_by="ScenarioStep.position"

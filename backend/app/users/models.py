@@ -13,6 +13,11 @@ if TYPE_CHECKING:
     from app.routes.models import UserRoute
 
 
+class Citizenship(StrEnum):
+    RU = "RU"
+    FOREIGN = "FOREIGN"
+
+
 class EducationType(StrEnum):
     FULL_TIME = "FULL_TIME"
     PART_TIME = "PART_TIME"
@@ -52,5 +57,14 @@ class UserProfile(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     has_registration: Mapped[bool] = mapped_column(Boolean, nullable=False)
     has_clinic_attachment: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    citizenship: Mapped[Citizenship] = mapped_column(
+        Enum(Citizenship, name="citizenship"),
+        nullable=False,
+        default=Citizenship.RU,
+        server_default=Citizenship.RU.value,
+    )
+    university_code: Mapped[str | None] = mapped_column(
+        ForeignKey("universities.code", ondelete="SET NULL")
+    )
 
     user: Mapped[User] = relationship(back_populates="profile")

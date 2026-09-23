@@ -5,7 +5,7 @@ from enum import StrEnum
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, UniqueConstraint, func
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -70,6 +70,8 @@ class UserRouteStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     reminded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Where the step was marked done: "app" (Mini App / web) or "chat" (bot button).
+    completed_via: Mapped[str | None] = mapped_column(String(16))
 
     route: Mapped[UserRoute] = relationship(back_populates="steps")
     scenario_step: Mapped[ScenarioStep] = relationship(back_populates="route_steps")

@@ -11,7 +11,7 @@ from pydantic import (
 )
 
 from app.scenarios.models import RuleOperator
-from app.users.models import EducationType, HousingType
+from app.users.models import Citizenship, EducationType, HousingType
 
 type RuleField = Literal[
     "age",
@@ -20,6 +20,8 @@ type RuleField = Literal[
     "housing_type",
     "has_registration",
     "has_clinic_attachment",
+    "citizenship",
+    "university_code",
 ]
 type RuleScalar = StrictStr | StrictInt | StrictFloat | StrictBool
 type RuleValue = RuleScalar | list[RuleScalar]
@@ -35,10 +37,14 @@ FIELD_TYPES: dict[str, type] = {
     "housing_type": str,
     "has_registration": bool,
     "has_clinic_attachment": bool,
+    "citizenship": str,
+    # Nullable in the context: EQ/IN never match a missing university, NE/NOT_IN do.
+    "university_code": str,
 }
 ENUM_VALUES: dict[str, set[str]] = {
     "education_type": {item.value for item in EducationType},
     "housing_type": {item.value for item in HousingType},
+    "citizenship": {item.value for item in Citizenship},
 }
 
 

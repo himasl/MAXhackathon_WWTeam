@@ -1,7 +1,8 @@
 """Handles MAX bot updates (webhook or long polling).
 
 The bot is the entry point and notification channel; the Mini App is the main interface,
-so the bot only greets, shows the next step and deep-links into the Mini App.
+so the bot greets, shows the next step, lets the user tick a step off right in the chat
+and deep-links into the app.
 """
 
 import logging
@@ -10,10 +11,13 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.exceptions import ApplicationError, InvalidOperationError
+from app.notifications.max_sender import parse_done_payload
 from app.notifications.service import NotificationService
 from app.routes.models import RouteStatus
 from app.routes.repository import RouteRepository
 from app.routes.service import RouteService
+from app.universities.repository import UniversityRepository
 from app.users.repository import UserRepository
 
 logger = logging.getLogger(__name__)
@@ -45,25 +49,71 @@ class BotHandler:
         if update_type == "bot_started":
             user_id = _user_id(update.get("user"))
             if user_id is not None:
-                await self.notifications.welcome(user_id)
-            return
+                await self.welcome(user_id, update.get("payload"))
+        elif update_type == "message_created":
+            await self._on_message(update.get("message") or {})
+        elif update_type == "message_callback":
+            await self._on_callback(update.get("callback") or {})
 
-        if update_type != "message_created":
-            return
-        message = update.get("message") or {}
+    async def _on_message(self, message: dict[str, Any]) -> None:
         user_id = _user_id(message.get("sender"))
-        text = str((message.get("body") or {}).get("text") or "").strip().lower()
         if user_id is None:
             return
-
-        command = text.split("@", 1)[0]
+        text = str((message.get("body") or {}).get("text") or "").strip()
+        command, _, argument = text.partition(" ")
+        command = command.split("@", 1)[0].lower()
         if command in START_COMMANDS:
-            await self.notifications.welcome(user_id)
-        elif command in NEXT_COMMANDS:
+            await self.welcome(user_id, argument.strip() or None)
+        elif text.lower() in NEXT_COMMANDS or command in NEXT_COMMANDS:
             await self.send_next_step(user_id)
         else:
             # /help and any other text: answer with the command list.
             await self.notifications.help(user_id)
+
+    async def welcome(self, max_user_id: int, payload: object) -> None:
+        """Greet the user. A start payload with a university code (``?start=kfu``) adds it."""
+        university = None
+        if isinstance(payload, str) and payload.strip():
+            code = payload.strip().lower().removeprefix("uni_")
+            async with self.session_factory() as session:
+                university = await UniversityRepository(session).get(code)
+        await self.notifications.welcome(
+            max_user_id,
+            university_code=university.code if university else None,
+            university_title=university.short_title if university else None,
+        )
+
+    async def _on_callback(self, callback: dict[str, Any]) -> None:
+        callback_id = callback.get("callback_id")
+        user_id = _user_id(callback.get("user"))
+        step_id = parse_done_payload(str(callback.get("payload") or ""))
+        if not isinstance(callback_id, str) or user_id is None:
+            return
+        if step_id is None:
+            await self.notifications.callback_notice(callback_id, "Кнопка устарела")
+            return
+
+        async with self.session_factory() as session:
+            user = await UserRepository(session).get_by_max_user_id(user_id)
+            if user is None:
+                await self.notifications.callback_notice(callback_id, "Маршрут не найден")
+                return
+            try:
+                title, route = await RouteService(session).complete_from_chat(user, step_id)
+            except InvalidOperationError as error:
+                notice = (
+                    "Этот шаг уже выполнен"
+                    if "already completed" in error.message
+                    else "Маршрут обновился — откройте актуальный через /next"
+                )
+                await self.notifications.callback_notice(callback_id, notice)
+                return
+            except ApplicationError:
+                await self.notifications.callback_notice(callback_id, "Шаг не найден")
+                return
+
+        await self.notifications.callback_done(callback_id, title)
+        await self.notifications.step_completed(user_id, route)
 
     async def send_next_step(self, max_user_id: int) -> None:
         async with self.session_factory() as session:

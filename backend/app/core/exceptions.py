@@ -26,6 +26,13 @@ class RouteStepNotFoundError(ApplicationError):
         super().__init__("ROUTE_STEP_NOT_FOUND", "Route step was not found", 404)
 
 
+class UnknownUniversityError(ApplicationError):
+    def __init__(self) -> None:
+        super().__init__(
+            "UNKNOWN_UNIVERSITY", "University was not found in the selected region", 422
+        )
+
+
 class InvalidOperationError(ApplicationError):
     def __init__(self, message: str) -> None:
         super().__init__("INVALID_OPERATION", message, 409)

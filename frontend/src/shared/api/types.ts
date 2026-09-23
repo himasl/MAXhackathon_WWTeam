@@ -1,3 +1,4 @@
+export type Citizenship = "RU" | "FOREIGN";
 export type EducationType = "FULL_TIME" | "PART_TIME";
 export type HousingType = "DORMITORY" | "RENT" | "RELATIVES" | "OTHER";
 export type RouteStatus = "ACTIVE" | "COMPLETED" | "ARCHIVED";
@@ -18,6 +19,20 @@ export interface Profile {
   housing_type: HousingType;
   has_registration: boolean;
   has_clinic_attachment: boolean;
+  citizenship: Citizenship;
+  university_code: string | null;
+}
+
+export interface University {
+  code: string;
+  title: string;
+  short_title: string;
+  region_code: string;
+}
+
+export interface AppConfig {
+  bot_username: string | null;
+  bot_url: string | null;
 }
 
 export interface RouteStepSummary {

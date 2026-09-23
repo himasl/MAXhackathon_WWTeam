@@ -20,11 +20,17 @@ class OutgoingMessage:
     text: str
     button_text: str | None = None
     start_param: str | None = None
+    # Adds a "✅ Выполнено" callback button that completes this step from the chat.
+    done_step_id: UUID | None = None
     extra_links: list[tuple[str, str]] = field(default_factory=list)
 
 
 class MessageSender(Protocol):
     async def send(self, max_user_id: int, message: OutgoingMessage) -> bool: ...
+
+    async def acknowledge(
+        self, callback_id: str, notification: str, replace_text: str | None = None
+    ) -> bool: ...
 
 
 class NullSender:
@@ -32,6 +38,11 @@ class NullSender:
 
     async def send(self, max_user_id: int, message: OutgoingMessage) -> bool:
         logger.info("Bot is not configured, notification skipped")
+        return False
+
+    async def acknowledge(
+        self, callback_id: str, notification: str, replace_text: str | None = None
+    ) -> bool:
         return False
 
 
@@ -59,6 +70,7 @@ HELP_TEXT = (
     "Команды:\n"
     "/start — начать и открыть маршрут\n"
     "/next — следующий шаг маршрута\n"
+    "Кнопка «✅ Выполнено» под шагом отмечает его прямо в чате\n"
     "/help — эта подсказка"
 )
 
@@ -67,9 +79,25 @@ class NotificationService:
     def __init__(self, sender: MessageSender) -> None:
         self.sender = sender
 
-    async def welcome(self, max_user_id: int) -> bool:
+    async def welcome(
+        self,
+        max_user_id: int,
+        university_code: str | None = None,
+        university_title: str | None = None,
+    ) -> bool:
+        text = WELCOME_TEXT
+        if university_code and university_title:
+            text += (
+                f"\n\nВы пришли по приглашению {university_title} — добавим в маршрут "
+                "шаги вашего вуза."
+            )
         return await self.sender.send(
-            max_user_id, OutgoingMessage(text=WELCOME_TEXT, button_text="Открыть маршрут")
+            max_user_id,
+            OutgoingMessage(
+                text=text,
+                button_text="Открыть маршрут",
+                start_param=f"uni_{university_code}" if university_code else None,
+            ),
         )
 
     async def help(self, max_user_id: int) -> bool:
@@ -137,13 +165,26 @@ class NotificationService:
                 ),
                 button_text="Открыть шаг",
                 start_param=step_start_param(step_id),
+                done_step_id=step_id,
             ),
         )
+
+    async def callback_done(self, callback_id: str, title: str) -> bool:
+        """The step was completed from the chat: replace the buttons with a confirmation."""
+        return await self.sender.acknowledge(
+            callback_id, "Шаг отмечен выполненным", replace_text=f"✅ «{title}» — выполнено"
+        )
+
+    async def callback_notice(self, callback_id: str, text: str) -> bool:
+        return await self.sender.acknowledge(callback_id, text)
 
     async def _send_step(self, max_user_id: int, text: str, step: RouteStepSummary) -> bool:
         return await self.sender.send(
             max_user_id,
             OutgoingMessage(
-                text=text, button_text="Открыть шаг", start_param=step_start_param(step.id)
+                text=text,
+                button_text="Открыть шаг",
+                start_param=step_start_param(step.id),
+                done_step_id=step.id,
             ),
         )

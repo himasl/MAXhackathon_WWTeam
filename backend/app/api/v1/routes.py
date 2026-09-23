@@ -4,9 +4,21 @@ from fastapi import APIRouter, BackgroundTasks, Request, status
 
 from app.api.dependencies import CurrentUserDependency, SessionDependency
 from app.api.errors import ERROR_RESPONSES
+from app.auth.tokens import issue_calendar_token
 from app.bot.runtime import BotRuntime, format_deadline
+from app.core.config import settings
+from app.core.exceptions import (
+    AuthUnavailableError,
+    InvalidOperationError,
+    RouteStepNotFoundError,
+)
 from app.notifications.service import NotificationService
-from app.routes.schemas import ReminderResponse, RouteResponse, RouteStepDetailResponse
+from app.routes.schemas import (
+    CalendarLinkResponse,
+    ReminderResponse,
+    RouteResponse,
+    RouteStepDetailResponse,
+)
 from app.routes.service import RouteService, next_open_step
 
 router = APIRouter(prefix="/routes", tags=["routes"], responses=ERROR_RESPONSES)
@@ -57,7 +69,7 @@ async def complete_route_step(
     user: CurrentUserDependency,
     session: SessionDependency,
 ) -> RouteResponse:
-    route = await RouteService(session).complete(user, route_id, step_id)
+    route = await RouteService(session).complete(user, route_id, step_id, via="app")
     background.add_task(notifications(request).step_completed, user.max_user_id, route)
     return route
 
@@ -91,3 +103,36 @@ async def send_reminder(
         user.max_user_id, step.id, step.scenario_step.title, format_deadline(step.deadline)
     )
     return ReminderResponse(sent=sent, step_id=step.id)
+
+
+CALENDAR_LINK_TTL_SECONDS = 30 * 24 * 3600
+
+
+@router.post(
+    "/{route_id}/steps/{step_id}/calendar-link", response_model=CalendarLinkResponse
+)
+async def create_calendar_link(
+    request: Request,
+    route_id: UUID,
+    step_id: UUID,
+    user: CurrentUserDependency,
+    session: SessionDependency,
+) -> CalendarLinkResponse:
+    """Signed link to an .ics file with the step's recommended deadline.
+
+    The link opens in the phone's browser or calendar app, so it carries its own token
+    instead of the Authorization header. It grants access to this event only.
+    """
+    route = await RouteService(session).get_route_model(user, route_id)
+    step = next((item for item in route.steps if item.id == step_id), None)
+    if step is None:
+        raise RouteStepNotFoundError
+    if step.deadline is None:
+        raise InvalidOperationError("Route step has no recommended deadline")
+    if not settings.signing_key:
+        raise AuthUnavailableError("Calendar links are not configured")
+    token = issue_calendar_token(step.id, settings.signing_key, CALENDAR_LINK_TTL_SECONDS)
+    base = settings.public_url or str(request.base_url).rstrip("/")
+    return CalendarLinkResponse(
+        url=f"{base}/api/v1/calendar/{token}.ics", expires_in=CALENDAR_LINK_TTL_SECONDS
+    )

@@ -14,9 +14,10 @@ import {
   restoreAccessToken,
   setAccessToken,
 } from "../shared/api/client";
-import type { Profile, Route } from "../shared/api/types";
+import type { AppConfig, Profile, Route, University } from "../shared/api/types";
 import { maxBridge } from "../shared/max/maxBridge";
 import { ErrorState, Loading, Screen } from "../shared/ui";
+import { InviteButton } from "../features/InviteButton";
 import { useHashRoute } from "./useHashRoute";
 
 type Boot = { state: "loading" } | { state: "error"; message: string } | { state: "ready" };
@@ -34,6 +35,9 @@ export function App() {
   const [boot, setBoot] = useState<Boot>({ state: "loading" });
   const [route, setRoute] = useState<Route | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [config, setConfig] = useState<AppConfig>({ bot_username: null, bot_url: null });
+  const [inviteUniversity, setInviteUniversity] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [view, navigate] = useHashRoute();
 
@@ -53,12 +57,18 @@ export function App() {
       } else {
         restoreAccessToken();
       }
-      const [currentRoute, currentProfile] = await Promise.all([
+      const [currentRoute, currentProfile, catalog, appConfig] = await Promise.all([
         orNull(api.getCurrentRoute()),
         orNull(api.getProfile()),
+        // The catalog and config are optional: onboarding works without them.
+        api.getUniversities().catch(() => [] as University[]),
+        api.getConfig().catch(() => ({ bot_username: null, bot_url: null })),
       ]);
       setRoute(currentRoute);
       setProfile(currentProfile);
+      setUniversities(catalog);
+      setConfig(appConfig);
+      if (startParam?.startsWith("uni_")) setInviteUniversity(startParam.slice(4));
 
       const deepLinkStep = startParam?.startsWith("step_") ? startParam.slice(5) : null;
       if (!currentRoute) {
@@ -131,9 +141,16 @@ export function App() {
     );
   }
 
+  const invited = universities.find((item) => item.code === inviteUniversity);
   const onboarding = (
     <OnboardingPage
-      initial={profile}
+      initial={
+        profile ??
+        (invited
+          ? { citizenship: "RU", region_code: invited.region_code, university_code: invited.code }
+          : null)
+      }
+      universities={universities}
       error={submitError}
       onSubmit={submitProfile}
       onCancel={route ? goBack : () => navigate({ name: "welcome" })}
@@ -158,7 +175,13 @@ export function App() {
       />
     );
   } else if (view.name === "done") {
-    content = <CompletionPage route={route} onShowRoute={goBack} />;
+    content = (
+      <CompletionPage
+        route={route}
+        onShowRoute={goBack}
+        invite={<InviteButton botUrl={config.bot_url} universityCode={profile?.university_code ?? null} />}
+      />
+    );
   } else if (view.name === "support") {
     content = <SupportPage />;
   } else {
@@ -167,6 +190,7 @@ export function App() {
         route={route}
         onOpenStep={(stepId) => navigate({ name: "step", stepId })}
         onEditProfile={() => navigate({ name: "onboarding" })}
+        invite={<InviteButton botUrl={config.bot_url} universityCode={profile?.university_code ?? null} />}
       />
     );
   }

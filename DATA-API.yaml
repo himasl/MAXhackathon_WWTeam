@@ -222,6 +222,51 @@ checks:
     timeoutMs: 5000
     repeatable: false
 
+  - id: "calendar-link"
+    name: "Ссылка на файл календаря со сроком шага"
+    method: "POST"
+    path: "/api/v1/routes/{route_id}/steps/{step_id}/calendar-link"
+    role: "user"
+    dependsOn: ["create-route"]
+    request:
+      path:
+        route_id: "${routeId}"
+        step_id: "${stepId}"
+    expected:
+      statusCodes: [200]
+      contentType: "application/json"
+      requiredFields: ["url", "expires_in"]
+    timeoutMs: 5000
+    repeatable: true
+
+  - id: "universities"
+    name: "Каталог вузов-партнёров пилота"
+    method: "GET"
+    path: "/api/v1/universities"
+    role: "public"
+    request:
+      query:
+        region_code: "16"
+    expected:
+      statusCodes: [200]
+      contentType: "application/json"
+      bodySchema:
+        type: "array"
+    timeoutMs: 5000
+    repeatable: true
+
+  - id: "stats"
+    name: "Обезличенные метрики пилота"
+    method: "GET"
+    path: "/api/v1/stats"
+    role: "public"
+    expected:
+      statusCodes: [200]
+      contentType: "application/json"
+      requiredFields: ["users", "routes", "steps", "by_scenario", "by_university"]
+    timeoutMs: 5000
+    repeatable: true
+
   - id: "missing-route"
     name: "Несуществующий маршрут — 404 в едином формате"
     method: "GET"

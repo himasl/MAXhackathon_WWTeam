@@ -15,6 +15,7 @@ from pydantic import (
 from app.rules.schemas import RuleDefinition
 from app.scenarios.models import StepCategory
 from app.sources.models import SourceType
+from app.universities.schemas import UniversityDefinition
 
 CODE_PATTERN = r"^[a-z0-9_]+$"
 
@@ -74,6 +75,9 @@ class ScenarioDefinition(BaseModel):
     description: StrictStr = ""
     version: StrictInt = Field(gt=0)
     is_active: StrictBool = True
+    # Who the scenario is for, e.g. citizenship EQ RU. Empty list = everyone.
+    audience: list[RuleDefinition] = Field(default_factory=list)
+    universities: list[UniversityDefinition] = Field(default_factory=list)
     sources: list[SourceDefinition] = Field(default_factory=list)
     documents: list[DocumentDefinition] = Field(default_factory=list)
     steps: list[ScenarioStepDefinition]
@@ -84,6 +88,7 @@ class ScenarioDefinition(BaseModel):
             ("step", [step.code for step in self.steps]),
             ("source", [source.code for source in self.sources]),
             ("document", [document.code for document in self.documents]),
+            ("university", [university.code for university in self.universities]),
         ):
             duplicates = sorted({code for code in codes if codes.count(code) > 1})
             if duplicates:

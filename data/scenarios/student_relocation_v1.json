@@ -1,9 +1,36 @@
 {
   "code": "student_relocation_v1",
-  "version": 1,
+  "version": 2,
   "title": "Переезд на учёбу в другой регион",
   "description": "Маршрут для студента — гражданина РФ, который переехал в другой регион для обучения. Тексты шагов составлены командой проекта как памятка и не являются юридической консультацией; порядок действий нужно сверять с официальным источником шага.",
   "is_active": true,
+  "audience": [
+    {
+      "field": "citizenship",
+      "operator": "EQ",
+      "value": "RU"
+    }
+  ],
+  "universities": [
+    {
+      "code": "kfu",
+      "title": "Казанский (Приволжский) федеральный университет",
+      "short_title": "КФУ",
+      "region_code": "16"
+    },
+    {
+      "code": "spbu",
+      "title": "Санкт-Петербургский государственный университет",
+      "short_title": "СПбГУ",
+      "region_code": "78"
+    },
+    {
+      "code": "hse",
+      "title": "НИУ «Высшая школа экономики» (Москва)",
+      "short_title": "НИУ ВШЭ",
+      "region_code": "77"
+    }
+  ],
   "sources": [
     {
       "code": "gosuslugi_stay_registration",
@@ -77,16 +104,113 @@
       "url": "https://example.com/marshrut-demo/regional-transport",
       "organization": "Демонстрационные данные проекта «Маршрут»",
       "source_type": "MOCK"
+    },
+    {
+      "code": "kfu_first_year_dormitory",
+      "title": "Заселение студентов 1 курса",
+      "url": "https://students.kpfu.ru/universiade-village/check-order/junior-students",
+      "organization": "Сайт для студентов КФУ",
+      "source_type": "OFFICIAL",
+      "region_code": "16",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "kfu_scholarships",
+      "title": "Стипендии для студентов КФУ: академическая, повышенная, социальная",
+      "url": "https://students.kpfu.ru/scholarship-commissions/academic",
+      "organization": "Сайт для студентов КФУ",
+      "source_type": "OFFICIAL",
+      "region_code": "16",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "kfu_social_support",
+      "title": "Материальная поддержка из средств стипендиального фонда КФУ",
+      "url": "https://students.kpfu.ru/scholarship-commissions/social-support/social",
+      "organization": "Сайт для студентов КФУ",
+      "source_type": "OFFICIAL",
+      "region_code": "16",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "spbu_registration",
+      "title": "О временной регистрации обучающихся в СПбГУ по месту пребывания",
+      "url": "https://students.spbu.ru/mmen-poleznaja-informacija/243-registration.html",
+      "organization": "СПбГУ",
+      "source_type": "OFFICIAL",
+      "region_code": "78",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "spbu_dormitory",
+      "title": "Подача заявлений на поселение в общежитие СПбГУ",
+      "url": "https://students.spbu.ru/mmen-obwezhitija/4007-podacha-zayavlenij-na-poselenie-v-obshchezhitie-spbgu.html",
+      "organization": "СПбГУ",
+      "source_type": "OFFICIAL",
+      "region_code": "78",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "spbu_grants",
+      "title": "Стипендии и иные виды материальной поддержки",
+      "url": "https://spbu.ru/sveden/grants",
+      "organization": "СПбГУ",
+      "source_type": "OFFICIAL",
+      "region_code": "78",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "hse_dormitory",
+      "title": "Порядок выдачи направлений на заселение",
+      "url": "https://www.hse.ru/dormoffice/infoduoguk",
+      "organization": "НИУ ВШЭ, Дирекция по управлению общежитиями",
+      "source_type": "OFFICIAL",
+      "region_code": "77",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "hse_support",
+      "title": "Материальная помощь обучающимся",
+      "url": "https://www.hse.ru/scholarships/stud_finsupport",
+      "organization": "НИУ ВШЭ, Центр стипендиальных программ",
+      "source_type": "OFFICIAL",
+      "region_code": "77",
+      "checked_at": "2026-09-23"
     }
   ],
   "documents": [
-    {"code": "passport", "title": "Паспорт гражданина РФ"},
-    {"code": "student_id", "title": "Студенческий билет или справка из вуза", "description": "Подтверждает, что вы обучаетесь в вузе."},
-    {"code": "oms_policy", "title": "Полис ОМС", "description": "Можно использовать номер полиса в электронном виде."},
-    {"code": "snils", "title": "СНИЛС"},
-    {"code": "dormitory_contract", "title": "Договор найма жилого помещения в общежитии"},
-    {"code": "housing_basis", "title": "Документ-основание для проживания", "description": "Например, договор аренды или согласие собственника жилья."},
-    {"code": "photo", "title": "Фотография", "description": "Может понадобиться для проездного — формат уточните по источнику."}
+    {
+      "code": "passport",
+      "title": "Паспорт гражданина РФ"
+    },
+    {
+      "code": "student_id",
+      "title": "Студенческий билет или справка из вуза",
+      "description": "Подтверждает, что вы обучаетесь в вузе."
+    },
+    {
+      "code": "oms_policy",
+      "title": "Полис ОМС",
+      "description": "Можно использовать номер полиса в электронном виде."
+    },
+    {
+      "code": "snils",
+      "title": "СНИЛС"
+    },
+    {
+      "code": "dormitory_contract",
+      "title": "Договор найма жилого помещения в общежитии"
+    },
+    {
+      "code": "housing_basis",
+      "title": "Документ-основание для проживания",
+      "description": "Например, договор аренды или согласие собственника жилья."
+    },
+    {
+      "code": "photo",
+      "title": "Фотография",
+      "description": "Может понадобиться для проездного — формат уточните по источнику."
+    }
   ],
   "steps": [
     {
@@ -101,14 +225,171 @@
       "estimated_duration": 60,
       "recommended_days": 7,
       "rules": [
-        {"field": "has_registration", "operator": "EQ", "value": false},
-        {"field": "housing_type", "operator": "EQ", "value": "DORMITORY"}
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        },
+        {
+          "field": "housing_type",
+          "operator": "EQ",
+          "value": "DORMITORY"
+        },
+        {
+          "field": "university_code",
+          "operator": "NOT_IN",
+          "value": [
+            "kfu",
+            "spbu",
+            "hse"
+          ]
+        }
       ],
-      "sources": ["gosuslugi_stay_registration"],
+      "sources": [
+        "gosuslugi_stay_registration"
+      ],
       "documents": [
-        {"code": "passport"},
-        {"code": "student_id"},
-        {"code": "dormitory_contract"}
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        },
+        {
+          "code": "dormitory_contract"
+        }
+      ]
+    },
+    {
+      "code": "hse_dormitory_registration",
+      "title": "Заселение и регистрация в общежитии НИУ ВШЭ",
+      "short_description": "Проверьте, как получить направление на заселение в ВШЭ.",
+      "full_description": "Прочитайте порядок выдачи направлений на заселение на сайте Дирекции по управлению общежитиями ВШЭ.\nПосле заселения уточните в общежитии, как оформляется регистрация по месту пребывания.",
+      "reason": "Вы учитесь в НИУ ВШЭ, живёте в общежитии и пока не имеете регистрации в новом регионе.",
+      "location": "Дирекция по управлению общежитиями НИУ ВШЭ",
+      "position": 10,
+      "category": "REGISTRATION",
+      "estimated_duration": 60,
+      "recommended_days": 7,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "hse"
+        },
+        {
+          "field": "housing_type",
+          "operator": "EQ",
+          "value": "DORMITORY"
+        },
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        }
+      ],
+      "sources": [
+        "hse_dormitory",
+        "gosuslugi_stay_registration"
+      ],
+      "documents": [
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        },
+        {
+          "code": "dormitory_contract"
+        }
+      ]
+    },
+    {
+      "code": "kfu_dormitory_registration",
+      "title": "Заселение и регистрация в общежитии КФУ",
+      "short_description": "Проверьте порядок заселения первокурсников КФУ.",
+      "full_description": "Откройте страницу «Заселение студентов 1 курса» на сайте для студентов КФУ.\nПроверьте график и список документов для заселения.\nУзнайте у администрации общежития, как оформляется регистрация по месту пребывания.",
+      "reason": "Вы учитесь в КФУ, живёте в общежитии и пока не имеете регистрации в новом регионе.",
+      "location": "Студенческий городок КФУ, администрация общежития",
+      "position": 10,
+      "category": "REGISTRATION",
+      "estimated_duration": 60,
+      "recommended_days": 7,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "kfu"
+        },
+        {
+          "field": "housing_type",
+          "operator": "EQ",
+          "value": "DORMITORY"
+        },
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        }
+      ],
+      "sources": [
+        "kfu_first_year_dormitory",
+        "gosuslugi_stay_registration"
+      ],
+      "documents": [
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        },
+        {
+          "code": "dormitory_contract"
+        }
+      ]
+    },
+    {
+      "code": "spbu_dormitory_registration",
+      "title": "Поселение и регистрация в общежитии СПбГУ",
+      "short_description": "Проверьте порядок поселения и временной регистрации в СПбГУ.",
+      "full_description": "Прочитайте порядок подачи заявлений на поселение в общежитие СПбГУ.\nПрочитайте памятку СПбГУ о временной регистрации обучающихся по месту пребывания.\nПодготовьте документы из списка ниже.",
+      "reason": "Вы учитесь в СПбГУ, живёте в общежитии и пока не имеете регистрации в новом регионе.",
+      "location": "Общежитие СПбГУ",
+      "position": 10,
+      "category": "REGISTRATION",
+      "estimated_duration": 60,
+      "recommended_days": 7,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "spbu"
+        },
+        {
+          "field": "housing_type",
+          "operator": "EQ",
+          "value": "DORMITORY"
+        },
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        }
+      ],
+      "sources": [
+        "spbu_registration",
+        "spbu_dormitory"
+      ],
+      "documents": [
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        },
+        {
+          "code": "dormitory_contract"
+        }
       ]
     },
     {
@@ -123,13 +404,31 @@
       "estimated_duration": 30,
       "recommended_days": 7,
       "rules": [
-        {"field": "has_registration", "operator": "EQ", "value": false},
-        {"field": "housing_type", "operator": "IN", "value": ["RENT", "RELATIVES", "OTHER"]}
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        },
+        {
+          "field": "housing_type",
+          "operator": "IN",
+          "value": [
+            "RENT",
+            "RELATIVES",
+            "OTHER"
+          ]
+        }
       ],
-      "sources": ["gosuslugi_stay_registration"],
+      "sources": [
+        "gosuslugi_stay_registration"
+      ],
       "documents": [
-        {"code": "passport"},
-        {"code": "housing_basis"}
+        {
+          "code": "passport"
+        },
+        {
+          "code": "housing_basis"
+        }
       ]
     },
     {
@@ -142,9 +441,13 @@
       "position": 20,
       "category": "HEALTHCARE",
       "estimated_duration": 10,
-      "sources": ["ffoms_home"],
+      "sources": [
+        "ffoms_home"
+      ],
       "documents": [
-        {"code": "oms_policy"}
+        {
+          "code": "oms_policy"
+        }
       ]
     },
     {
@@ -159,56 +462,26 @@
       "estimated_duration": 20,
       "recommended_days": 14,
       "rules": [
-        {"field": "has_clinic_attachment", "operator": "EQ", "value": false}
+        {
+          "field": "has_clinic_attachment",
+          "operator": "EQ",
+          "value": false
+        }
       ],
-      "sources": ["gosuslugi_clinic_attachment"],
-      "documents": [
-        {"code": "passport"},
-        {"code": "oms_policy"},
-        {"code": "snils", "required": false}
-      ]
-    },
-    {
-      "code": "transport_moscow",
-      "title": "Студенческий проезд в Москве",
-      "short_description": "Узнайте о Карте москвича для студента.",
-      "full_description": "Прочитайте условия получения Карты москвича для студента на mos.ru.\nПроверьте, какие льготы на проезд она даёт.\nПодайте заявку по инструкции из источника.",
-      "reason": "Вы учитесь очно и указали, что переехали в Москву.",
-      "location": "mos.ru",
-      "position": 40,
-      "category": "TRANSPORT",
-      "estimated_duration": 20,
-      "recommended_days": 14,
-      "rules": [
-        {"field": "region_code", "operator": "EQ", "value": "77"},
-        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+      "sources": [
+        "gosuslugi_clinic_attachment"
       ],
-      "sources": ["mos_student_card"],
       "documents": [
-        {"code": "passport"},
-        {"code": "student_id"},
-        {"code": "photo", "required": false}
-      ]
-    },
-    {
-      "code": "transport_spb",
-      "title": "Льготный проездной в Санкт-Петербурге",
-      "short_description": "Узнайте, как оформить проездной для учащихся.",
-      "full_description": "Прочитайте порядок оформления льготного проездного на сайте Администрации Санкт-Петербурга.\nУточните в вузе, как оформляется проездной для студентов вашего вуза.",
-      "reason": "Вы учитесь очно и указали, что переехали в Санкт-Петербург.",
-      "location": "Вуз или пункт оформления проездных",
-      "position": 40,
-      "category": "TRANSPORT",
-      "estimated_duration": 20,
-      "recommended_days": 14,
-      "rules": [
-        {"field": "region_code", "operator": "EQ", "value": "78"},
-        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
-      ],
-      "sources": ["spb_student_travel"],
-      "documents": [
-        {"code": "passport"},
-        {"code": "student_id"}
+        {
+          "code": "passport"
+        },
+        {
+          "code": "oms_policy"
+        },
+        {
+          "code": "snils",
+          "required": false
+        }
       ]
     },
     {
@@ -223,13 +496,66 @@
       "estimated_duration": 20,
       "recommended_days": 14,
       "rules": [
-        {"field": "region_code", "operator": "EQ", "value": "16"},
-        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+        {
+          "field": "region_code",
+          "operator": "EQ",
+          "value": "16"
+        },
+        {
+          "field": "education_type",
+          "operator": "EQ",
+          "value": "FULL_TIME"
+        }
       ],
-      "sources": ["kazan_transport_privileges"],
+      "sources": [
+        "kazan_transport_privileges"
+      ],
       "documents": [
-        {"code": "passport"},
-        {"code": "student_id"}
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        }
+      ]
+    },
+    {
+      "code": "transport_moscow",
+      "title": "Студенческий проезд в Москве",
+      "short_description": "Узнайте о Карте москвича для студента.",
+      "full_description": "Прочитайте условия получения Карты москвича для студента на mos.ru.\nПроверьте, какие льготы на проезд она даёт.\nПодайте заявку по инструкции из источника.",
+      "reason": "Вы учитесь очно и указали, что переехали в Москву.",
+      "location": "mos.ru",
+      "position": 40,
+      "category": "TRANSPORT",
+      "estimated_duration": 20,
+      "recommended_days": 14,
+      "rules": [
+        {
+          "field": "region_code",
+          "operator": "EQ",
+          "value": "77"
+        },
+        {
+          "field": "education_type",
+          "operator": "EQ",
+          "value": "FULL_TIME"
+        }
+      ],
+      "sources": [
+        "mos_student_card"
+      ],
+      "documents": [
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        },
+        {
+          "code": "photo",
+          "required": false
+        }
       ]
     },
     {
@@ -244,12 +570,63 @@
       "estimated_duration": 15,
       "recommended_days": 14,
       "rules": [
-        {"field": "region_code", "operator": "NOT_IN", "value": ["77", "78", "16"]},
-        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+        {
+          "field": "region_code",
+          "operator": "NOT_IN",
+          "value": [
+            "77",
+            "78",
+            "16"
+          ]
+        },
+        {
+          "field": "education_type",
+          "operator": "EQ",
+          "value": "FULL_TIME"
+        }
       ],
-      "sources": ["demo_regional_transport"],
+      "sources": [
+        "demo_regional_transport"
+      ],
       "documents": [
-        {"code": "student_id"}
+        {
+          "code": "student_id"
+        }
+      ]
+    },
+    {
+      "code": "transport_spb",
+      "title": "Льготный проездной в Санкт-Петербурге",
+      "short_description": "Узнайте, как оформить проездной для учащихся.",
+      "full_description": "Прочитайте порядок оформления льготного проездного на сайте Администрации Санкт-Петербурга.\nУточните в вузе, как оформляется проездной для студентов вашего вуза.",
+      "reason": "Вы учитесь очно и указали, что переехали в Санкт-Петербург.",
+      "location": "Вуз или пункт оформления проездных",
+      "position": 40,
+      "category": "TRANSPORT",
+      "estimated_duration": 20,
+      "recommended_days": 14,
+      "rules": [
+        {
+          "field": "region_code",
+          "operator": "EQ",
+          "value": "78"
+        },
+        {
+          "field": "education_type",
+          "operator": "EQ",
+          "value": "FULL_TIME"
+        }
+      ],
+      "sources": [
+        "spb_student_travel"
+      ],
+      "documents": [
+        {
+          "code": "passport"
+        },
+        {
+          "code": "student_id"
+        }
       ]
     },
     {
@@ -263,25 +640,132 @@
       "category": "SOCIAL_SUPPORT",
       "estimated_duration": 15,
       "rules": [
-        {"field": "age", "operator": "GTE", "value": 14},
-        {"field": "age", "operator": "LTE", "value": 22}
+        {
+          "field": "age",
+          "operator": "GTE",
+          "value": 14
+        },
+        {
+          "field": "age",
+          "operator": "LTE",
+          "value": 22
+        }
       ],
-      "sources": ["pushkin_card"]
+      "sources": [
+        "pushkin_card"
+      ]
+    },
+    {
+      "code": "hse_support",
+      "title": "Материальная помощь в НИУ ВШЭ",
+      "short_description": "Узнайте, как получить материальную помощь в ВШЭ.",
+      "full_description": "Прочитайте условия материальной помощи обучающимся на сайте Центра стипендиальных программ ВШЭ.\nЕсли подходите под условия, подайте заявление по инструкции.",
+      "reason": "Вы учитесь в НИУ ВШЭ — вуз публикует официальные условия материальной помощи.",
+      "location": "Центр стипендиальных программ НИУ ВШЭ",
+      "position": 60,
+      "category": "SOCIAL_SUPPORT",
+      "estimated_duration": 20,
+      "is_required": false,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "hse"
+        }
+      ],
+      "sources": [
+        "hse_support"
+      ],
+      "documents": [
+        {
+          "code": "student_id"
+        }
+      ]
+    },
+    {
+      "code": "kfu_support",
+      "title": "Стипендии и материальная поддержка в КФУ",
+      "short_description": "Узнайте, на какие выплаты вы можете претендовать в КФУ.",
+      "full_description": "Прочитайте, какие стипендии есть в КФУ: академическая, повышенная, социальная.\nПроверьте условия материальной поддержки из стипендиального фонда.\nЕсли подходите под условия, подайте заявление по инструкции на сайте.",
+      "reason": "Вы учитесь в КФУ — вуз публикует официальные условия стипендий и материальной поддержки.",
+      "location": "Сайт для студентов КФУ, стипендиальная комиссия",
+      "position": 60,
+      "category": "SOCIAL_SUPPORT",
+      "estimated_duration": 20,
+      "is_required": false,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "kfu"
+        }
+      ],
+      "sources": [
+        "kfu_scholarships",
+        "kfu_social_support"
+      ],
+      "documents": [
+        {
+          "code": "student_id"
+        }
+      ]
+    },
+    {
+      "code": "spbu_support",
+      "title": "Стипендии и материальная поддержка в СПбГУ",
+      "short_description": "Узнайте о стипендиях и мерах поддержки СПбГУ.",
+      "full_description": "Откройте раздел «Стипендии и иные виды материальной поддержки» на сайте СПбГУ.\nПроверьте условия и сроки подачи заявлений.",
+      "reason": "Вы учитесь в СПбГУ — вуз публикует официальные условия стипендий и поддержки.",
+      "location": "Сайт СПбГУ",
+      "position": 60,
+      "category": "SOCIAL_SUPPORT",
+      "estimated_duration": 20,
+      "is_required": false,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "spbu"
+        }
+      ],
+      "sources": [
+        "spbu_grants"
+      ],
+      "documents": [
+        {
+          "code": "student_id"
+        }
+      ]
     },
     {
       "code": "university_support",
       "title": "Меры поддержки в вузе",
       "short_description": "Узнайте о стипендиях и поддержке студентов.",
       "full_description": "Спросите в деканате о стипендиях и материальной поддержке, на которые вы можете претендовать.\nУзнайте, куда обращаться в трудной жизненной ситуации.",
-      "reason": "Этот шаг включён в маршрут для всех студентов после переезда.",
+      "reason": "Этот шаг включён в маршрут для всех студентов после переезда. Для вашего вуза в сервисе пока нет официальной памятки, поэтому шаг основан на демонстрационной.",
       "location": "Деканат, профком или студенческий совет",
       "position": 60,
       "category": "SOCIAL_SUPPORT",
       "estimated_duration": 20,
       "is_required": false,
-      "sources": ["demo_university_support"],
+      "sources": [
+        "demo_university_support"
+      ],
       "documents": [
-        {"code": "student_id"}
+        {
+          "code": "student_id"
+        }
+      ],
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "NOT_IN",
+          "value": [
+            "kfu",
+            "spbu",
+            "hse"
+          ]
+        }
       ]
     }
   ]

@@ -1,7 +1,17 @@
+import type { ReactNode } from "react";
+
 import type { Route } from "../shared/api/types";
 import { Button, Screen } from "../shared/ui";
 
-export function CompletionPage({ route, onShowRoute }: { route: Route; onShowRoute: () => void }) {
+export function CompletionPage({
+  route,
+  onShowRoute,
+  invite,
+}: {
+  route: Route;
+  onShowRoute: () => void;
+  invite?: ReactNode;
+}) {
   return (
     <Screen footer={<Button onClick={onShowRoute}>Посмотреть маршрут</Button>}>
       <div className="hero hero--center">
@@ -13,6 +23,8 @@ export function CompletionPage({ route, onShowRoute }: { route: Route; onShowRou
         <p className="counter">
           {route.progress.completed} / {route.progress.total}
         </p>
+        <p className="muted">Помогите одногруппнику: у него те же дела после переезда.</p>
+        <div className="actions">{invite}</div>
       </div>
     </Screen>
   );

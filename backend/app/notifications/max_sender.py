@@ -2,14 +2,35 @@ import logging
 from collections.abc import Callable
 from typing import Any
 from urllib.parse import urlencode
+from uuid import UUID
 
 from app.integrations.max.client import MaxApiError, MAXClient
-from app.integrations.max.keyboards import keyboard, link_button, open_app_button
+from app.integrations.max.keyboards import (
+    callback_button,
+    keyboard,
+    link_button,
+    open_app_button,
+)
 from app.notifications.service import OutgoingMessage
 
 logger = logging.getLogger(__name__)
 
 type LinkTokenFactory = Callable[[int], str | None]
+
+DONE_PREFIX = "done:"
+
+
+def done_payload(step_id: UUID) -> str:
+    return f"{DONE_PREFIX}{step_id}"
+
+
+def parse_done_payload(payload: str) -> UUID | None:
+    if not payload.startswith(DONE_PREFIX):
+        return None
+    try:
+        return UUID(payload.removeprefix(DONE_PREFIX))
+    except ValueError:
+        return None
 
 
 class MaxMessageSender:
@@ -65,6 +86,8 @@ class MaxMessageSender:
                     message.button_text, self.app_link(max_user_id, message.start_param)
                 )
             rows.append([button])
+        if message.done_step_id is not None:
+            rows.append([callback_button("✅ Выполнено", done_payload(message.done_step_id))])
         rows.extend([link_button(text, url)] for text, url in message.extra_links)
         return [keyboard(*rows)] if rows else []
 
@@ -93,3 +116,16 @@ class MaxMessageSender:
         except Exception:
             logger.exception("MAX message was not delivered")
         return False
+
+    async def acknowledge(
+        self, callback_id: str, notification: str, replace_text: str | None = None
+    ) -> bool:
+        message = None if replace_text is None else {"text": replace_text, "attachments": []}
+        try:
+            await self.client.answer_callback(
+                callback_id, notification=notification, message=message
+            )
+            return True
+        except Exception as error:  # noqa: BLE001
+            logger.warning("MAX callback answer failed: %s", error)
+            return False

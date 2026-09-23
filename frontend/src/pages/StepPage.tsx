@@ -19,6 +19,17 @@ export function StepPage({ routeId, stepId, routeIsArchived, onRouteChanged, onB
   const [loadError, setLoadError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [calendarError, setCalendarError] = useState<string | null>(null);
+
+  const addToCalendar = async () => {
+    setCalendarError(null);
+    try {
+      const { url } = await api.calendarLink(routeId, stepId);
+      maxBridge.openLink(url);
+    } catch (error) {
+      setCalendarError(errorMessage(error));
+    }
+  };
 
   const load = useCallback(async () => {
     setLoadError(null);
@@ -149,6 +160,10 @@ export function StepPage({ routeId, stepId, routeIsArchived, onRouteChanged, onB
           <p className="muted">
             Срок рассчитан сервисом как рекомендация и не является юридическим требованием.
           </p>
+          <Button variant="secondary" onClick={addToCalendar}>
+            Добавить в календарь
+          </Button>
+          {calendarError ? <Notice tone="error">{calendarError}</Notice> : null}
         </Section>
       ) : null}
 

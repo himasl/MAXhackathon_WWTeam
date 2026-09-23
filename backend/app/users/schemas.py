@@ -1,8 +1,8 @@
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 
-from app.users.models import EducationType, HousingType
+from app.users.models import Citizenship, EducationType, HousingType
 
 
 class ProfilePayload(BaseModel):
@@ -14,6 +14,8 @@ class ProfilePayload(BaseModel):
     housing_type: HousingType
     has_registration: StrictBool
     has_clinic_attachment: StrictBool
+    citizenship: Citizenship = Citizenship.RU
+    university_code: StrictStr | None = Field(default=None, max_length=50)
 
 
 class ProfileResponse(ProfilePayload):

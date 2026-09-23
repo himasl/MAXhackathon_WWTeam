@@ -17,7 +17,7 @@ from app.routes.repository import RouteRepository
 
 logger = logging.getLogger(__name__)
 
-UPDATE_TYPES = ["bot_started", "message_created"]
+UPDATE_TYPES = ["bot_started", "message_created", "message_callback"]
 WEBHOOK_PATH = "/max/webhook"
 MOSCOW = ZoneInfo("Europe/Moscow")
 

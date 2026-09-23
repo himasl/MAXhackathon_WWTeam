@@ -33,6 +33,11 @@ class RecordingSender:
         self.sent.append((max_user_id, message))
         return True
 
+    async def acknowledge(
+        self, callback_id: str, notification: str, replace_text: str | None = None
+    ) -> bool:
+        return True
+
 
 @pytest.fixture
 def sender(monkeypatch: pytest.MonkeyPatch) -> RecordingSender:

@@ -45,6 +45,23 @@ class RouteRepository:
         )
         return cast(UserRoute | None, await self.session.scalar(query))
 
+    async def get_by_step(self, step_id: UUID, user_id: UUID) -> UserRoute | None:
+        query = (
+            select(UserRoute)
+            .join(UserRouteStep, UserRouteStep.route_id == UserRoute.id)
+            .where(UserRouteStep.id == step_id, UserRoute.user_id == user_id)
+            .options(*self._with_details())
+        )
+        return cast(UserRoute | None, await self.session.scalar(query))
+
+    async def get_step(self, step_id: UUID) -> UserRouteStep | None:
+        query = (
+            select(UserRouteStep)
+            .where(UserRouteStep.id == step_id)
+            .options(joinedload(UserRouteStep.scenario_step))
+        )
+        return cast(UserRouteStep | None, await self.session.scalar(query))
+
     async def get_current(self, user_id: UUID) -> UserRoute | None:
         query = (
             select(UserRoute)

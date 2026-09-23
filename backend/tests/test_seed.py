@@ -36,10 +36,11 @@ async def test_seed_is_idempotent() -> None:
     await seed()
     await seed()
 
+    scenarios = ScenarioLoader(DATA_DIR).load_all()
     async with async_session() as session:
-        assert await session.scalar(select(func.count()).select_from(Scenario)) == 1
+        assert await session.scalar(select(func.count()).select_from(Scenario)) == len(scenarios)
         sources = await session.scalar(select(func.count()).select_from(Source))
-    assert sources == len(ScenarioLoader(DATA_DIR).load("student_relocation_v1").sources)
+    assert sources == len({source.code for item in scenarios for source in item.sources})
 
 
 @pytest.mark.parametrize(
@@ -58,8 +59,13 @@ async def test_seed_is_idempotent() -> None:
         ),
         (
             {"region_code": "78", "housing_type": "RENT", "has_clinic_attachment": True},
-            ["temporary_registration", "oms_check", "transport_spb", "pushkin_card",
-             "university_support"],
+            [
+                "temporary_registration",
+                "oms_check",
+                "transport_spb",
+                "pushkin_card",
+                "university_support",
+            ],
         ),
         (
             {"region_code": "16", "age": 25, "has_registration": True},
@@ -81,6 +87,86 @@ async def test_seeded_route_for_regions(
 
     assert response.status_code == 201
     assert [step["code"] for step in response.json()["steps"]] == expected
+
+
+@pytest.mark.parametrize(
+    ("overrides", "expected"),
+    [
+        (
+            {"region_code": "16", "university_code": "kfu"},
+            [
+                "kfu_dormitory_registration",
+                "oms_check",
+                "clinic_attachment",
+                "transport_kazan",
+                "pushkin_card",
+                "kfu_support",
+            ],
+        ),
+        (
+            {"region_code": "78", "university_code": "spbu", "has_clinic_attachment": True},
+            [
+                "spbu_dormitory_registration",
+                "oms_check",
+                "transport_spb",
+                "pushkin_card",
+                "spbu_support",
+            ],
+        ),
+        (
+            {"citizenship": "FOREIGN", "region_code": "77"},
+            [
+                "international_office",
+                "migration_registration",
+                "fingerprinting",
+                "health_insurance",
+            ],
+        ),
+        (
+            {"citizenship": "FOREIGN", "region_code": "16", "university_code": "kfu"},
+            ["kfu_migration_registration", "kfu_fingerprinting", "health_insurance"],
+        ),
+    ],
+)
+async def test_university_and_foreign_routes(
+    client: AsyncClient, overrides: dict[str, object], expected: list[str]
+) -> None:
+    await seed()
+    saved = await client.put("/api/v1/profile", json={**PROFILE, **overrides})
+    assert saved.status_code == 200
+
+    response = await client.post("/api/v1/routes")
+
+    assert response.status_code == 201
+    assert [step["code"] for step in response.json()["steps"]] == expected
+    scenario = "foreign_student_v1" if overrides.get("citizenship") else "student_relocation_v1"
+    assert response.json()["scenario_code"] == scenario
+
+
+async def test_university_must_exist_in_region(client: AsyncClient) -> None:
+    await seed()
+
+    wrong_region = await client.put(
+        "/api/v1/profile", json={**PROFILE, "region_code": "77", "university_code": "kfu"}
+    )
+    unknown = await client.put("/api/v1/profile", json={**PROFILE, "university_code": "nope"})
+
+    assert wrong_region.status_code == 422
+    assert wrong_region.json()["error"]["code"] == "UNKNOWN_UNIVERSITY"
+    assert unknown.status_code == 422
+
+
+async def test_universities_and_config_are_public(client: AsyncClient) -> None:
+    await seed()
+
+    all_items = (await client.get("/api/v1/universities")).json()
+    kazan = (await client.get("/api/v1/universities", params={"region_code": "16"})).json()
+    config = await client.get("/api/v1/config")
+
+    assert {item["code"] for item in all_items} == {"kfu", "spbu", "hse"}
+    assert [item["code"] for item in kazan] == ["kfu"]
+    assert config.status_code == 200
+    assert set(config.json()) == {"bot_username", "bot_url"}
 
 
 async def test_step_detail_explains_itself(client: AsyncClient) -> None:

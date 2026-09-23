@@ -1,21 +1,25 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import ScenarioNotFoundError
+from app.rules.engine import evaluate_all
 from app.rules.schemas import RuleDefinition
 from app.scenarios.models import Scenario
 from app.scenarios.repository import ScenarioRepository
 from app.scenarios.schemas import ScenarioDefinition, ScenarioStepDefinition
+from app.users.schemas import UserContext
 
 
 class ScenarioService:
     def __init__(self, session: AsyncSession) -> None:
         self.repository = ScenarioRepository(session)
 
-    async def get_active(self) -> Scenario:
-        scenario = await self.repository.get_active()
-        if scenario is None:
-            raise ScenarioNotFoundError
-        return scenario
+    async def get_for(self, context: UserContext) -> Scenario:
+        """Pick the active scenario whose audience rules match the user."""
+        for scenario in await self.repository.list_active():
+            audience = [RuleDefinition.model_validate(rule) for rule in scenario.audience]
+            if evaluate_all(audience, context):
+                return scenario
+        raise ScenarioNotFoundError
 
     def to_definition(self, scenario: Scenario) -> ScenarioDefinition:
         return ScenarioDefinition(
@@ -24,6 +28,7 @@ class ScenarioService:
             description=scenario.description,
             version=scenario.version,
             is_active=scenario.is_active,
+            audience=[RuleDefinition.model_validate(rule) for rule in scenario.audience],
             steps=[
                 ScenarioStepDefinition(
                     code=step.code,

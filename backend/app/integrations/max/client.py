@@ -107,6 +107,24 @@ class MAXClient:
     async def send_notification(self, user_id: int, text: str, **kwargs: Any) -> dict[str, Any]:
         return await self.send_message(text, user_id=user_id, **kwargs)
 
+    async def answer_callback(
+        self,
+        callback_id: str,
+        *,
+        notification: str | None = None,
+        message: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Answer a callback button press: show a notification and/or edit the message."""
+        body: dict[str, Any] = {}
+        if notification:
+            body["notification"] = notification
+        if message is not None:
+            body["message"] = message
+        result: dict[str, Any] = await self._request(
+            "POST", "/answers", params={"callback_id": callback_id}, json=body
+        )
+        return result
+
     async def get_updates(
         self, marker: int | None, timeout: int = 30, types: list[str] | None = None
     ) -> dict[str, Any]:

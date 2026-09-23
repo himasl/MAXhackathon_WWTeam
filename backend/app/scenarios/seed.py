@@ -19,6 +19,7 @@ from app.scenarios.loader import ScenarioLoader
 from app.scenarios.models import Rule, Scenario, ScenarioStep
 from app.scenarios.schemas import ScenarioDefinition
 from app.sources.models import Source
+from app.universities.models import University
 
 logger = logging.getLogger(__name__)
 _MODELS_LOADED = _models
@@ -63,8 +64,20 @@ async def _upsert_documents(
     return result
 
 
+async def _upsert_universities(session: AsyncSession, definition: ScenarioDefinition) -> None:
+    for item in definition.universities:
+        university = await session.scalar(select(University).where(University.code == item.code))
+        if university is None:
+            university = University(code=item.code)
+            session.add(university)
+        university.title = item.title
+        university.short_title = item.short_title
+        university.region_code = item.region_code
+
+
 async def sync_scenario(session: AsyncSession, definition: ScenarioDefinition) -> bool:
     """Create the scenario version if missing. Returns True when something was created."""
+    await _upsert_universities(session, definition)
     sources = await _upsert_sources(session, definition)
     documents = await _upsert_documents(session, definition)
 
@@ -88,6 +101,7 @@ async def sync_scenario(session: AsyncSession, definition: ScenarioDefinition) -
         description=definition.description,
         version=definition.version,
         is_active=definition.is_active,
+        audience=[rule.model_dump(mode="json") for rule in definition.audience],
         steps=[
             ScenarioStep(
                 code=step.code,

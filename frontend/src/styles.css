@@ -613,3 +613,12 @@ code {
   background: var(--accent-soft);
   color: var(--accent);
 }
+
+.section .button {
+  margin-top: 10px;
+}
+
+.hero--center .actions {
+  margin-top: 16px;
+  text-align: left;
+}

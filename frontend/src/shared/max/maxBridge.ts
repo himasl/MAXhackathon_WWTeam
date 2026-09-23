@@ -15,6 +15,8 @@ interface MaxWebApp {
     onClick: (callback: () => void) => void;
     offClick: (callback: () => void) => void;
   };
+  shareMaxContent?: (params: { text?: string; link?: string }) => void;
+  shareContent?: (params: { text?: string; link?: string }) => void;
   HapticFeedback?: {
     notificationOccurred: (type: "error" | "success" | "warning") => void;
   };
@@ -35,6 +37,7 @@ export interface MaxBridge {
   openLink(url: string): void;
   showBackButton(callback: () => void): () => void;
   notify(type: "error" | "success" | "warning"): void;
+  share(text: string, link: string): Promise<"shared" | "copied" | "failed">;
 }
 
 function webApp(): MaxWebApp | undefined {
@@ -89,6 +92,32 @@ export const maxBridge: MaxBridge = {
       button.offClick(callback);
       button.hide();
     };
+  },
+  async share(text: string, link: string) {
+    const app = webApp();
+    try {
+      // Inside MAX: share to a chat in MAX (falls back to the native share sheet).
+      if (this.isInsideMax() && app?.shareMaxContent) {
+        app.shareMaxContent({ text, link });
+        return "shared";
+      }
+      if (this.isInsideMax() && app?.shareContent) {
+        app.shareContent({ text, link });
+        return "shared";
+      }
+      if (navigator.share) {
+        await navigator.share({ text, url: link });
+        return "shared";
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return "failed";
+    }
+    try {
+      await navigator.clipboard.writeText(`${text} ${link}`);
+      return "copied";
+    } catch {
+      return "failed";
+    }
   },
   notify(type) {
     try {

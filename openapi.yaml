@@ -532,11 +532,277 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Service Unavailable
+  /api/v1/routes/{route_id}/steps/{step_id}/calendar-link:
+    post:
+      tags:
+      - routes
+      summary: Create Calendar Link
+      description: 'Signed link to an .ics file with the step''s recommended deadline.
+
+
+        The link opens in the phone''s browser or calendar app, so it carries its
+        own token
+
+        instead of the Authorization header. It grants access to this event only.'
+      operationId: create_calendar_link_api_v1_routes__route_id__steps__step_id__calendar_link_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarLinkResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/config:
+    get:
+      tags:
+      - catalog
+      summary: Get Config
+      description: 'Public client settings: the bot link used for invitations.'
+      operationId: get_config_api_v1_config_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppConfigResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/universities:
+    get:
+      tags:
+      - catalog
+      summary: List Universities
+      description: Pilot partner universities, optionally filtered by region.
+      operationId: list_universities_api_v1_universities_get
+      parameters:
+      - name: region_code
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: Region Code
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UniversityResponse'
+                title: Response List Universities Api V1 Universities Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/stats:
+    get:
+      tags:
+      - public
+      summary: Get Stats
+      description: 'Anonymous pilot metrics: routes, completion rate, steps done from
+        the chat,
+
+        reminders and the median number of days until registration is done.'
+      operationId: get_stats_api_v1_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/calendar/{token}.ics:
+    get:
+      tags:
+      - public
+      summary: Get Calendar File
+      description: Calendar file for a step deadline, addressed by a signed link token.
+      operationId: get_calendar_file_api_v1_calendar__token__ics_get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/calendar: {}
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
   /health:
     get:
       tags:
       - system
       summary: Health
+      description: 'Liveness. ``bot`` shows how the MAX bot is connected: off, polling,
+        webhook, webhook_failed.'
       operationId: health_health_get
       responses:
         '200':
@@ -550,6 +816,23 @@ paths:
                 title: Response Health Health Get
 components:
   schemas:
+    AppConfigResponse:
+      properties:
+        bot_username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bot Username
+        bot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bot Url
+      type: object
+      required:
+      - bot_username
+      - bot_url
+      title: AppConfigResponse
     AuthResponse:
       properties:
         access_token:
@@ -576,6 +859,25 @@ components:
       - start_param
       - user
       title: AuthResponse
+    CalendarLinkResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+        expires_in:
+          type: integer
+          title: Expires In
+      type: object
+      required:
+      - url
+      - expires_in
+      title: CalendarLinkResponse
+    Citizenship:
+      type: string
+      enum:
+      - RU
+      - FOREIGN
+      title: Citizenship
     CurrentUserResponse:
       properties:
         id:
@@ -617,6 +919,27 @@ components:
       required:
       - error
       title: ErrorResponse
+    GroupStats:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        routes:
+          type: integer
+          title: Routes
+        completed:
+          type: integer
+          title: Completed
+      type: object
+      required:
+      - code
+      - title
+      - routes
+      - completed
+      title: GroupStats
     HousingType:
       type: string
       enum:
@@ -655,6 +978,15 @@ components:
         has_clinic_attachment:
           type: boolean
           title: Has Clinic Attachment
+        citizenship:
+          $ref: '#/components/schemas/Citizenship'
+          default: RU
+        university_code:
+          anyOf:
+          - type: string
+            maxLength: 50
+          - type: 'null'
+          title: University Code
       additionalProperties: false
       type: object
       required:
@@ -683,6 +1015,15 @@ components:
         has_clinic_attachment:
           type: boolean
           title: Has Clinic Attachment
+        citizenship:
+          $ref: '#/components/schemas/Citizenship'
+          default: RU
+        university_code:
+          anyOf:
+          - type: string
+            maxLength: 50
+          - type: 'null'
+          title: University Code
       additionalProperties: false
       type: object
       required:
@@ -775,6 +1116,27 @@ components:
       - next_step_id
       - steps
       title: RouteResponse
+    RouteStats:
+      properties:
+        created:
+          type: integer
+          title: Created
+        active:
+          type: integer
+          title: Active
+        completed:
+          type: integer
+          title: Completed
+        completion_rate:
+          type: number
+          title: Completion Rate
+      type: object
+      required:
+      - created
+      - active
+      - completed
+      - completion_rate
+      title: RouteStats
     RouteStatus:
       type: string
       enum:
@@ -983,6 +1345,45 @@ components:
       - MOCK
       - OTHER
       title: SourceType
+    StatsResponse:
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        users:
+          type: integer
+          title: Users
+        routes:
+          $ref: '#/components/schemas/RouteStats'
+        steps:
+          $ref: '#/components/schemas/StepStats'
+        registration_median_days:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Registration Median Days
+        by_scenario:
+          items:
+            $ref: '#/components/schemas/GroupStats'
+          type: array
+          title: By Scenario
+        by_university:
+          items:
+            $ref: '#/components/schemas/GroupStats'
+          type: array
+          title: By University
+      type: object
+      required:
+      - generated_at
+      - users
+      - routes
+      - steps
+      - registration_median_days
+      - by_scenario
+      - by_university
+      title: StatsResponse
+      description: Anonymous aggregates for the pilot. No per-user data is exposed.
     StepCategory:
       type: string
       enum:
@@ -1014,6 +1415,48 @@ components:
       - description
       - required
       title: StepDocumentResponse
+    StepStats:
+      properties:
+        done:
+          type: integer
+          title: Done
+        done_from_chat:
+          type: integer
+          title: Done From Chat
+        reminders_sent:
+          type: integer
+          title: Reminders Sent
+        done_after_reminder:
+          type: integer
+          title: Done After Reminder
+      type: object
+      required:
+      - done
+      - done_from_chat
+      - reminders_sent
+      - done_after_reminder
+      title: StepStats
+    UniversityResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        short_title:
+          type: string
+          title: Short Title
+        region_code:
+          type: string
+          title: Region Code
+      type: object
+      required:
+      - code
+      - title
+      - short_title
+      - region_code
+      title: UniversityResponse
   securitySchemes:
     HTTPBearer:
       type: http

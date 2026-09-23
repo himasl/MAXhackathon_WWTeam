@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { api, errorMessage } from "../shared/api/client";
 import type { Route, RouteStepSummary } from "../shared/api/types";
@@ -16,9 +16,10 @@ interface Props {
   route: Route;
   onOpenStep: (stepId: string) => void;
   onEditProfile: () => void;
+  invite?: ReactNode;
 }
 
-export function RoutePage({ route, onOpenStep, onEditProfile }: Props) {
+export function RoutePage({ route, onOpenStep, onEditProfile, invite }: Props) {
   const [reminder, setReminder] = useState<{ tone: "success" | "error"; text: string } | null>(
     null,
   );
@@ -108,6 +109,7 @@ export function RoutePage({ route, onOpenStep, onEditProfile }: Props) {
           </Button>
         ) : null}
         {reminder ? <Notice tone={reminder.tone}>{reminder.text}</Notice> : null}
+        {invite}
         <Button variant="ghost" onClick={onEditProfile}>
           Изменить ответы и пересобрать маршрут
         </Button>

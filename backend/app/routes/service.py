@@ -48,7 +48,7 @@ class RouteService:
     async def generate(self, user: User) -> RouteResponse:
         await self.user_repository.lock(user.id)
         context = await self.user_service.get_context(user)
-        scenario = await self.scenario_service.get_active()
+        scenario = await self.scenario_service.get_for(context)
         generated = self.generator.generate(
             context,
             self.scenario_service.to_definition(scenario),
@@ -145,7 +145,9 @@ class RouteService:
             next_step_id=following.id if following else None,
         )
 
-    async def complete(self, user: User, route_id: UUID, step_id: UUID) -> RouteResponse:
+    async def complete(
+        self, user: User, route_id: UUID, step_id: UUID, via: str = "app"
+    ) -> RouteResponse:
         route = await self.get_route_model(user, route_id)
         if route.status != RouteStatus.ACTIVE:
             raise InvalidOperationError("Only an active route can be updated")
@@ -156,11 +158,20 @@ class RouteService:
         now = datetime.now(UTC)
         step.status = RouteStepStatus.DONE
         step.completed_at = now
+        step.completed_via = via
         if all(item.status in FINISHED_STATUSES for item in route.steps):
             route.status = RouteStatus.COMPLETED
             route.completed_at = now
         await self.session.commit()
         return await self._reload(route.id, user)
+
+    async def complete_from_chat(self, user: User, step_id: UUID) -> tuple[str, RouteResponse]:
+        """Complete a step from the bot button. Returns the step title and updated route."""
+        route = await self.repository.get_by_step(step_id, user.id)
+        if route is None:
+            raise RouteStepNotFoundError
+        title = self._find_step(route, step_id).scenario_step.title
+        return title, await self.complete(user, route.id, step_id, via="chat")
 
     async def reopen(self, user: User, route_id: UUID, step_id: UUID) -> RouteResponse:
         route = await self.get_route_model(user, route_id)
@@ -172,6 +183,7 @@ class RouteService:
 
         step.status = RouteStepStatus.TODO
         step.completed_at = None
+        step.completed_via = None
         if route.status == RouteStatus.COMPLETED:
             route.status = RouteStatus.ACTIVE
             route.completed_at = None

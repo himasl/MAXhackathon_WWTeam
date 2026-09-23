@@ -76,6 +76,11 @@ class RouteStepDetailResponse(BaseModel):
     next_step_id: UUID | None
 
 
+class CalendarLinkResponse(BaseModel):
+    url: str
+    expires_in: int
+
+
 class ReminderResponse(BaseModel):
     sent: bool
     step_id: UUID | None

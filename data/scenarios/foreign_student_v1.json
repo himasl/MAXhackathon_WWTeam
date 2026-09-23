@@ -1,0 +1,291 @@
+{
+  "code": "foreign_student_v1",
+  "version": 1,
+  "title": "Иностранный студент после приезда",
+  "description": "Маршрут для иностранного студента, который приехал на учёбу в Россию. Второй сценарий на том же движке правил: добавлен одним файлом без изменения кода. Тексты шагов — памятки команды проекта; требования зависят от страны и цели въезда, поэтому порядок действий нужно сверять с официальным источником и международной службой вуза.",
+  "is_active": true,
+  "audience": [
+    {
+      "field": "citizenship",
+      "operator": "EQ",
+      "value": "FOREIGN"
+    }
+  ],
+  "universities": [],
+  "sources": [
+    {
+      "code": "gosuslugi_migration_registration",
+      "title": "Как поставить иностранца на учёт по месту пребывания",
+      "url": "https://www.gosuslugi.ru/help/faq/migration_registration/283254",
+      "organization": "Госуслуги",
+      "source_type": "OFFICIAL",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "kfu_migration_visa_free",
+      "title": "Миграционный учёт — безвизовый въезд",
+      "url": "https://kpfu.ru/international/migracionnoe-soprovozhdenie-inostrannyh-grazhdan/bezvizovyi-vjezd",
+      "organization": "КФУ, миграционное сопровождение иностранных граждан",
+      "source_type": "OFFICIAL",
+      "region_code": "16",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "kfu_fingerprinting",
+      "title": "Дактилоскопия и медицинское освидетельствование",
+      "url": "https://kpfu.ru/international/migracionnoe-soprovozhdenie-inostrannyh-grazhdan/daktiloskopiya-i-medicinskoe-osvidetelstvovanie",
+      "organization": "КФУ, миграционное сопровождение иностранных граждан",
+      "source_type": "OFFICIAL",
+      "region_code": "16",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "demo_foreign_insurance",
+      "title": "Демонстрационная памятка: медицинское страхование иностранного студента",
+      "url": "https://example.com/marshrut-demo/foreign-insurance",
+      "organization": "Демонстрационные данные проекта «Маршрут»",
+      "source_type": "MOCK"
+    },
+    {
+      "code": "demo_international_office",
+      "title": "Демонстрационная памятка: международная служба вуза",
+      "url": "https://example.com/marshrut-demo/international-office",
+      "organization": "Демонстрационные данные проекта «Маршрут»",
+      "source_type": "MOCK"
+    },
+    {
+      "code": "demo_fingerprinting",
+      "title": "Демонстрационная памятка: дактилоскопия и медосвидетельствование",
+      "url": "https://example.com/marshrut-demo/fingerprinting",
+      "organization": "Демонстрационные данные проекта «Маршрут»",
+      "source_type": "MOCK"
+    }
+  ],
+  "documents": [
+    {
+      "code": "foreign_passport",
+      "title": "Национальный паспорт",
+      "description": "Документ, по которому вы въехали в Россию."
+    },
+    {
+      "code": "migration_card",
+      "title": "Миграционная карта",
+      "description": "Выдаётся при въезде, если требуется для вашей страны."
+    },
+    {
+      "code": "visa",
+      "title": "Виза",
+      "description": "Если въезд в Россию для вас визовый."
+    },
+    {
+      "code": "enrollment_confirmation",
+      "title": "Документ о зачислении или студенческий билет"
+    },
+    {
+      "code": "insurance_policy",
+      "title": "Полис медицинского страхования"
+    }
+  ],
+  "steps": [
+    {
+      "code": "international_office",
+      "title": "Встреча с международной службой вуза",
+      "short_description": "Узнайте, кто в вузе сопровождает иностранных студентов.",
+      "full_description": "Найдите международную службу (отдел по работе с иностранными студентами) вашего вуза.\nУточните, какие документы нужно сдать после приезда и в какие сроки.\nСохраните контакты сотрудника, который ведёт ваши миграционные документы.",
+      "reason": "Вы указали, что не являетесь гражданином России: вуз обычно помогает иностранным студентам с документами после приезда.",
+      "location": "Международная служба вуза",
+      "position": 10,
+      "category": "EDUCATION",
+      "estimated_duration": 30,
+      "recommended_days": 2,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "NE",
+          "value": "kfu"
+        }
+      ],
+      "sources": [
+        "demo_international_office"
+      ],
+      "documents": [
+        {
+          "code": "foreign_passport"
+        },
+        {
+          "code": "enrollment_confirmation"
+        }
+      ]
+    },
+    {
+      "code": "migration_registration",
+      "title": "Миграционный учёт по месту пребывания",
+      "short_description": "Проверьте, оформлен ли для вас миграционный учёт.",
+      "full_description": "Прочитайте на Госуслугах, как ставят иностранного гражданина на учёт по месту пребывания: уведомление подаёт принимающая сторона.\nУточните в вузе или у собственника жилья, кто и когда подаст уведомление о прибытии.\nСохраните отрывную часть уведомления — она подтверждает постановку на учёт.",
+      "reason": "Вы указали, что пока не прошли регистрацию (миграционный учёт) по новому адресу.",
+      "location": "Принимающая сторона: вуз, общежитие или собственник жилья",
+      "position": 20,
+      "category": "REGISTRATION",
+      "estimated_duration": 30,
+      "recommended_days": 3,
+      "rules": [
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        },
+        {
+          "field": "university_code",
+          "operator": "NE",
+          "value": "kfu"
+        }
+      ],
+      "sources": [
+        "gosuslugi_migration_registration"
+      ],
+      "documents": [
+        {
+          "code": "foreign_passport"
+        },
+        {
+          "code": "migration_card",
+          "required": false
+        },
+        {
+          "code": "visa",
+          "required": false
+        }
+      ]
+    },
+    {
+      "code": "kfu_migration_registration",
+      "title": "Миграционный учёт в КФУ",
+      "short_description": "Сдайте документы для миграционного учёта через КФУ.",
+      "full_description": "Откройте страницу КФУ о миграционном учёте и выберите свой случай: безвизовый или визовый въезд.\nСдайте документы в службу миграционного сопровождения в указанные сроки.\nСохраните отрывную часть уведомления о прибытии.",
+      "reason": "Вы учитесь в КФУ и пока не прошли миграционный учёт по новому адресу.",
+      "location": "Служба миграционного сопровождения КФУ",
+      "position": 20,
+      "category": "REGISTRATION",
+      "estimated_duration": 30,
+      "recommended_days": 3,
+      "rules": [
+        {
+          "field": "has_registration",
+          "operator": "EQ",
+          "value": false
+        },
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "kfu"
+        }
+      ],
+      "sources": [
+        "kfu_migration_visa_free",
+        "gosuslugi_migration_registration"
+      ],
+      "documents": [
+        {
+          "code": "foreign_passport"
+        },
+        {
+          "code": "migration_card",
+          "required": false
+        },
+        {
+          "code": "visa",
+          "required": false
+        },
+        {
+          "code": "enrollment_confirmation"
+        }
+      ]
+    },
+    {
+      "code": "fingerprinting",
+      "title": "Дактилоскопия и медицинское освидетельствование",
+      "short_description": "Уточните, нужно ли вам проходить эти процедуры.",
+      "full_description": "Узнайте в международной службе вуза, обязательны ли для вас дактилоскопия и медицинское освидетельствование — это зависит от страны и срока пребывания.\nЕсли обязательны, уточните адрес и сроки прохождения.",
+      "reason": "Для части иностранных граждан эти процедуры обязательны после въезда — проверьте, относится ли это к вам.",
+      "location": "Международная служба вуза",
+      "position": 30,
+      "category": "HEALTHCARE",
+      "estimated_duration": 120,
+      "recommended_days": 14,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "NE",
+          "value": "kfu"
+        }
+      ],
+      "sources": [
+        "demo_fingerprinting"
+      ],
+      "documents": [
+        {
+          "code": "foreign_passport"
+        },
+        {
+          "code": "migration_card",
+          "required": false
+        }
+      ]
+    },
+    {
+      "code": "kfu_fingerprinting",
+      "title": "Дактилоскопия и медосвидетельствование для студентов КФУ",
+      "short_description": "Проверьте порядок прохождения процедур в КФУ.",
+      "full_description": "Откройте страницу КФУ о дактилоскопии и медицинском освидетельствовании.\nПроверьте, относится ли требование к вам, и запишитесь по инструкции.",
+      "reason": "Вы учитесь в КФУ — вуз публикует порядок прохождения этих процедур для иностранных студентов.",
+      "location": "Служба миграционного сопровождения КФУ",
+      "position": 30,
+      "category": "HEALTHCARE",
+      "estimated_duration": 120,
+      "recommended_days": 14,
+      "rules": [
+        {
+          "field": "university_code",
+          "operator": "EQ",
+          "value": "kfu"
+        }
+      ],
+      "sources": [
+        "kfu_fingerprinting"
+      ],
+      "documents": [
+        {
+          "code": "foreign_passport"
+        },
+        {
+          "code": "migration_card",
+          "required": false
+        }
+      ]
+    },
+    {
+      "code": "health_insurance",
+      "title": "Медицинское страхование",
+      "short_description": "Проверьте, есть ли у вас действующий полис.",
+      "full_description": "Проверьте срок действия вашего полиса медицинского страхования.\nУточните в вузе, какой полис принимается и где получить медицинскую помощь.",
+      "reason": "Иностранному студенту понадобится полис медицинского страхования для обращения к врачу.",
+      "location": "Международная служба вуза или страховая компания",
+      "position": 40,
+      "category": "HEALTHCARE",
+      "estimated_duration": 30,
+      "recommended_days": 14,
+      "sources": [
+        "demo_foreign_insurance"
+      ],
+      "documents": [
+        {
+          "code": "foreign_passport"
+        },
+        {
+          "code": "insurance_policy",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
