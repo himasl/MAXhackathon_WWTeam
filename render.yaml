@@ -1,0 +1,36 @@
+# Render Blueprint: one free Docker web service. PostgreSQL is hosted on Neon (free tier,
+# no 30-day expiry) — paste its connection string into DATABASE_URL.
+services:
+  - type: web
+    name: marshrut
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATA_MODE
+        value: mock
+      - key: BOT_MODE
+        value: webhook
+      - key: DEV_AUTH_ENABLED
+        value: "false"
+      - key: MAX_BOT_USERNAME
+        value: t818_hakaton_max_bot
+      - key: PUBLIC_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: MAX_BOT_TOKEN
+        sync: false
+      - key: WEBHOOK_SECRET
+        generateValue: true
+      - key: SECRET_KEY
+        generateValue: true
+      - key: TEST_ACCESS_TOKENS
+        sync: false

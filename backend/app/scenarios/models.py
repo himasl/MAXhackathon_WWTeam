@@ -24,6 +24,7 @@ from app.core.database import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.sources.models import scenario_step_sources
 
 if TYPE_CHECKING:
+    from app.documents.models import ScenarioStepDocument
     from app.routes.models import UserRouteStep
     from app.sources.models import Source
 
@@ -67,6 +68,7 @@ class ScenarioStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     __tablename__ = "scenario_steps"
     __table_args__ = (
         CheckConstraint("estimated_duration >= 0", name="estimated_duration_non_negative"),
+        CheckConstraint("recommended_days >= 0", name="recommended_days_non_negative"),
         UniqueConstraint("scenario_id", "code"),
     )
 
@@ -83,6 +85,9 @@ class ScenarioStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     estimated_duration: Mapped[int | None] = mapped_column(Integer)
     is_required: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    reason: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
+    location: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
+    recommended_days: Mapped[int | None] = mapped_column(Integer)
 
     scenario: Mapped[Scenario] = relationship(back_populates="steps")
     rules: Mapped[list[Rule]] = relationship(
@@ -90,6 +95,9 @@ class ScenarioStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     sources: Mapped[list[Source]] = relationship(
         secondary=scenario_step_sources, back_populates="scenario_steps"
+    )
+    documents: Mapped[list[ScenarioStepDocument]] = relationship(
+        back_populates="scenario_step", cascade="all, delete-orphan"
     )
     route_steps: Mapped[list[UserRouteStep]] = relationship(back_populates="scenario_step")
 

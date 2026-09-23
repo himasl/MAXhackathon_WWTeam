@@ -1,0 +1,1024 @@
+openapi: 3.1.0
+info:
+  title: Маршрут API
+  description: 'API сервиса «Маршрут»: персональный маршрут действий для студента
+    после переезда в другой регион. Сервис не является государственным и не принимает
+    юридически значимых решений.'
+  version: 1.0.0
+paths:
+  /api/v1/auth/max:
+    post:
+      tags:
+      - auth
+      summary: Login With Max
+      description: 'Exchange MAX Mini App ``initData`` for an access token.
+
+
+        The backend validates the HMAC signature with the bot token and never trusts
+        a
+
+        ``user_id`` sent by the client.'
+      operationId: login_with_max_api_v1_auth_max_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaxAuthRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/me:
+    get:
+      tags:
+      - users
+      summary: Get Me
+      operationId: get_me_api_v1_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/profile:
+    get:
+      tags:
+      - users
+      summary: Get Profile
+      operationId: get_profile_api_v1_profile_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+    put:
+      tags:
+      - users
+      summary: Save Profile
+      operationId: save_profile_api_v1_profile_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfilePayload'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/routes:
+    post:
+      tags:
+      - routes
+      summary: Create Route
+      description: Build a personal route from the saved profile. A previous active
+        route is archived.
+      operationId: create_route_api_v1_routes_post
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/routes/current:
+    get:
+      tags:
+      - routes
+      summary: Get Current Route
+      operationId: get_current_route_api_v1_routes_current_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/routes/{route_id}/steps/{step_id}:
+    get:
+      tags:
+      - routes
+      summary: Get Route Step
+      operationId: get_route_step_api_v1_routes__route_id__steps__step_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteStepDetailResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/routes/{route_id}/steps/{step_id}/complete:
+    post:
+      tags:
+      - routes
+      summary: Complete Route Step
+      operationId: complete_route_step_api_v1_routes__route_id__steps__step_id__complete_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/routes/{route_id}/steps/{step_id}/reopen:
+    post:
+      tags:
+      - routes
+      summary: Reopen Route Step
+      operationId: reopen_route_step_api_v1_routes__route_id__steps__step_id__reopen_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/routes/{route_id}/remind:
+    post:
+      tags:
+      - routes
+      summary: Send Reminder
+      description: 'Send the next open step to the user''s MAX chat right now.
+
+
+        ``sent`` is false when the bot is not configured or MAX did not accept the
+        message.'
+      operationId: send_reminder_api_v1_routes__route_id__remind_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReminderResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /health:
+    get:
+      tags:
+      - system
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Health Health Get
+components:
+  schemas:
+    AuthResponse:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        token_type:
+          type: string
+          title: Token Type
+          default: bearer
+        expires_in:
+          type: integer
+          title: Expires In
+        start_param:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Param
+        user:
+          $ref: '#/components/schemas/CurrentUserResponse'
+      type: object
+      required:
+      - access_token
+      - expires_in
+      - start_param
+      - user
+      title: AuthResponse
+    CurrentUserResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        max_user_id:
+          type: integer
+          title: Max User Id
+      type: object
+      required:
+      - id
+      - max_user_id
+      title: CurrentUserResponse
+    EducationType:
+      type: string
+      enum:
+      - FULL_TIME
+      - PART_TIME
+      title: EducationType
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    ErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: ErrorResponse
+    HousingType:
+      type: string
+      enum:
+      - DORMITORY
+      - RENT
+      - RELATIVES
+      - OTHER
+      title: HousingType
+    MaxAuthRequest:
+      properties:
+        init_data:
+          type: string
+          maxLength: 8192
+          minLength: 1
+          title: Init Data
+      additionalProperties: false
+      type: object
+      required:
+      - init_data
+      title: MaxAuthRequest
+    ProfilePayload:
+      properties:
+        age:
+          type: integer
+          title: Age
+        region_code:
+          type: string
+          title: Region Code
+        education_type:
+          $ref: '#/components/schemas/EducationType'
+        housing_type:
+          $ref: '#/components/schemas/HousingType'
+        has_registration:
+          type: boolean
+          title: Has Registration
+        has_clinic_attachment:
+          type: boolean
+          title: Has Clinic Attachment
+      additionalProperties: false
+      type: object
+      required:
+      - age
+      - region_code
+      - education_type
+      - housing_type
+      - has_registration
+      - has_clinic_attachment
+      title: ProfilePayload
+    ProfileResponse:
+      properties:
+        age:
+          type: integer
+          title: Age
+        region_code:
+          type: string
+          title: Region Code
+        education_type:
+          $ref: '#/components/schemas/EducationType'
+        housing_type:
+          $ref: '#/components/schemas/HousingType'
+        has_registration:
+          type: boolean
+          title: Has Registration
+        has_clinic_attachment:
+          type: boolean
+          title: Has Clinic Attachment
+      additionalProperties: false
+      type: object
+      required:
+      - age
+      - region_code
+      - education_type
+      - housing_type
+      - has_registration
+      - has_clinic_attachment
+      title: ProfileResponse
+    ReminderResponse:
+      properties:
+        sent:
+          type: boolean
+          title: Sent
+        step_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Step Id
+      type: object
+      required:
+      - sent
+      - step_id
+      title: ReminderResponse
+    RouteProgress:
+      properties:
+        completed:
+          type: integer
+          title: Completed
+        total:
+          type: integer
+          title: Total
+        percent:
+          type: integer
+          title: Percent
+      type: object
+      required:
+      - completed
+      - total
+      - percent
+      title: RouteProgress
+    RouteResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        status:
+          $ref: '#/components/schemas/RouteStatus'
+        scenario_code:
+          type: string
+          title: Scenario Code
+        scenario_version:
+          type: integer
+          title: Scenario Version
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        progress:
+          $ref: '#/components/schemas/RouteProgress'
+        next_step_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Step Id
+        steps:
+          items:
+            $ref: '#/components/schemas/RouteStepSummary'
+          type: array
+          title: Steps
+      type: object
+      required:
+      - id
+      - status
+      - scenario_code
+      - scenario_version
+      - created_at
+      - completed_at
+      - progress
+      - next_step_id
+      - steps
+      title: RouteResponse
+    RouteStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - COMPLETED
+      - ARCHIVED
+      title: RouteStatus
+    RouteStepDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        route_id:
+          type: string
+          format: uuid
+          title: Route Id
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        short_description:
+          type: string
+          title: Short Description
+        full_description:
+          type: string
+          title: Full Description
+        reason:
+          type: string
+          title: Reason
+        location:
+          type: string
+          title: Location
+        category:
+          $ref: '#/components/schemas/StepCategory'
+        estimated_duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Estimated Duration
+        is_required:
+          type: boolean
+          title: Is Required
+        position:
+          type: integer
+          title: Position
+        status:
+          $ref: '#/components/schemas/RouteStepStatus'
+        deadline:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Deadline
+        deadline_origin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deadline Origin
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        documents:
+          items:
+            $ref: '#/components/schemas/StepDocumentResponse'
+          type: array
+          title: Documents
+        sources:
+          items:
+            $ref: '#/components/schemas/SourceResponse'
+          type: array
+          title: Sources
+        next_step_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Next Step Id
+      type: object
+      required:
+      - id
+      - route_id
+      - code
+      - title
+      - short_description
+      - full_description
+      - reason
+      - location
+      - category
+      - estimated_duration
+      - is_required
+      - position
+      - status
+      - deadline
+      - deadline_origin
+      - completed_at
+      - documents
+      - sources
+      - next_step_id
+      title: RouteStepDetailResponse
+    RouteStepStatus:
+      type: string
+      enum:
+      - TODO
+      - IN_PROGRESS
+      - DONE
+      - SKIPPED
+      title: RouteStepStatus
+    RouteStepSummary:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        short_description:
+          type: string
+          title: Short Description
+        category:
+          $ref: '#/components/schemas/StepCategory'
+        position:
+          type: integer
+          title: Position
+        status:
+          $ref: '#/components/schemas/RouteStepStatus'
+        is_required:
+          type: boolean
+          title: Is Required
+        deadline:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Deadline
+      type: object
+      required:
+      - id
+      - code
+      - title
+      - short_description
+      - category
+      - position
+      - status
+      - is_required
+      - deadline
+      title: RouteStepSummary
+    SourceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+        organization:
+          type: string
+          title: Organization
+        source_type:
+          $ref: '#/components/schemas/SourceType'
+        region_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Code
+        published_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Published At
+        checked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Checked At
+      type: object
+      required:
+      - id
+      - title
+      - url
+      - organization
+      - source_type
+      - region_code
+      - published_at
+      - checked_at
+      title: SourceResponse
+    SourceType:
+      type: string
+      enum:
+      - OFFICIAL
+      - MOCK
+      - OTHER
+      title: SourceType
+    StepCategory:
+      type: string
+      enum:
+      - REGISTRATION
+      - HEALTHCARE
+      - EDUCATION
+      - TRANSPORT
+      - SOCIAL_SUPPORT
+      - OTHER
+      title: StepCategory
+    StepDocumentResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        required:
+          type: boolean
+          title: Required
+      type: object
+      required:
+      - code
+      - title
+      - description
+      - required
+      title: StepDocumentResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      description: Access token from POST /api/v1/auth/max, or a test token issued
+        to reviewers.
+      scheme: bearer
+servers:
+- url: https://marshrut.onrender.com

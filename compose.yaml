@@ -1,3 +1,4 @@
+# Local run: docker compose up --build  →  Mini App + API on http://localhost:8000
 services:
   postgres:
     image: postgres:17-alpine
@@ -14,31 +15,23 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    build: ./backend
+    build: .
+    env_file:
+      - path: .env
+        required: false
     environment:
       APP_ENV: ${APP_ENV:-development}
-      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@postgres:5432/marshrut}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
-      SCENARIO_DATA_DIR: /app/data/scenarios
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/marshrut
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8000}
       DEV_AUTH_ENABLED: ${DEV_AUTH_ENABLED:-true}
       DEV_MAX_USER_ID: ${DEV_MAX_USER_ID:-123456}
+      # Long polling works without a public HTTPS address, so the bot runs locally too.
+      BOT_MODE: ${BOT_MODE:-polling}
     ports:
       - "8000:8000"
-    volumes:
-      - ./data:/app/data:ro
     depends_on:
       postgres:
         condition: service_healthy
-
-  frontend:
-    build: ./frontend
-    environment:
-      VITE_API_URL: http://localhost:8000
-    ports:
-      - "5173:5173"
-    depends_on:
-      backend:
-        condition: service_started
 
 volumes:
   postgres_data:

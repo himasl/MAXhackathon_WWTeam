@@ -96,27 +96,42 @@ def test_empty_rules_match(context: UserContext) -> None:
     assert evaluate_all([], context)
 
 
-def test_eq_does_not_coerce_types(context: UserContext) -> None:
-    numeric_string = RuleDefinition(field="age", operator=RuleOperator.EQ, value="18")
-    bool_as_integer = RuleDefinition(
-        field="has_registration", operator=RuleOperator.EQ, value=0
-    )
+def unchecked(field: str, operator: RuleOperator, value: object) -> RuleDefinition:
+    """Build a rule bypassing validation to test evaluator strictness directly."""
+    return RuleDefinition.model_construct(field=field, operator=operator, value=value)
 
-    assert not evaluate(numeric_string, context)
-    assert not evaluate(bool_as_integer, context)
+
+def test_eq_does_not_coerce_types(context: UserContext) -> None:
+    assert not evaluate(unchecked("age", RuleOperator.EQ, "18"), context)
+    assert not evaluate(unchecked("has_registration", RuleOperator.EQ, 0), context)
 
 
 def test_ne_does_not_coerce_types(context: UserContext) -> None:
-    rule = RuleDefinition(field="age", operator=RuleOperator.NE, value="18")
-
-    assert evaluate(rule, context)
+    assert evaluate(unchecked("age", RuleOperator.NE, "18"), context)
 
 
 def test_ordered_comparison_rejects_incompatible_types(context: UserContext) -> None:
-    rule = RuleDefinition(field="age", operator=RuleOperator.GT, value="17")
-
     with pytest.raises(ValueError, match="Cannot compare int with str"):
-        evaluate(rule, context)
+        evaluate(unchecked("age", RuleOperator.GT, "17"), context)
+
+
+@pytest.mark.parametrize(
+    ("field", "operator", "value", "message"),
+    [
+        ("age", RuleOperator.GT, "17", "expects int"),
+        ("age", RuleOperator.EQ, True, "expects int"),
+        ("has_registration", RuleOperator.EQ, 0, "expects bool"),
+        ("region_code", RuleOperator.EQ, 77, "expects str"),
+        ("region_code", RuleOperator.GT, "77", "only supported for numeric"),
+        ("housing_type", RuleOperator.EQ, "HOSTEL", "Unknown value"),
+        ("region_code", RuleOperator.EQ, ["77"], "requires a scalar"),
+    ],
+)
+def test_rule_value_type_is_validated(
+    field: str, operator: RuleOperator, value: object, message: str
+) -> None:
+    with pytest.raises(ValidationError, match=message):
+        RuleDefinition.model_validate({"field": field, "operator": operator, "value": value})
 
 
 @pytest.mark.parametrize("operator", [RuleOperator.IN, RuleOperator.NOT_IN])

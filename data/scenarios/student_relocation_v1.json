@@ -1,0 +1,288 @@
+{
+  "code": "student_relocation_v1",
+  "version": 1,
+  "title": "Переезд на учёбу в другой регион",
+  "description": "Маршрут для студента — гражданина РФ, который переехал в другой регион для обучения. Тексты шагов составлены командой проекта как памятка и не являются юридической консультацией; порядок действий нужно сверять с официальным источником шага.",
+  "is_active": true,
+  "sources": [
+    {
+      "code": "gosuslugi_stay_registration",
+      "title": "Регистрация и снятие с регистрации по месту пребывания",
+      "url": "https://www.gosuslugi.ru/600100/1",
+      "organization": "Госуслуги",
+      "source_type": "OFFICIAL",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "gosuslugi_clinic_attachment",
+      "title": "Прикрепление к поликлинике на Госуслугах",
+      "url": "https://www.gosuslugi.ru/help/faq/attachment_to_clinic/101970",
+      "organization": "Госуслуги",
+      "source_type": "OFFICIAL",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "ffoms_home",
+      "title": "Федеральный фонд обязательного медицинского страхования",
+      "url": "https://www.ffoms.gov.ru/",
+      "organization": "ФОМС",
+      "source_type": "OFFICIAL",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "mos_student_card",
+      "title": "Карта москвича для студента: где и как получить, доступные льготы",
+      "url": "https://www.mos.ru/karta-moskvicha/tipy-derzhataley/studenty/",
+      "organization": "Официальный сайт Мэра Москвы",
+      "source_type": "OFFICIAL",
+      "region_code": "77",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "spb_student_travel",
+      "title": "Как получить или продлить льготный проездной учащегося",
+      "url": "https://www.gov.spb.ru/gov/otrasl/c_transport/news/266156/",
+      "organization": "Администрация Санкт-Петербурга",
+      "source_type": "OFFICIAL",
+      "region_code": "78",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "kazan_transport_privileges",
+      "title": "Льготы на проезд",
+      "url": "https://kazantransport.ru/fare/privileges/",
+      "organization": "Транспортный сайт города Казани",
+      "source_type": "OFFICIAL",
+      "region_code": "16",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "pushkin_card",
+      "title": "Пушкинская карта",
+      "url": "https://culture.gosuslugi.ru/",
+      "organization": "Госуслуги. Культура",
+      "source_type": "OFFICIAL",
+      "checked_at": "2026-09-23"
+    },
+    {
+      "code": "demo_university_support",
+      "title": "Демонстрационная памятка: поддержка студентов в вузе",
+      "url": "https://example.com/marshrut-demo/university-support",
+      "organization": "Демонстрационные данные проекта «Маршрут»",
+      "source_type": "MOCK"
+    },
+    {
+      "code": "demo_regional_transport",
+      "title": "Демонстрационная памятка: студенческий проезд в регионе",
+      "url": "https://example.com/marshrut-demo/regional-transport",
+      "organization": "Демонстрационные данные проекта «Маршрут»",
+      "source_type": "MOCK"
+    }
+  ],
+  "documents": [
+    {"code": "passport", "title": "Паспорт гражданина РФ"},
+    {"code": "student_id", "title": "Студенческий билет или справка из вуза", "description": "Подтверждает, что вы обучаетесь в вузе."},
+    {"code": "oms_policy", "title": "Полис ОМС", "description": "Можно использовать номер полиса в электронном виде."},
+    {"code": "snils", "title": "СНИЛС"},
+    {"code": "dormitory_contract", "title": "Договор найма жилого помещения в общежитии"},
+    {"code": "housing_basis", "title": "Документ-основание для проживания", "description": "Например, договор аренды или согласие собственника жилья."},
+    {"code": "photo", "title": "Фотография", "description": "Может понадобиться для проездного — формат уточните по источнику."}
+  ],
+  "steps": [
+    {
+      "code": "dormitory_registration",
+      "title": "Регистрация по месту пребывания в общежитии",
+      "short_description": "Узнайте в общежитии, как оформляется регистрация.",
+      "full_description": "Спросите у администрации общежития или в паспортном столе вуза, как оформить регистрацию по месту пребывания.\nПодготовьте документы из списка ниже.\nПосле оформления сохраните подтверждение регистрации.",
+      "reason": "Вы указали, что живёте в общежитии и пока не имеете регистрации в новом регионе.",
+      "location": "Администрация общежития или паспортный стол вуза",
+      "position": 10,
+      "category": "REGISTRATION",
+      "estimated_duration": 60,
+      "recommended_days": 7,
+      "rules": [
+        {"field": "has_registration", "operator": "EQ", "value": false},
+        {"field": "housing_type", "operator": "EQ", "value": "DORMITORY"}
+      ],
+      "sources": ["gosuslugi_stay_registration"],
+      "documents": [
+        {"code": "passport"},
+        {"code": "student_id"},
+        {"code": "dormitory_contract"}
+      ]
+    },
+    {
+      "code": "temporary_registration",
+      "title": "Регистрация по месту пребывания",
+      "short_description": "Проверьте, как оформить регистрацию по новому адресу.",
+      "full_description": "Прочитайте условия услуги «Регистрация по месту пребывания» на Госуслугах.\nДоговоритесь с собственником жилья: для заявления понадобится его согласие.\nПодайте заявление онлайн или через МФЦ.",
+      "reason": "Вы указали, что живёте не в общежитии и пока не имеете регистрации в новом регионе.",
+      "location": "Госуслуги или МФЦ",
+      "position": 11,
+      "category": "REGISTRATION",
+      "estimated_duration": 30,
+      "recommended_days": 7,
+      "rules": [
+        {"field": "has_registration", "operator": "EQ", "value": false},
+        {"field": "housing_type", "operator": "IN", "value": ["RENT", "RELATIVES", "OTHER"]}
+      ],
+      "sources": ["gosuslugi_stay_registration"],
+      "documents": [
+        {"code": "passport"},
+        {"code": "housing_basis"}
+      ]
+    },
+    {
+      "code": "oms_check",
+      "title": "Проверка полиса ОМС",
+      "short_description": "Убедитесь, что у вас есть действующий полис ОМС.",
+      "full_description": "Найдите номер полиса ОМС — он пригодится для записи к врачу и прикрепления к поликлинике.\nЕсли полиса нет или он утерян, узнайте о порядке оформления на сайте ФОМС.",
+      "reason": "Полис ОМС понадобится для медицинской помощи в новом регионе.",
+      "location": "Госуслуги или страховая медицинская организация",
+      "position": 20,
+      "category": "HEALTHCARE",
+      "estimated_duration": 10,
+      "sources": ["ffoms_home"],
+      "documents": [
+        {"code": "oms_policy"}
+      ]
+    },
+    {
+      "code": "clinic_attachment",
+      "title": "Прикрепление к поликлинике",
+      "short_description": "Выберите поликлинику рядом с домом или вузом.",
+      "full_description": "Выберите поликлинику в новом городе.\nПодайте заявление о прикреплении на Госуслугах или лично в выбранной поликлинике.\nДождитесь подтверждения прикрепления.",
+      "reason": "Вы указали, что пока не прикреплены к поликлинике в новом регионе.",
+      "location": "Госуслуги или регистратура выбранной поликлиники",
+      "position": 30,
+      "category": "HEALTHCARE",
+      "estimated_duration": 20,
+      "recommended_days": 14,
+      "rules": [
+        {"field": "has_clinic_attachment", "operator": "EQ", "value": false}
+      ],
+      "sources": ["gosuslugi_clinic_attachment"],
+      "documents": [
+        {"code": "passport"},
+        {"code": "oms_policy"},
+        {"code": "snils", "required": false}
+      ]
+    },
+    {
+      "code": "transport_moscow",
+      "title": "Студенческий проезд в Москве",
+      "short_description": "Узнайте о Карте москвича для студента.",
+      "full_description": "Прочитайте условия получения Карты москвича для студента на mos.ru.\nПроверьте, какие льготы на проезд она даёт.\nПодайте заявку по инструкции из источника.",
+      "reason": "Вы учитесь очно и указали, что переехали в Москву.",
+      "location": "mos.ru",
+      "position": 40,
+      "category": "TRANSPORT",
+      "estimated_duration": 20,
+      "recommended_days": 14,
+      "rules": [
+        {"field": "region_code", "operator": "EQ", "value": "77"},
+        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+      ],
+      "sources": ["mos_student_card"],
+      "documents": [
+        {"code": "passport"},
+        {"code": "student_id"},
+        {"code": "photo", "required": false}
+      ]
+    },
+    {
+      "code": "transport_spb",
+      "title": "Льготный проездной в Санкт-Петербурге",
+      "short_description": "Узнайте, как оформить проездной для учащихся.",
+      "full_description": "Прочитайте порядок оформления льготного проездного на сайте Администрации Санкт-Петербурга.\nУточните в вузе, как оформляется проездной для студентов вашего вуза.",
+      "reason": "Вы учитесь очно и указали, что переехали в Санкт-Петербург.",
+      "location": "Вуз или пункт оформления проездных",
+      "position": 40,
+      "category": "TRANSPORT",
+      "estimated_duration": 20,
+      "recommended_days": 14,
+      "rules": [
+        {"field": "region_code", "operator": "EQ", "value": "78"},
+        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+      ],
+      "sources": ["spb_student_travel"],
+      "documents": [
+        {"code": "passport"},
+        {"code": "student_id"}
+      ]
+    },
+    {
+      "code": "transport_kazan",
+      "title": "Студенческий проезд в Казани",
+      "short_description": "Проверьте льготы на проезд для студентов.",
+      "full_description": "Прочитайте раздел «Льготы» на транспортном сайте Казани.\nПроверьте, подходит ли вам студенческий тариф, и оформите транспортную карту.",
+      "reason": "Вы учитесь очно и указали, что переехали в Республику Татарстан.",
+      "location": "Пункт обслуживания транспортных карт",
+      "position": 40,
+      "category": "TRANSPORT",
+      "estimated_duration": 20,
+      "recommended_days": 14,
+      "rules": [
+        {"field": "region_code", "operator": "EQ", "value": "16"},
+        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+      ],
+      "sources": ["kazan_transport_privileges"],
+      "documents": [
+        {"code": "passport"},
+        {"code": "student_id"}
+      ]
+    },
+    {
+      "code": "transport_other_region",
+      "title": "Студенческий проезд в вашем регионе",
+      "short_description": "Узнайте в вузе о льготах на проезд.",
+      "full_description": "Спросите в деканате или студенческом совете, есть ли в регионе льготный проезд для студентов.\nУточните, где оформляется проездной и какие документы нужны.",
+      "reason": "Вы учитесь очно. Для вашего региона в сервисе пока нет официальных данных, поэтому шаг основан на демонстрационной памятке.",
+      "location": "Деканат или студенческий совет",
+      "position": 40,
+      "category": "TRANSPORT",
+      "estimated_duration": 15,
+      "recommended_days": 14,
+      "rules": [
+        {"field": "region_code", "operator": "NOT_IN", "value": ["77", "78", "16"]},
+        {"field": "education_type", "operator": "EQ", "value": "FULL_TIME"}
+      ],
+      "sources": ["demo_regional_transport"],
+      "documents": [
+        {"code": "student_id"}
+      ]
+    },
+    {
+      "code": "pushkin_card",
+      "title": "Пушкинская карта",
+      "short_description": "Проверьте, можете ли вы оформить Пушкинскую карту.",
+      "full_description": "Прочитайте условия программы «Пушкинская карта».\nЕсли вы подходите под условия, оформите карту через Госуслуги.",
+      "reason": "Вы указали возраст, который входит в возрастной диапазон программы «Пушкинская карта».",
+      "location": "Госуслуги",
+      "position": 50,
+      "category": "SOCIAL_SUPPORT",
+      "estimated_duration": 15,
+      "rules": [
+        {"field": "age", "operator": "GTE", "value": 14},
+        {"field": "age", "operator": "LTE", "value": 22}
+      ],
+      "sources": ["pushkin_card"]
+    },
+    {
+      "code": "university_support",
+      "title": "Меры поддержки в вузе",
+      "short_description": "Узнайте о стипендиях и поддержке студентов.",
+      "full_description": "Спросите в деканате о стипендиях и материальной поддержке, на которые вы можете претендовать.\nУзнайте, куда обращаться в трудной жизненной ситуации.",
+      "reason": "Этот шаг включён в маршрут для всех студентов после переезда.",
+      "location": "Деканат, профком или студенческий совет",
+      "position": 60,
+      "category": "SOCIAL_SUPPORT",
+      "estimated_duration": 20,
+      "is_required": false,
+      "sources": ["demo_university_support"],
+      "documents": [
+        {"code": "student_id"}
+      ]
+    }
+  ]
+}

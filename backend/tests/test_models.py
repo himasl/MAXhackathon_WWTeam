@@ -6,10 +6,12 @@ import app.models  # noqa: F401
 from app.core.database import Base
 
 
-def test_model_registry_contains_stage_one_tables() -> None:
+def test_model_registry_contains_all_tables() -> None:
     configure_mappers()
 
     assert set(Base.metadata.tables) == {
+        "documents",
+        "scenario_step_documents",
         "rules",
         "scenario_step_sources",
         "scenario_steps",
@@ -25,7 +27,7 @@ def test_model_registry_contains_stage_one_tables() -> None:
 def test_database_types_match_specification() -> None:
     tables = Base.metadata.tables
 
-    for table_name in set(tables) - {"scenario_step_sources"}:
+    for table_name in set(tables) - {"scenario_step_sources", "scenario_step_documents"}:
         assert isinstance(tables[table_name].c.id.type, Uuid)
 
     assert isinstance(tables["rules"].c.value.type, JSONB)

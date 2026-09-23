@@ -27,8 +27,11 @@ class RouteStepSummary(BaseModel):
     id: UUID
     code: str
     title: str
+    short_description: str
+    category: StepCategory
     position: int
     status: RouteStepStatus
+    is_required: bool
     deadline: datetime | None
 
 
@@ -37,19 +40,42 @@ class RouteResponse(BaseModel):
     status: RouteStatus
     scenario_code: str
     scenario_version: int
+    created_at: datetime
+    completed_at: datetime | None
     progress: RouteProgress
+    next_step_id: UUID | None
     steps: list[RouteStepSummary]
+
+
+class StepDocumentResponse(BaseModel):
+    code: str
+    title: str
+    description: str
+    required: bool
 
 
 class RouteStepDetailResponse(BaseModel):
     id: UUID
+    route_id: UUID
     code: str
     title: str
     short_description: str
     full_description: str
+    reason: str
+    location: str
     category: StepCategory
     estimated_duration: int | None
+    is_required: bool
     position: int
     status: RouteStepStatus
     deadline: datetime | None
+    deadline_origin: str | None
+    completed_at: datetime | None
+    documents: list[StepDocumentResponse]
     sources: list[SourceResponse]
+    next_step_id: UUID | None
+
+
+class ReminderResponse(BaseModel):
+    sent: bool
+    step_id: UUID | None

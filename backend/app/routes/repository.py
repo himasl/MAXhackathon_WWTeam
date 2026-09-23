@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, cast
 from uuid import UUID
 
@@ -5,7 +6,9 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
 
-from app.routes.models import RouteStatus, UserRoute, UserRouteStep
+from app.documents.models import ScenarioStepDocument
+from app.routes.models import RouteStatus, RouteStepStatus, UserRoute, UserRouteStep
+from app.scenarios.models import ScenarioStep
 
 
 class RouteRepository:
@@ -15,7 +18,10 @@ class RouteRepository:
     def _with_details(self) -> tuple[Any, ...]:
         return (
             joinedload(UserRoute.scenario),
-            selectinload(UserRoute.steps).joinedload(UserRouteStep.scenario_step),
+            selectinload(UserRoute.steps)
+            .joinedload(UserRouteStep.scenario_step)
+            .selectinload(ScenarioStep.documents)
+            .joinedload(ScenarioStepDocument.document),
         )
 
     async def archive_active(self, user_id: UUID) -> None:
@@ -30,11 +36,12 @@ class RouteRepository:
         await self.session.flush()
         return route
 
-    async def get(self, route_id: UUID, user_id: UUID) -> UserRoute | None:
+    async def get(self, route_id: UUID, user_id: UUID, refresh: bool = False) -> UserRoute | None:
         query = (
             select(UserRoute)
             .where(UserRoute.id == route_id, UserRoute.user_id == user_id)
             .options(*self._with_details())
+            .execution_options(populate_existing=refresh)
         )
         return cast(UserRoute | None, await self.session.scalar(query))
 
@@ -50,3 +57,23 @@ class RouteRepository:
             .limit(1)
         )
         return cast(UserRoute | None, await self.session.scalar(query))
+
+    async def list_due_for_reminder(self, due_before: datetime) -> list[UserRouteStep]:
+        query = (
+            select(UserRouteStep)
+            .join(UserRoute, UserRoute.id == UserRouteStep.route_id)
+            .where(
+                UserRoute.status == RouteStatus.ACTIVE,
+                UserRouteStep.status.in_([RouteStepStatus.TODO, RouteStepStatus.IN_PROGRESS]),
+                UserRouteStep.deadline.is_not(None),
+                UserRouteStep.deadline <= due_before,
+                UserRouteStep.reminded_at.is_(None),
+            )
+            .options(
+                joinedload(UserRouteStep.route).joinedload(UserRoute.user),
+                joinedload(UserRouteStep.scenario_step),
+            )
+            .order_by(UserRouteStep.deadline)
+            .limit(100)
+        )
+        return list(await self.session.scalars(query))

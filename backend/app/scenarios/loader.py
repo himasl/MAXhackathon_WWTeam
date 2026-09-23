@@ -15,3 +15,5 @@ class ScenarioLoader:
             raise ValueError(f"Scenario code {scenario.code!r} does not match file {code!r}")
         return scenario
 
+    def load_all(self) -> list[ScenarioDefinition]:
+        return [self.load(path.stem) for path in sorted(self.directory.glob("*.json"))]

@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from fastapi import FastAPI, Request
@@ -7,6 +8,8 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 
 from app.core.exceptions import ApplicationError
+
+logger = logging.getLogger(__name__)
 
 
 class ErrorDetail(BaseModel):
@@ -19,9 +22,11 @@ class ErrorResponse(BaseModel):
 
 
 ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
+    401: {"model": ErrorResponse},
     404: {"model": ErrorResponse},
     409: {"model": ErrorResponse},
     422: {"model": ErrorResponse},
+    503: {"model": ErrorResponse},
 }
 
 
@@ -48,7 +53,8 @@ async def http_error_handler(_: Request, error: Exception) -> JSONResponse:
     return error_response(error.status_code, code, str(error.detail))
 
 
-async def unhandled_error_handler(_: Request, __: Exception) -> JSONResponse:
+async def unhandled_error_handler(request: Request, error: Exception) -> JSONResponse:
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
     return error_response(500, "INTERNAL_ERROR", "Internal server error")
 
 

@@ -69,6 +69,7 @@ class UserRouteStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    reminded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     route: Mapped[UserRoute] = relationship(back_populates="steps")
     scenario_step: Mapped[ScenarioStep] = relationship(back_populates="route_steps")

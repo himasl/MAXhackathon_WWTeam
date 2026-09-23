@@ -31,7 +31,12 @@ class InvalidOperationError(ApplicationError):
         super().__init__("INVALID_OPERATION", message, 409)
 
 
-class DevelopmentAuthDisabledError(ApplicationError):
-    def __init__(self) -> None:
-        super().__init__("AUTH_UNAVAILABLE", "Development authentication is disabled", 503)
+class UnauthorizedError(ApplicationError):
+    def __init__(self, message: str = "Authentication required") -> None:
+        super().__init__("UNAUTHORIZED", message, 401)
+
+
+class AuthUnavailableError(ApplicationError):
+    def __init__(self, message: str) -> None:
+        super().__init__("AUTH_UNAVAILABLE", message, 503)
 

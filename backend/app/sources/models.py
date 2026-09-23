@@ -40,6 +40,7 @@ scenario_step_sources = Table(
 class Source(UUIDPrimaryKeyMixin, Base):
     __tablename__ = "sources"
 
+    code: Mapped[str | None] = mapped_column(String(100), unique=True)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     url: Mapped[str] = mapped_column(Text, nullable=False)
     organization: Mapped[str] = mapped_column(String(255), nullable=False)
