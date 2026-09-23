@@ -79,6 +79,16 @@ def test_expired_init_data_is_rejected() -> None:
         validate_init_data(make_init_data(auth_date=old), BOT_TOKEN, 3600)
 
 
+def test_link_token_is_not_an_access_token() -> None:
+    from app.auth.tokens import issue_link_token, verify_subject
+
+    token = issue_link_token(123, "key", 60, now=1000)
+
+    assert verify_subject(token, "key", now=1030).max_user_id == 123
+    with pytest.raises(TokenError, match="not an access token"):
+        verify_token(token, "key", now=1030)
+
+
 def test_token_round_trip_and_expiry() -> None:
     user_id = uuid4()
     token = issue_token(user_id, "key", 60, now=1000)

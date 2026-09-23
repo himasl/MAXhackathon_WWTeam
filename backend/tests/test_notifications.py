@@ -153,7 +153,7 @@ async def test_max_sender_falls_back_to_link_button() -> None:
         return httpx.Response(200, json={"message": {}})
 
     client = MAXClient("token", "https://max.test", transport=httpx.MockTransport(handler))
-    sender = MaxMessageSender(client, "https://app.test", "marshrut_bot", 99)
+    sender = MaxMessageSender(client, "https://app.test", "marshrut_bot", 99, "open_app")
     message = OutgoingMessage(text="Привет", button_text="Открыть", start_param="step_1")
 
     assert await sender.send(7, message)
@@ -162,7 +162,7 @@ async def test_max_sender_falls_back_to_link_button() -> None:
     types = [body["attachments"][0]["payload"]["buttons"][0][0]["type"] for body in requests]
     assert types == ["open_app", "link", "link"]
     assert requests[1]["attachments"][0]["payload"]["buttons"][0][0]["url"] == (
-        "https://max.ru/marshrut_bot?startapp=step_1"
+        "https://app.test/?start=step_1"
     )
     await client.close()
 
@@ -199,3 +199,37 @@ async def test_webhook_registration_error_is_redacted(
     assert secret_settings.max_webhook_secret not in caplog.text
     assert "***" in caplog.text
     await runtime.client.close()
+
+
+async def test_link_mode_sends_signed_login_link(client: AsyncClient) -> None:
+    from urllib.parse import parse_qs, urlsplit
+
+    from app.auth.tokens import issue_link_token
+
+    sent: list[dict[str, Any]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append(json.loads(request.content))
+        return httpx.Response(200, json={"message": {}})
+
+    max_client = MAXClient("t", "https://max.test", transport=httpx.MockTransport(handler))
+    sender = MaxMessageSender(
+        max_client,
+        "https://app.test/",
+        "marshrut_bot",
+        99,
+        "link",
+        link_token=lambda mid: issue_link_token(mid, settings.signing_key, 600),
+    )
+    message = OutgoingMessage(text="Hi", button_text="Open", start_param="step_9")
+
+    assert await sender.send(4242, message)
+
+    button = sent[0]["attachments"][0]["payload"]["buttons"][0][0]
+    assert button["type"] == "link"
+    query = parse_qs(urlsplit(button["url"]).query)
+    assert query["start"] == ["step_9"]
+    me = await client.get("/api/v1/me", headers={"Authorization": f"Bearer {query['t'][0]}"})
+    assert me.status_code == 200
+    assert me.json()["max_user_id"] == 4242
+    await max_client.close()

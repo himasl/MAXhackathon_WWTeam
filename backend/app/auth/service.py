@@ -1,11 +1,10 @@
 import hmac
-from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.max_init_data import InitDataError, validate_init_data
 from app.auth.schemas import AuthResponse
-from app.auth.tokens import TokenError, issue_token, verify_token
+from app.auth.tokens import TokenError, issue_token, verify_subject
 from app.core.config import settings
 from app.core.exceptions import AuthUnavailableError, UnauthorizedError
 from app.users.models import User
@@ -56,10 +55,14 @@ class AuthService:
         if not settings.signing_key:
             raise UnauthorizedError("Access token is invalid")
         try:
-            user_id: UUID = verify_token(token, settings.signing_key)
+            subject = verify_subject(token, settings.signing_key)
         except TokenError as error:
             raise UnauthorizedError("Access token is invalid") from error
-        user = await self.users.get(user_id)
+        if subject.max_user_id is not None:
+            # Signed link from the bot chat: the bot already knows who the user is.
+            return await self.get_or_create(subject.max_user_id)
+        assert subject.user_id is not None
+        user = await self.users.get(subject.user_id)
         if user is None:
             raise UnauthorizedError("Access token is invalid")
         return user

@@ -18,6 +18,10 @@ services:
         value: webhook
       - key: DEV_AUTH_ENABLED
         value: "false"
+      # link: bot buttons open PUBLIC_URL with a signed login (works without the Mini App
+      # URL registered on business.max.ru). Switch to open_app once it is registered.
+      - key: MAX_BUTTON_MODE
+        value: link
       - key: MAX_BOT_USERNAME
         value: t818_hakaton_max_bot
       - key: PUBLIC_URL

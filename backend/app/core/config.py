@@ -71,6 +71,10 @@ class Settings:
     max_bot_token: str = os.getenv("MAX_BOT_TOKEN", "")
     max_api_url: str = os.getenv("MAX_API_URL", "https://platform-api2.max.ru").rstrip("/")
     max_ca_bundle: str | None = os.getenv("MAX_CA_BUNDLE") or None
+    # open_app: buttons open the Mini App registered for the bot (needs its URL set on
+    # business.max.ru). link: buttons open PUBLIC_URL with a signed per-user login link.
+    max_button_mode: str = os.getenv("MAX_BUTTON_MODE", "link").lower()
+    link_token_ttl_seconds: int = int(os.getenv("LINK_TOKEN_TTL_SECONDS", "2592000"))
     max_bot_username: str = os.getenv("MAX_BOT_USERNAME", "").lstrip("@")
     bot_mode: str = os.getenv("BOT_MODE", "off").lower()
     webhook_secret: str = os.getenv("WEBHOOK_SECRET", "")

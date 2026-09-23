@@ -16,10 +16,37 @@ export class ApiError extends Error {
   }
 }
 
+const TOKEN_KEY = "marshrut.token";
 let accessToken: string | null = null;
 
-export function setAccessToken(token: string | null) {
+export function setAccessToken(token: string | null, remember = false) {
   accessToken = token;
+  if (!remember && token) return;
+  try {
+    if (token) window.localStorage.setItem(TOKEN_KEY, token);
+    else window.localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // Storage can be unavailable (private mode); the token then lives for this session.
+  }
+}
+
+export function restoreAccessToken(): string | null {
+  try {
+    accessToken = window.localStorage.getItem(TOKEN_KEY);
+  } catch {
+    accessToken = null;
+  }
+  return accessToken;
+}
+
+/** Take the signed login token from a bot link (?t=...) and clean the address bar. */
+export function consumeLinkToken(): string | null {
+  const url = new URL(window.location.href);
+  const token = url.searchParams.get("t");
+  if (!token) return null;
+  url.searchParams.delete("t");
+  window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+  return token;
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -73,7 +100,8 @@ export const api = {
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     if (error.status === 0) return "Нет соединения с сервером. Проверьте интернет.";
-    if (error.status === 401) return "Не удалось подтвердить вход. Откройте приложение из бота в MAX.";
+    if (error.status === 401)
+      return "Не удалось подтвердить вход. Откройте маршрут по кнопке из чата с ботом в MAX (команда /start).";
     if (error.status >= 500) return "Сервис временно недоступен. Попробуйте ещё раз.";
     return error.message;
   }

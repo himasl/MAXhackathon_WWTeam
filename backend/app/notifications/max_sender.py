@@ -1,6 +1,7 @@
 import logging
+from collections.abc import Callable
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import urlencode
 
 from app.integrations.max.client import MaxApiError, MAXClient
 from app.integrations.max.keyboards import keyboard, link_button, open_app_button
@@ -8,13 +9,16 @@ from app.notifications.service import OutgoingMessage
 
 logger = logging.getLogger(__name__)
 
+type LinkTokenFactory = Callable[[int], str | None]
+
 
 class MaxMessageSender:
-    """Delivers messages via the MAX Bot API with a button that opens the Mini App.
+    """Delivers messages via the MAX Bot API with a button that opens the app.
 
-    ``open_app`` is preferred. If MAX rejects it (for example the Mini App is not yet
-    attached to the bot), the message is resent with a plain link button so the user still
-    gets the notification.
+    ``button_mode="open_app"`` uses the Mini App registered for the bot. If MAX rejects the
+    button, the message is resent with a link button. ``button_mode="link"`` always sends a
+    link to the web app with a signed per-user token, so the user is signed in even when
+    the Mini App URL is not configured on the MAX platform.
     """
 
     def __init__(
@@ -23,37 +27,44 @@ class MaxMessageSender:
         mini_app_url: str,
         bot_username: str = "",
         bot_user_id: int | None = None,
+        button_mode: str = "link",
+        link_token: LinkTokenFactory | None = None,
     ) -> None:
         self.client = client
-        self.mini_app_url = mini_app_url
+        self.mini_app_url = mini_app_url.rstrip("/")
         self.bot_username = bot_username
         self.bot_user_id = bot_user_id
-        self._open_app_supported = bool(bot_username or bot_user_id)
+        self.link_token = link_token
+        self._open_app_supported = button_mode == "open_app" and bool(
+            bot_username or bot_user_id
+        )
 
-    def _deep_link(self, start_param: str | None) -> str:
-        if self.bot_username:
-            base = f"https://max.ru/{self.bot_username}"
-            return f"{base}?startapp={quote(start_param)}" if start_param else base
+    def app_link(self, max_user_id: int, start_param: str | None) -> str:
+        params: dict[str, str] = {}
+        token = self.link_token(max_user_id) if self.link_token else None
+        if token:
+            params["t"] = token
         if start_param:
-            return f"{self.mini_app_url}/#/start/{quote(start_param)}"
-        return self.mini_app_url
+            params["start"] = start_param
+        return f"{self.mini_app_url}/?{urlencode(params)}" if params else f"{self.mini_app_url}/"
 
-    def _attachments(self, message: OutgoingMessage, use_open_app: bool) -> list[dict[str, Any]]:
+    def _attachments(
+        self, max_user_id: int, message: OutgoingMessage, use_open_app: bool
+    ) -> list[dict[str, Any]]:
         rows: list[list[dict[str, Any]]] = []
         if message.button_text:
             if use_open_app:
-                rows.append(
-                    [
-                        open_app_button(
-                            message.button_text,
-                            self.bot_username or str(self.bot_user_id),
-                            self.bot_user_id,
-                            message.start_param,
-                        )
-                    ]
+                button = open_app_button(
+                    message.button_text,
+                    self.bot_username or str(self.bot_user_id),
+                    self.bot_user_id,
+                    message.start_param,
                 )
             else:
-                rows.append([link_button(message.button_text, self._deep_link(message.start_param))])
+                button = link_button(
+                    message.button_text, self.app_link(max_user_id, message.start_param)
+                )
+            rows.append([button])
         rows.extend([link_button(text, url)] for text, url in message.extra_links)
         return [keyboard(*rows)] if rows else []
 
@@ -61,7 +72,7 @@ class MaxMessageSender:
         await self.client.send_message(
             message.text,
             user_id=max_user_id,
-            attachments=self._attachments(message, open_app),
+            attachments=self._attachments(max_user_id, message, open_app),
         )
 
     async def send(self, max_user_id: int, message: OutgoingMessage) -> bool:

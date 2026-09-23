@@ -6,7 +6,14 @@ import { RoutePage } from "../pages/RoutePage";
 import { StepPage } from "../pages/StepPage";
 import { SupportPage } from "../pages/SupportPage";
 import { WelcomePage } from "../pages/WelcomePage";
-import { ApiError, api, errorMessage, setAccessToken } from "../shared/api/client";
+import {
+  ApiError,
+  api,
+  consumeLinkToken,
+  errorMessage,
+  restoreAccessToken,
+  setAccessToken,
+} from "../shared/api/client";
 import type { Profile, Route } from "../shared/api/types";
 import { maxBridge } from "../shared/max/maxBridge";
 import { ErrorState, Loading, Screen } from "../shared/ui";
@@ -35,10 +42,16 @@ export function App() {
     try {
       let startParam = maxBridge.getStartParam();
       const initData = maxBridge.getInitData();
+      const linkToken = consumeLinkToken();
       if (initData) {
         const auth = await api.loginWithMax(initData);
         setAccessToken(auth.access_token);
         startParam = auth.start_param ?? startParam;
+      } else if (linkToken) {
+        // Opened from a bot button: remember the signed login for later visits.
+        setAccessToken(linkToken, true);
+      } else {
+        restoreAccessToken();
       }
       const [currentRoute, currentProfile] = await Promise.all([
         orNull(api.getCurrentRoute()),

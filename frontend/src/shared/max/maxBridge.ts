@@ -41,8 +41,10 @@ function webApp(): MaxWebApp | undefined {
   return typeof window === "undefined" ? undefined : window.WebApp;
 }
 
-function startParamFromHash(): string | null {
-  // Browser fallback for deep links: https://app/#/start/<param>
+function startParamFromUrl(): string | null {
+  // Link buttons from the bot: https://app/?t=<token>&start=<param>
+  const fromQuery = new URLSearchParams(window.location.search).get("start");
+  if (fromQuery) return fromQuery;
   const match = window.location.hash.match(/^#\/start\/([^/?]+)/);
   return match ? decodeURIComponent(match[1]) : null;
 }
@@ -56,7 +58,7 @@ export const maxBridge: MaxBridge = {
     return webApp()?.platform ?? "browser";
   },
   getStartParam() {
-    return webApp()?.initDataUnsafe?.start_param || startParamFromHash();
+    return webApp()?.initDataUnsafe?.start_param || startParamFromUrl();
   },
   isInsideMax() {
     return this.getInitData() !== null;

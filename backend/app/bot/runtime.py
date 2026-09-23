@@ -6,6 +6,7 @@ import logging
 from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
+from app.auth.tokens import issue_link_token
 from app.bot.handler import BotHandler
 from app.core.config import Settings
 from app.core.database import async_session
@@ -65,8 +66,20 @@ class BotRuntime:
         except Exception as error:  # noqa: BLE001 - the API must start even if MAX is down
             logger.warning("MAX /me failed, continuing without bot identity: %s", error)
 
+        key = settings.signing_key
+
+        def link_token(max_user_id: int) -> str | None:
+            if not key:
+                return None
+            return issue_link_token(max_user_id, key, settings.link_token_ttl_seconds)
+
         self.sender = MaxMessageSender(
-            self.client, settings.mini_app_url, username, bot_user_id
+            self.client,
+            settings.mini_app_url,
+            username,
+            bot_user_id,
+            button_mode=settings.max_button_mode,
+            link_token=link_token,
         )
         self.notifications = NotificationService(self.sender)
         self.handler = BotHandler(self.notifications, async_session)
