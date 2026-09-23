@@ -22,9 +22,21 @@ export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?:
           </linearGradient>
         </defs>
         <rect width="320" height="170" fill="url(#sky)" />
-        <circle cx="258" cy="46" r={scene === "done" ? 30 : 24} fill="var(--art-sun)" />
+        <circle
+          className="art__sun"
+          cx="258"
+          cy="46"
+          r={scene === "done" ? 30 : 24}
+          fill="var(--art-sun)"
+        />
         {scene === "done" ? (
-          <g stroke="var(--art-sun)" strokeWidth="4" strokeLinecap="round" opacity="0.7">
+          <g
+            className="art__rays"
+            stroke="var(--art-sun)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            opacity="0.7"
+          >
             <line x1="258" y1="4" x2="258" y2="12" />
             <line x1="300" y1="46" x2="292" y2="46" />
             <line x1="288" y1="16" x2="282" y2="22" />
@@ -51,7 +63,7 @@ export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?:
           <rect x="13" y="28" width="9" height="14" rx="2" fill="var(--art-door)" />
           <rect x="4" y="22" width="7" height="6" rx="1" fill="var(--art-window)" />
           {scene === "done" ? (
-            <g>
+            <g className="art__flag">
               <line x1="30" y1="2" x2="30" y2="-18" stroke="var(--art-roof)" strokeWidth="2" />
               <path d="M30 -18 L44 -13 L30 -8 Z" fill="var(--art-flag)" />
             </g>

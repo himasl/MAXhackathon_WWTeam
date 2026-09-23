@@ -183,6 +183,7 @@ export function App() {
       <CompletionPage
         route={route}
         onShowRoute={goBack}
+        onNewRoute={() => navigate({ name: "onboarding" })}
         invite={<InviteButton botUrl={config.bot_url} universityCode={profile?.university_code ?? null} />}
       />
     );

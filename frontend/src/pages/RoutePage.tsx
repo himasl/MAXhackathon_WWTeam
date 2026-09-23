@@ -20,6 +20,12 @@ function headline(route: Route): { title: string; subtitle: string } {
   const { completed, total, percent } = route.progress;
   const left = total - completed;
   const tasks = `${left} ${plural(left, "дело", "дела", "дел")}`;
+  if (left === 0) {
+    return {
+      title: "Маршрут пройден",
+      subtitle: "Все дела выполнены. Если ситуация изменилась — постройте новый маршрут.",
+    };
+  }
   if (completed === 0) {
     return { title: "Начнём с главного", subtitle: `В маршруте ${tasks}. Идите по одному шагу — так проще.` };
   }
@@ -135,6 +141,9 @@ export function RoutePage({ route, onOpenStep, onEditProfile, invite }: Props) {
       ) : null}
 
       <div className="actions">
+        {route.status === "COMPLETED" ? (
+          <Button onClick={onEditProfile}>Построить новый маршрут</Button>
+        ) : null}
         {route.next_step_id ? (
           <Button variant="secondary" onClick={remind} loading={sending}>
             Напомнить о следующем шаге в MAX
@@ -142,9 +151,11 @@ export function RoutePage({ route, onOpenStep, onEditProfile, invite }: Props) {
         ) : null}
         {reminder ? <Notice tone={reminder.tone}>{reminder.text}</Notice> : null}
         {invite}
-        <Button variant="ghost" onClick={onEditProfile}>
-          Изменить ответы и пересобрать маршрут
-        </Button>
+        {route.status !== "COMPLETED" ? (
+          <Button variant="ghost" onClick={onEditProfile}>
+            Изменить ответы и пересобрать маршрут
+          </Button>
+        ) : null}
       </div>
     </Screen>
   );
