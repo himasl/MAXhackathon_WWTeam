@@ -996,6 +996,11 @@ components:
       - RELATIVES
       - OTHER
       title: HousingType
+    InstitutionKind:
+      type: string
+      enum:
+      - university
+      - college
     MaxAuthRequest:
       properties:
         init_data:
@@ -1523,12 +1528,23 @@ components:
         region_code:
           type: string
           title: Region Code
+        kind:
+          $ref: '#/components/schemas/InstitutionKind'
+        partner:
+          type: boolean
+          title: Partner
+        popular:
+          type: boolean
+          title: Popular
       type: object
       required:
       - code
       - title
       - short_title
       - region_code
+      - kind
+      - partner
+      - popular
       title: UniversityResponse
   securitySchemes:
     HTTPBearer:

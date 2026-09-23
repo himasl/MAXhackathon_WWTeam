@@ -34,6 +34,9 @@ export interface University {
   title: string;
   short_title: string;
   region_code: string;
+  kind: "university" | "college";
+  partner: boolean;
+  popular: boolean;
 }
 
 export interface AppConfig {

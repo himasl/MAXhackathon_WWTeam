@@ -8,11 +8,13 @@ Sources and documents are upserted by ``code``.
 import asyncio
 import logging
 from datetime import UTC, date, datetime, time
+from pathlib import Path
 
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import models as _models
+from app.core.config import settings
 from app.core.database import async_session
 from app.documents.models import Document, ScenarioStepDocument
 from app.scenarios.loader import ScenarioLoader
@@ -20,6 +22,7 @@ from app.scenarios.models import Rule, Scenario, ScenarioStep
 from app.scenarios.schemas import ScenarioDefinition
 from app.sources.models import Source
 from app.universities.models import University
+from app.universities.schemas import UniversityCatalog, UniversityDefinition
 
 logger = logging.getLogger(__name__)
 _MODELS_LOADED = _models
@@ -64,8 +67,10 @@ async def _upsert_documents(
     return result
 
 
-async def _upsert_universities(session: AsyncSession, definition: ScenarioDefinition) -> None:
-    for item in definition.universities:
+async def upsert_universities(
+    session: AsyncSession, items: list[UniversityDefinition]
+) -> None:
+    for position, item in enumerate(items):
         university = await session.scalar(select(University).where(University.code == item.code))
         if university is None:
             university = University(code=item.code)
@@ -73,11 +78,29 @@ async def _upsert_universities(session: AsyncSession, definition: ScenarioDefini
         university.title = item.title
         university.short_title = item.short_title
         university.region_code = item.region_code
+        university.kind = item.kind
+        university.partner = item.partner
+        university.popular = item.popular
+        university.sort_order = position
+    await session.flush()
+
+
+def load_universities(path: Path | None = None) -> list[UniversityDefinition]:
+    source = path or settings.universities_file
+    if not source.is_file():
+        logger.warning("Universities catalog %s not found", source)
+        return []
+    catalog = UniversityCatalog.model_validate_json(source.read_text(encoding="utf-8"))
+    codes = [item.code for item in catalog.institutions]
+    duplicates = sorted({code for code in codes if codes.count(code) > 1})
+    if duplicates:
+        raise ValueError(f"Duplicate university codes: {', '.join(duplicates)}")
+    return catalog.institutions
 
 
 async def sync_scenario(session: AsyncSession, definition: ScenarioDefinition) -> bool:
     """Create the scenario version if missing. Returns True when something was created."""
-    await _upsert_universities(session, definition)
+    await upsert_universities(session, definition.universities)
     sources = await _upsert_sources(session, definition)
     documents = await _upsert_documents(session, definition)
 
@@ -133,7 +156,12 @@ async def sync_scenario(session: AsyncSession, definition: ScenarioDefinition) -
     return True
 
 
-async def sync_all(session: AsyncSession, loader: ScenarioLoader | None = None) -> int:
+async def sync_all(
+    session: AsyncSession,
+    loader: ScenarioLoader | None = None,
+    universities_file: Path | None = None,
+) -> int:
+    await upsert_universities(session, load_universities(universities_file))
     created = 0
     for definition in (loader or ScenarioLoader()).load_all():
         if await sync_scenario(session, definition):

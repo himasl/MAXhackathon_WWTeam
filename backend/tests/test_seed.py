@@ -163,8 +163,16 @@ async def test_universities_and_config_are_public(client: AsyncClient) -> None:
     kazan = (await client.get("/api/v1/universities", params={"region_code": "16"})).json()
     config = await client.get("/api/v1/config")
 
-    assert {item["code"] for item in all_items} == {"kfu", "spbu", "hse"}
-    assert [item["code"] for item in kazan] == ["kfu"]
+    codes = {item["code"] for item in all_items}
+    assert {"kfu", "spbu", "hse", "fa", "msu", "itmo"} <= codes
+    assert len(all_items) >= 200
+    assert kazan[0]["code"] == "kfu"
+    assert {item["region_code"] for item in kazan} == {"16"}
+    moscow = (await client.get("/api/v1/universities", params={"region_code": "77"})).json()
+    popular = [item["code"] for item in moscow if item["popular"]]
+    assert "fa" in popular
+    assert [item["code"] for item in moscow if item["partner"]] == ["hse"]
+    assert {item["kind"] for item in moscow} == {"university", "college"}
     assert config.status_code == 200
     assert set(config.json()) == {"bot_username", "bot_url"}
 

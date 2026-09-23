@@ -1,0 +1,1931 @@
+{
+  "_comment": "Справочник вузов и колледжей для анкеты. Собран командой по открытым источникам; partner=true — вуз-партнёр пилота, для него в сценарии есть официальные шаги (правило university_code). Остальные записи используются для выбора и статистики; новые добавляются в этот файл без изменения кода. popular=true — «Часто выбирают» в анкете, в порядке показа.",
+  "institutions": [
+    {
+      "code": "bsau",
+      "short_title": "Башкирский ГАУ",
+      "title": "Башкирский государственный аграрный университет",
+      "region_code": "02",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "bashgmu",
+      "short_title": "БГМУ",
+      "title": "Башкирский государственный медицинский университет",
+      "region_code": "02",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "bspu",
+      "short_title": "БГПУ им. Акмуллы",
+      "title": "Башкирский государственный педагогический университет имени М. Акмуллы",
+      "region_code": "02",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rusoil",
+      "short_title": "УГНТУ",
+      "title": "Уфимский государственный нефтяной технический университет",
+      "region_code": "02",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "uust",
+      "short_title": "УУНиТ",
+      "title": "Уфимский университет науки и технологий",
+      "region_code": "02",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mrsu",
+      "short_title": "МГУ им. Огарёва",
+      "title": "Национальный исследовательский Мордовский государственный университет имени Н.П. Огарёва",
+      "region_code": "13",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "svfu",
+      "short_title": "СВФУ",
+      "title": "Северо-Восточный федеральный университет имени М.К. Аммосова",
+      "region_code": "14",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kfu",
+      "short_title": "КФУ",
+      "title": "Казанский (Приволжский) федеральный университет",
+      "region_code": "16",
+      "kind": "university",
+      "partner": true,
+      "popular": true
+    },
+    {
+      "code": "kai",
+      "short_title": "КНИТУ-КАИ",
+      "title": "Казанский национальный исследовательский технический университет имени А.Н. Туполева — КАИ",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "knitu",
+      "short_title": "КНИТУ (КХТИ)",
+      "title": "Казанский национальный исследовательский технологический университет",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "kazangmu",
+      "short_title": "Казанский ГМУ",
+      "title": "Казанский государственный медицинский университет",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "kazgau",
+      "short_title": "Казанский ГАУ",
+      "title": "Казанский государственный аграрный университет",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kgasu",
+      "short_title": "КГАСУ",
+      "title": "Казанский государственный архитектурно-строительный университет",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kgeu",
+      "short_title": "КГЭУ",
+      "title": "Казанский государственный энергетический университет",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sportacadem",
+      "short_title": "Поволжский ГУФКСиТ",
+      "title": "Поволжский государственный университет физической культуры, спорта и туризма",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "innopolis",
+      "short_title": "Университет Иннополис",
+      "title": "Университет Иннополис",
+      "region_code": "16",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "udsu",
+      "short_title": "УдГУ",
+      "title": "Удмуртский государственный университет",
+      "region_code": "18",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "chuvsu",
+      "short_title": "ЧГУ им. Ульянова",
+      "title": "Чувашский государственный университет имени И.Н. Ульянова",
+      "region_code": "21",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "altstu",
+      "short_title": "АлтГТУ",
+      "title": "Алтайский государственный технический университет имени И.И. Ползунова",
+      "region_code": "22",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "asu",
+      "short_title": "АлтГУ",
+      "title": "Алтайский государственный университет",
+      "region_code": "22",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kubsau",
+      "short_title": "КубГАУ",
+      "title": "Кубанский государственный аграрный университет имени И.Т. Трубилина",
+      "region_code": "23",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ksma",
+      "short_title": "КубГМУ",
+      "title": "Кубанский государственный медицинский университет",
+      "region_code": "23",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kubstu",
+      "short_title": "КубГТУ",
+      "title": "Кубанский государственный технологический университет",
+      "region_code": "23",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kubsu",
+      "short_title": "КубГУ",
+      "title": "Кубанский государственный университет",
+      "region_code": "23",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "krasgmu",
+      "short_title": "КрасГМУ",
+      "title": "Красноярский государственный медицинский университет имени проф. В.Ф. Войно-Ясенецкого",
+      "region_code": "24",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sibsau",
+      "short_title": "СибГУ им. Решетнёва",
+      "title": "Сибирский государственный университет науки и технологий имени академика М.Ф. Решетнёва",
+      "region_code": "24",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sfu",
+      "short_title": "СФУ",
+      "title": "Сибирский федеральный университет",
+      "region_code": "24",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vvsu",
+      "short_title": "ВВГУ",
+      "title": "Владивостокский государственный университет",
+      "region_code": "25",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "dvfu",
+      "short_title": "ДВФУ",
+      "title": "Дальневосточный федеральный университет",
+      "region_code": "25",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ncfu",
+      "short_title": "СКФУ",
+      "title": "Северо-Кавказский федеральный университет",
+      "region_code": "26",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "narfu",
+      "short_title": "САФУ",
+      "title": "Северный (Арктический) федеральный университет имени М.В. Ломоносова",
+      "region_code": "29",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "bsu",
+      "short_title": "НИУ «БелГУ»",
+      "title": "Белгородский государственный национальный исследовательский университет",
+      "region_code": "31",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vstu_volgograd",
+      "short_title": "ВолгГТУ",
+      "title": "Волгоградский государственный технический университет",
+      "region_code": "34",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "volsu",
+      "short_title": "ВолГУ",
+      "title": "Волгоградский государственный университет",
+      "region_code": "34",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vstu",
+      "short_title": "ВГТУ",
+      "title": "Воронежский государственный технический университет",
+      "region_code": "36",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vsu",
+      "short_title": "ВГУ",
+      "title": "Воронежский государственный университет",
+      "region_code": "36",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "isu",
+      "short_title": "ИГУ",
+      "title": "Иркутский государственный университет",
+      "region_code": "38",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "istu",
+      "short_title": "ИРНИТУ",
+      "title": "Иркутский национальный исследовательский технический университет",
+      "region_code": "38",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kantiana",
+      "short_title": "БФУ им. Канта",
+      "title": "Балтийский федеральный университет имени Иммануила Канта",
+      "region_code": "39",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kemsu",
+      "short_title": "КемГУ",
+      "title": "Кемеровский государственный университет",
+      "region_code": "42",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kuzstu",
+      "short_title": "КузГТУ",
+      "title": "Кузбасский государственный технический университет имени Т.Ф. Горбачёва",
+      "region_code": "42",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "dubna",
+      "short_title": "Университет «Дубна»",
+      "title": "Государственный университет «Дубна»",
+      "region_code": "50",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gup",
+      "short_title": "Государственный университет просвещения",
+      "title": "Государственный университет просвещения, Мытищи",
+      "region_code": "50",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgik",
+      "short_title": "МГИК",
+      "title": "Московский государственный институт культуры, Химки",
+      "region_code": "50",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mipt",
+      "short_title": "МФТИ",
+      "title": "Московский физико-технический институт (национальный исследовательский университет), Долгопрудный",
+      "region_code": "50",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "unitech",
+      "short_title": "Технологический университет им. Леонова",
+      "title": "Технологический университет имени дважды Героя Советского Союза, лётчика-космонавта А.А. Леонова, Королёв",
+      "region_code": "50",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "unn",
+      "short_title": "ННГУ им. Лобачевского",
+      "title": "Национальный исследовательский Нижегородский государственный университет имени Н.И. Лобачевского",
+      "region_code": "52",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nngasu",
+      "short_title": "ННГАСУ",
+      "title": "Нижегородский государственный архитектурно-строительный университет",
+      "region_code": "52",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mininuniver",
+      "short_title": "Мининский университет",
+      "title": "Нижегородский государственный педагогический университет имени Козьмы Минина",
+      "region_code": "52",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nntu",
+      "short_title": "НГТУ им. Алексеева",
+      "title": "Нижегородский государственный технический университет имени Р.Е. Алексеева",
+      "region_code": "52",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "pimunn",
+      "short_title": "ПИМУ",
+      "title": "Приволжский исследовательский медицинский университет",
+      "region_code": "52",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nsau",
+      "short_title": "НГАУ",
+      "title": "Новосибирский государственный аграрный университет",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ngmu",
+      "short_title": "НГМУ",
+      "title": "Новосибирский государственный медицинский университет",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nspu",
+      "short_title": "НГПУ",
+      "title": "Новосибирский государственный педагогический университет",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nstu",
+      "short_title": "НГТУ НЭТИ",
+      "title": "Новосибирский государственный технический университет",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nsuem",
+      "short_title": "НГУЭУ",
+      "title": "Новосибирский государственный университет экономики и управления",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "nsu",
+      "short_title": "НГУ",
+      "title": "Новосибирский национальный исследовательский государственный университет",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "stu",
+      "short_title": "СГУПС",
+      "title": "Сибирский государственный университет путей сообщения",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sibsutis",
+      "short_title": "СибГУТИ",
+      "title": "Сибирский государственный университет телекоммуникаций и информатики",
+      "region_code": "54",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "omgtu",
+      "short_title": "ОмГТУ",
+      "title": "Омский государственный технический университет",
+      "region_code": "55",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "omsu",
+      "short_title": "ОмГУ",
+      "title": "Омский государственный университет имени Ф.М. Достоевского",
+      "region_code": "55",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "osu",
+      "short_title": "ОГУ",
+      "title": "Оренбургский государственный университет",
+      "region_code": "56",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "psu",
+      "short_title": "ПГНИУ",
+      "title": "Пермский государственный национальный исследовательский университет",
+      "region_code": "59",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "pstu",
+      "short_title": "ПНИПУ",
+      "title": "Пермский национальный исследовательский политехнический университет",
+      "region_code": "59",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "donstu",
+      "short_title": "ДГТУ",
+      "title": "Донской государственный технический университет",
+      "region_code": "61",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rostgmu",
+      "short_title": "РостГМУ",
+      "title": "Ростовский государственный медицинский университет",
+      "region_code": "61",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rgups",
+      "short_title": "РГУПС",
+      "title": "Ростовский государственный университет путей сообщения",
+      "region_code": "61",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rsue",
+      "short_title": "РГЭУ (РИНХ)",
+      "title": "Ростовский государственный экономический университет (РИНХ)",
+      "region_code": "61",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sfedu",
+      "short_title": "ЮФУ",
+      "title": "Южный федеральный университет",
+      "region_code": "61",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "psuti",
+      "short_title": "ПГУТИ",
+      "title": "Поволжский государственный университет телекоммуникаций и информатики",
+      "region_code": "63",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "samsmu",
+      "short_title": "СамГМУ",
+      "title": "Самарский государственный медицинский университет",
+      "region_code": "63",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "samgtu",
+      "short_title": "СамГТУ",
+      "title": "Самарский государственный технический университет",
+      "region_code": "63",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ssau",
+      "short_title": "Самарский университет",
+      "title": "Самарский национальный исследовательский университет имени академика С.П. Королёва",
+      "region_code": "63",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sgu",
+      "short_title": "СГУ им. Чернышевского",
+      "title": "Саратовский национальный исследовательский государственный университет имени Н.Г. Чернышевского",
+      "region_code": "64",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ursmu",
+      "short_title": "УГГУ",
+      "title": "Уральский государственный горный университет",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "usfeu",
+      "short_title": "УГЛТУ",
+      "title": "Уральский государственный лесотехнический университет",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "usmu",
+      "short_title": "УГМУ",
+      "title": "Уральский государственный медицинский университет",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "uspu",
+      "short_title": "УрГПУ",
+      "title": "Уральский государственный педагогический университет",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "usurt",
+      "short_title": "УрГУПС",
+      "title": "Уральский государственный университет путей сообщения",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "usue",
+      "short_title": "УрГЭУ",
+      "title": "Уральский государственный экономический университет",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "usla",
+      "short_title": "УрГЮУ",
+      "title": "Уральский государственный юридический университет имени В.Ф. Яковлева",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "urfu",
+      "short_title": "УрФУ",
+      "title": "Уральский федеральный университет имени первого Президента России Б.Н. Ельцина",
+      "region_code": "66",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tsu",
+      "short_title": "ТГУ",
+      "title": "Национальный исследовательский Томский государственный университет",
+      "region_code": "70",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tpu",
+      "short_title": "ТПУ",
+      "title": "Национальный исследовательский Томский политехнический университет",
+      "region_code": "70",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ssmu",
+      "short_title": "СибГМУ",
+      "title": "Сибирский государственный медицинский университет",
+      "region_code": "70",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tusur",
+      "short_title": "ТУСУР",
+      "title": "Томский государственный университет систем управления и радиоэлектроники",
+      "region_code": "70",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tsu_tula",
+      "short_title": "ТулГУ",
+      "title": "Тульский государственный университет",
+      "region_code": "71",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "utmn",
+      "short_title": "ТюмГУ",
+      "title": "Тюменский государственный университет",
+      "region_code": "72",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tiu",
+      "short_title": "ТИУ",
+      "title": "Тюменский индустриальный университет",
+      "region_code": "72",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ulstu",
+      "short_title": "УлГТУ",
+      "title": "Ульяновский государственный технический университет",
+      "region_code": "73",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ulsu",
+      "short_title": "УлГУ",
+      "title": "Ульяновский государственный университет",
+      "region_code": "73",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "csu",
+      "short_title": "ЧелГУ",
+      "title": "Челябинский государственный университет",
+      "region_code": "74",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "cspu",
+      "short_title": "ЮУрГГПУ",
+      "title": "Южно-Уральский государственный гуманитарно-педагогический университет",
+      "region_code": "74",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "susmu",
+      "short_title": "ЮУГМУ",
+      "title": "Южно-Уральский государственный медицинский университет",
+      "region_code": "74",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "susu",
+      "short_title": "ЮУрГУ",
+      "title": "Южно-Уральский государственный университет (национальный исследовательский университет)",
+      "region_code": "74",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "uniyar",
+      "short_title": "ЯрГУ им. Демидова",
+      "title": "Ярославский государственный университет имени П.Г. Демидова",
+      "region_code": "76",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "msu",
+      "short_title": "МГУ",
+      "title": "Московский государственный университет имени М.В. Ломоносова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "hse",
+      "short_title": "НИУ ВШЭ",
+      "title": "Национальный исследовательский университет «Высшая школа экономики»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": true,
+      "popular": true
+    },
+    {
+      "code": "bmstu",
+      "short_title": "МГТУ им. Баумана",
+      "title": "Московский государственный технический университет имени Н.Э. Баумана",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "fa",
+      "short_title": "Финансовый университет",
+      "title": "Финансовый университет при Правительстве Российской Федерации",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "mgimo",
+      "short_title": "МГИМО",
+      "title": "Московский государственный институт международных отношений МИД России",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "reu",
+      "short_title": "РЭУ им. Плеханова",
+      "title": "Российский экономический университет имени Г.В. Плеханова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "ranepa",
+      "short_title": "РАНХиГС",
+      "title": "Российская академия народного хозяйства и государственной службы при Президенте РФ",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "rudn",
+      "short_title": "РУДН",
+      "title": "Российский университет дружбы народов имени Патриса Лумумбы",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "mephi",
+      "short_title": "НИЯУ МИФИ",
+      "title": "Национальный исследовательский ядерный университет «МИФИ»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "sechenov",
+      "short_title": "Сеченовский Университет",
+      "title": "Первый Московский государственный медицинский университет имени И.М. Сеченова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "mai",
+      "short_title": "МАИ",
+      "title": "Московский авиационный институт (национальный исследовательский университет)",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "mirea",
+      "short_title": "РТУ МИРЭА",
+      "title": "МИРЭА — Российский технологический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "vavt",
+      "short_title": "ВАВТ",
+      "title": "Всероссийская академия внешней торговли Минэкономразвития России",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vgik",
+      "short_title": "ВГИК",
+      "title": "Всероссийский государственный институт кинематографии имени С.А. Герасимова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vgu_just",
+      "short_title": "ВГУЮ",
+      "title": "Всероссийский государственный университет юстиции (РПА Минюста России)",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gaugn",
+      "short_title": "ГАУГН",
+      "title": "Государственный академический университет гуманитарных наук",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "guu",
+      "short_title": "ГУУ",
+      "title": "Государственный университет управления",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "dipacademy",
+      "short_title": "Дипакадемия",
+      "title": "Дипломатическая академия МИД России",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "litinstitut",
+      "short_title": "Литинститут",
+      "title": "Литературный институт имени А.М. Горького",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgavm",
+      "short_title": "МВА им. Скрябина",
+      "title": "Московская государственная академия ветеринарной медицины и биотехнологии — МВА имени К.И. Скрябина",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mosconsv",
+      "short_title": "Московская консерватория",
+      "title": "Московская государственная консерватория имени П.И. Чайковского",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "madi",
+      "short_title": "МАДИ",
+      "title": "Московский автомобильно-дорожный государственный технический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "marhi",
+      "short_title": "МАРХИ",
+      "title": "Московский архитектурный институт (государственная академия)",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgpu",
+      "short_title": "МГПУ",
+      "title": "Московский городской педагогический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "surikov",
+      "short_title": "МГАХИ им. Сурикова",
+      "title": "Московский государственный академический художественный институт имени В.И. Сурикова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "linguanet",
+      "short_title": "МГЛУ",
+      "title": "Московский государственный лингвистический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgppu",
+      "short_title": "МГППУ",
+      "title": "Московский государственный психолого-педагогический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mstuca",
+      "short_title": "МГТУ ГА",
+      "title": "Московский государственный технический университет гражданской авиации",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "stankin",
+      "short_title": "МГТУ «СТАНКИН»",
+      "title": "Московский государственный технологический университет «СТАНКИН»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "miigaik",
+      "short_title": "МИИГАиК",
+      "title": "Московский государственный университет геодезии и картографии",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgutu",
+      "short_title": "МГУТУ им. Разумовского",
+      "title": "Московский государственный университет технологий и управления имени К.Г. Разумовского (ПКУ)",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "msal",
+      "short_title": "МГЮА",
+      "title": "Московский государственный юридический университет имени О.Е. Кутафина",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mpgu",
+      "short_title": "МПГУ",
+      "title": "Московский педагогический государственный университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mospolytech",
+      "short_title": "Московский Политех",
+      "title": "Московский политехнический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mtuci",
+      "short_title": "МТУСИ",
+      "title": "Московский технический университет связи и информатики",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgsu",
+      "short_title": "НИУ МГСУ",
+      "title": "Национальный исследовательский Московский государственный строительный университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "misis",
+      "short_title": "НИТУ МИСИС",
+      "title": "Национальный исследовательский технологический университет «МИСИС»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "miet",
+      "short_title": "МИЭТ",
+      "title": "Национальный исследовательский университет «МИЭТ»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mpei",
+      "short_title": "НИУ «МЭИ»",
+      "title": "Национальный исследовательский университет «МЭИ»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gnesin",
+      "short_title": "РАМ им. Гнесиных",
+      "title": "Российская академия музыки имени Гнесиных",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rosbiotech",
+      "short_title": "РОСБИОТЕХ",
+      "title": "Российский биотехнологический университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "timacad",
+      "short_title": "Тимирязевская академия",
+      "title": "Российский государственный аграрный университет — МСХА имени К.А. Тимирязева",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgri",
+      "short_title": "МГРИ",
+      "title": "Российский государственный геологоразведочный университет имени Серго Орджоникидзе",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rsuh",
+      "short_title": "РГГУ",
+      "title": "Российский государственный гуманитарный университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rgsu",
+      "short_title": "РГСУ",
+      "title": "Российский государственный социальный университет",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kosygin",
+      "short_title": "РГУ им. Косыгина",
+      "title": "Российский государственный университет имени А.Н. Косыгина",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gubkin",
+      "short_title": "Губкинский университет",
+      "title": "Российский государственный университет нефти и газа имени И.М. Губкина",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rgup",
+      "short_title": "РГУП",
+      "title": "Российский государственный университет правосудия",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rguts",
+      "short_title": "РГУТИС",
+      "title": "Российский государственный университет туризма и сервиса",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "stroganov",
+      "short_title": "Строгановка",
+      "title": "Российский государственный художественно-промышленный университет имени С.Г. Строганова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gitis",
+      "short_title": "ГИТИС",
+      "title": "Российский институт театрального искусства — ГИТИС",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rnimu",
+      "short_title": "Пироговский Университет",
+      "title": "Российский национальный исследовательский медицинский университет имени Н.И. Пирогова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rosunimed",
+      "short_title": "Российский университет медицины",
+      "title": "Российский университет медицины (бывший МГМСУ имени А.И. Евдокимова)",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gtsolifk",
+      "short_title": "РУС «ГЦОЛИФК»",
+      "title": "Российский университет спорта «ГЦОЛИФК»",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rut",
+      "short_title": "РУТ (МИИТ)",
+      "title": "Российский университет транспорта",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "muctr",
+      "short_title": "РХТУ им. Менделеева",
+      "title": "Российский химико-технологический университет имени Д.И. Менделеева",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "shchukin",
+      "short_title": "Щукинский институт",
+      "title": "Театральный институт имени Бориса Щукина",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mhat",
+      "short_title": "Школа-студия МХАТ",
+      "title": "Школа-студия (институт) имени Вл.И. Немировича-Данченко при МХТ имени А.П. Чехова",
+      "region_code": "77",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kas7",
+      "short_title": "Колледж архитектуры и строительства № 7",
+      "title": "Колледж архитектуры и строительства № 7",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kadr26",
+      "short_title": "КАДР № 26",
+      "title": "Колледж архитектуры, дизайна и реинжиниринга № 26",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "fa_kip",
+      "short_title": "КИП Финуниверситета",
+      "title": "Колледж информатики и программирования Финансового университета",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kmb4",
+      "short_title": "Колледж малого бизнеса № 4",
+      "title": "Колледж малого бизнеса № 4",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kp11",
+      "short_title": "Колледж предпринимательства № 11",
+      "title": "Колледж предпринимательства № 11",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mirea_kpt",
+      "short_title": "Колледж РТУ МИРЭА",
+      "title": "Колледж приборостроения и информационных технологий РТУ МИРЭА",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ks54",
+      "short_title": "Колледж связи № 54",
+      "title": "Колледж связи № 54 имени П.М. Вострухина",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kst_pankov",
+      "short_title": "Колледж им. Панькова",
+      "title": "Колледж современных технологий имени Героя Советского Союза М.Ф. Панькова",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mk1_msk",
+      "short_title": "Медицинский колледж № 1",
+      "title": "Медицинский колледж № 1 Департамента здравоохранения Москвы",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mk2_msk",
+      "short_title": "Медицинский колледж № 2",
+      "title": "Медицинский колледж № 2 Департамента здравоохранения Москвы",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mgkeit",
+      "short_title": "МГКЭИТ",
+      "title": "Московский государственный колледж электромеханики и информационных технологий",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mkbt",
+      "short_title": "МКБТ",
+      "title": "Московский колледж бизнес-технологий",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tsaritsyno",
+      "short_title": "Колледж «Царицыно»",
+      "title": "Московский колледж управления, гостиничного бизнеса и информационных технологий «Царицыно»",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "talalikhin",
+      "short_title": "Комплекс им. Талалихина",
+      "title": "Московский образовательный комплекс имени Виктора Талалихина",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "pmok",
+      "short_title": "ПМОК",
+      "title": "Первый Московский образовательный комплекс",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "godovikov",
+      "short_title": "Колледж им. Годовикова",
+      "title": "Политехнический колледж имени Н.Н. Годовикова",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tk21",
+      "short_title": "Технологический колледж № 21",
+      "title": "Технологический колледж № 21",
+      "region_code": "77",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbu",
+      "short_title": "СПбГУ",
+      "title": "Санкт-Петербургский государственный университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": true,
+      "popular": true
+    },
+    {
+      "code": "itmo",
+      "short_title": "ИТМО",
+      "title": "Национальный исследовательский университет ИТМО",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "spbpu",
+      "short_title": "Политех Петра Великого",
+      "title": "Санкт-Петербургский политехнический университет Петра Великого",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "leti",
+      "short_title": "ЛЭТИ",
+      "title": "Санкт-Петербургский государственный электротехнический университет «ЛЭТИ» имени В.И. Ульянова (Ленина)",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "unecon",
+      "short_title": "СПбГЭУ",
+      "title": "Санкт-Петербургский государственный экономический университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "spmi",
+      "short_title": "Горный университет",
+      "title": "Санкт-Петербургский горный университет императрицы Екатерины II",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "herzen",
+      "short_title": "РГПУ им. Герцена",
+      "title": "Российский государственный педагогический университет имени А.И. Герцена",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "pavlov",
+      "short_title": "ПСПбГМУ им. Павлова",
+      "title": "Первый Санкт-Петербургский государственный медицинский университет имени академика И.П. Павлова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": true
+    },
+    {
+      "code": "vaganova",
+      "short_title": "Академия Вагановой",
+      "title": "Академия Русского балета имени А.Я. Вагановой",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "voenmeh",
+      "short_title": "ВОЕНМЕХ",
+      "title": "Балтийский государственный технический университет «ВОЕНМЕХ» имени Д.Ф. Устинова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "vmeda",
+      "short_title": "ВМедА им. Кирова",
+      "title": "Военно-медицинская академия имени С.М. Кирова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gumrf",
+      "short_title": "ГУМРФ им. Макарова",
+      "title": "Государственный университет морского и речного флота имени адмирала С.О. Макарова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "lgu",
+      "short_title": "ЛГУ им. Пушкина",
+      "title": "Ленинградский государственный университет имени А.С. Пушкина",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "lesgaft",
+      "short_title": "НГУ им. Лесгафта",
+      "title": "Национальный государственный университет физической культуры, спорта и здоровья имени П.Ф. Лесгафта",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "pgups",
+      "short_title": "ПГУПС",
+      "title": "Петербургский государственный университет путей сообщения Императора Александра I",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rshu",
+      "short_title": "РГГМУ",
+      "title": "Российский государственный гидрометеорологический университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "rgisi",
+      "short_title": "РГИСИ",
+      "title": "Российский государственный институт сценических искусств",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "repin",
+      "short_title": "Академия художеств им. Репина",
+      "title": "Санкт-Петербургская академия художеств имени Ильи Репина",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbconsv",
+      "short_title": "Петербургская консерватория",
+      "title": "Санкт-Петербургская государственная консерватория имени Н.А. Римского-Корсакова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "stieglitz",
+      "short_title": "Муха (СПГХПА)",
+      "title": "Санкт-Петербургская государственная художественно-промышленная академия имени А.Л. Штиглица",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbgau",
+      "short_title": "СПбГАУ",
+      "title": "Санкт-Петербургский государственный аграрный университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbgasu",
+      "short_title": "СПбГАСУ",
+      "title": "Санкт-Петербургский государственный архитектурно-строительный университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbgik",
+      "short_title": "СПбГИК",
+      "title": "Санкт-Петербургский государственный институт культуры",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbftu",
+      "short_title": "СПбГЛТУ",
+      "title": "Санкт-Петербургский государственный лесотехнический университет имени С.М. Кирова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "smtu",
+      "short_title": "Корабелка (СПбГМТУ)",
+      "title": "Санкт-Петербургский государственный морской технический университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "gpmu",
+      "short_title": "СПбГПМУ",
+      "title": "Санкт-Петербургский государственный педиатрический медицинский университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbti",
+      "short_title": "Техноложка (СПбГТИ)",
+      "title": "Санкт-Петербургский государственный технологический институт (технический университет)",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "guap",
+      "short_title": "ГУАП",
+      "title": "Санкт-Петербургский государственный университет аэрокосмического приборостроения",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbguvm",
+      "short_title": "СПбГУВМ",
+      "title": "Санкт-Петербургский государственный университет ветеринарной медицины",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spbguga",
+      "short_title": "СПбГУ ГА",
+      "title": "Санкт-Петербургский государственный университет гражданской авиации имени Главного маршала авиации А.А. Новикова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sutd",
+      "short_title": "СПбГУПТД",
+      "title": "Санкт-Петербургский государственный университет промышленных технологий и дизайна",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sut",
+      "short_title": "СПбГУТ",
+      "title": "Санкт-Петербургский государственный университет телекоммуникаций имени проф. М.А. Бонч-Бруевича",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "spcpu",
+      "short_title": "СПХФУ",
+      "title": "Санкт-Петербургский государственный химико-фармацевтический университет",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "szgmu",
+      "short_title": "СЗГМУ им. Мечникова",
+      "title": "Северо-Западный государственный медицинский университет имени И.И. Мечникова",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "sziu",
+      "short_title": "СЗИУ РАНХиГС",
+      "title": "Северо-Западный институт управления РАНХиГС",
+      "region_code": "78",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "att_spb",
+      "short_title": "Академия транспортных технологий",
+      "title": "Академия транспортных технологий (Санкт-Петербург)",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kit_spb",
+      "short_title": "Колледж информационных технологий",
+      "title": "Колледж информационных технологий (Санкт-Петербург)",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "ktgs",
+      "short_title": "Колледж туризма",
+      "title": "Колледж туризма и гостиничного сервиса",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "mk1_spb",
+      "short_title": "Медицинский колледж № 1 (СПб)",
+      "title": "Медицинский колледж № 1 (Санкт-Петербург)",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "pkgh",
+      "short_title": "ПКГХ",
+      "title": "Политехнический колледж городского хозяйства",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "kt_sut",
+      "short_title": "Колледж телекоммуникаций СПбГУТ",
+      "title": "Санкт-Петербургский колледж телекоммуникаций имени Э.Т. Кренкеля СПбГУТ",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "tkuk",
+      "short_title": "ТКУиК",
+      "title": "Санкт-Петербургский технический колледж управления и коммерции",
+      "region_code": "78",
+      "kind": "college",
+      "partner": false,
+      "popular": false
+    },
+    {
+      "code": "cfuv",
+      "short_title": "КФУ им. Вернадского",
+      "title": "Крымский федеральный университет имени В.И. Вернадского",
+      "region_code": "91",
+      "kind": "university",
+      "partner": false,
+      "popular": false
+    }
+  ]
+}

@@ -11,26 +11,6 @@
       "value": "RU"
     }
   ],
-  "universities": [
-    {
-      "code": "kfu",
-      "title": "Казанский (Приволжский) федеральный университет",
-      "short_title": "КФУ",
-      "region_code": "16"
-    },
-    {
-      "code": "spbu",
-      "title": "Санкт-Петербургский государственный университет",
-      "short_title": "СПбГУ",
-      "region_code": "78"
-    },
-    {
-      "code": "hse",
-      "title": "НИУ «Высшая школа экономики» (Москва)",
-      "short_title": "НИУ ВШЭ",
-      "region_code": "77"
-    }
-  ],
   "sources": [
     {
       "code": "gosuslugi_stay_registration",

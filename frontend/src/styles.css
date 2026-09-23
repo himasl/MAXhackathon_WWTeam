@@ -787,3 +787,37 @@ code {
     animation: none;
   }
 }
+
+/* Institution choice: short name, full name and tags */
+
+.choice--institution {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.choice__title {
+  font-weight: 700;
+}
+
+.choice__subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.choice__tag {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.choice__tag--muted {
+  background: var(--surface-soft);
+  color: var(--muted);
+}

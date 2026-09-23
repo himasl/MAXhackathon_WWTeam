@@ -9,6 +9,7 @@ import type {
   University,
 } from "../shared/api/types";
 import { RegionPicker } from "../features/RegionPicker";
+import { UniversityPicker } from "../features/UniversityPicker";
 import { Button, Notice, Screen } from "../shared/ui";
 
 type Draft = Partial<Profile>;
@@ -25,8 +26,6 @@ interface Question {
   isAnswered: (draft: Draft) => boolean;
   render: (draft: Draft, set: (patch: Draft) => void) => ReactElement;
 }
-
-const NO_UNIVERSITY = "__none__";
 
 function Choices<T extends string | boolean>({
   options,
@@ -103,16 +102,13 @@ function buildQuestions(regions: Region[], universities: University[]): Question
     {
       id: "university",
       title: "Где вы учитесь?",
-      hint: "Для вузов-партнёров добавим их официальные памятки: общежитие, стипендии.",
+      hint: "Для вузов с отметкой «Официальные памятки» добавим их шаги: общежитие, стипендии.",
       isAnswered: (d) => d.university_code !== undefined,
       render: (d, set) => (
-        <Choices
-          options={[
-            ...inRegion(d).map((item) => ({ value: item.code, label: item.title })),
-            { value: NO_UNIVERSITY, label: "Другой вуз" },
-          ]}
-          value={d.university_code === null ? NO_UNIVERSITY : d.university_code}
-          onChange={(code) => set({ university_code: code === NO_UNIVERSITY ? null : code })}
+        <UniversityPicker
+          universities={inRegion(d)}
+          value={d.university_code}
+          onChange={(university_code) => set({ university_code })}
         />
       ),
     },

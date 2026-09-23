@@ -17,7 +17,7 @@ class UniversityRepository:
         )
 
     async def list(self, region_code: str | None = None) -> list[University]:
-        query = select(University).order_by(University.title)
+        query = select(University).order_by(University.sort_order, University.title)
         if region_code is not None:
             query = query.where(University.region_code == region_code)
         return list(await self.session.scalars(query))
