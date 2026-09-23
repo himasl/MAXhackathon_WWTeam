@@ -125,13 +125,13 @@ async def test_webhook_checks_secret(
     import app.main as main_module
 
     monkeypatch.setattr(
-        main_module, "settings", dataclasses.replace(settings, webhook_secret="s3cret")
+        main_module, "settings", dataclasses.replace(settings, webhook_secret="s3cret_ok")
     )
     update = {"update_type": "bot_started", "user": {"user_id": 42}}
 
     denied = await client.post("/max/webhook", json=update)
     accepted = await client.post(
-        "/max/webhook", json=update, headers={"X-Max-Bot-Api-Secret": "s3cret"}
+        "/max/webhook", json=update, headers={"X-Max-Bot-Api-Secret": "s3cret_ok"}
     )
 
     assert denied.status_code == 401
@@ -165,3 +165,37 @@ async def test_max_sender_falls_back_to_link_button() -> None:
         "https://max.ru/marshrut_bot?startapp=step_1"
     )
     await client.close()
+
+
+def test_webhook_secret_is_normalised_for_max() -> None:
+    import dataclasses
+    import re
+
+    plain = dataclasses.replace(settings, webhook_secret="plain_secret-1")
+    generated = dataclasses.replace(settings, webhook_secret="TTzK/V7k+yv5=")
+
+    assert plain.max_webhook_secret == "plain_secret-1"
+    assert re.fullmatch(r"[0-9a-f]{64}", generated.max_webhook_secret)
+
+
+async def test_webhook_registration_error_is_redacted(
+    caplog: pytest.LogCaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import dataclasses
+
+    secret_settings = dataclasses.replace(
+        settings, webhook_secret="abc/def+ghi=", public_url="https://app.test"
+    )
+    runtime = BotRuntime(secret_settings)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        return httpx.Response(400, json={"message": f"bad secret {body['secret']}"})
+
+    runtime.client = MAXClient("t", "https://max.test", transport=httpx.MockTransport(handler))
+    ok = await runtime._subscribe_webhook()
+
+    assert not ok
+    assert secret_settings.max_webhook_secret not in caplog.text
+    assert "***" in caplog.text
+    await runtime.client.close()

@@ -1,4 +1,6 @@
+import hashlib
 import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -87,6 +89,19 @@ class Settings:
         if self.is_production:
             return ""
         return "development-only-secret"
+
+    @property
+    def max_webhook_secret(self) -> str:
+        """Webhook secret in the alphabet MAX accepts ([A-Za-z0-9_-], 5-256 chars).
+
+        Generated values (e.g. Render's base64) may contain ``/+=``; such values are mapped
+        deterministically to their SHA-256 hex digest, used both for registration and for
+        checking the ``X-Max-Bot-Api-Secret`` header.
+        """
+        raw = self.webhook_secret
+        if not raw or re.fullmatch(r"[A-Za-z0-9_-]{5,256}", raw):
+            return raw
+        return hashlib.sha256(raw.encode()).hexdigest()
 
     @property
     def mini_app_url(self) -> str:

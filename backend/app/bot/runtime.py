@@ -97,13 +97,20 @@ class BotRuntime:
         url = f"{self.settings.public_url}{WEBHOOK_PATH}"
         try:
             await self.client.create_subscription(
-                url, UPDATE_TYPES, self.settings.webhook_secret or None
+                url, UPDATE_TYPES, self.settings.max_webhook_secret or None
             )
             logger.info("MAX webhook registered at %s", url)
             return True
         except Exception as error:  # noqa: BLE001
-            logger.warning("MAX webhook registration failed: %s", error)
+            logger.warning("MAX webhook registration failed: %s", self._redact(str(error)))
             return False
+
+    def _redact(self, text: str) -> str:
+        """MAX may echo request fields in errors; never let secrets reach the logs."""
+        for secret in {self.settings.webhook_secret, self.settings.max_webhook_secret}:
+            if secret:
+                text = text.replace(secret, "***")
+        return text
 
     async def _poll(self) -> None:
         assert self.client is not None

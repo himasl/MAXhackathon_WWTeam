@@ -66,8 +66,8 @@ async def max_webhook(
     background: BackgroundTasks,
     x_max_bot_api_secret: Annotated[str | None, Header()] = None,
 ) -> Response:
-    if settings.webhook_secret and not hmac.compare_digest(
-        x_max_bot_api_secret or "", settings.webhook_secret
+    if settings.max_webhook_secret and not hmac.compare_digest(
+        x_max_bot_api_secret or "", settings.max_webhook_secret
     ):
         return error_response(401, "UNAUTHORIZED", "Invalid webhook secret")
     try:
