@@ -1,7 +1,7 @@
 """Run the checks from DATA-API.yaml against a live API, like the automated review does.
 
 Usage:
-    python tools/run_data_api.py --base-url https://marshrut.onrender.com --token <test token>
+    python tools/run_data_api.py --base-url https://marshrut-tf5o.onrender.com --token <test token>
 
 Supports the subset of DATA-API 1.0 used in this repository: roles public/user,
 path/query/body/headers, dependsOn ordering, expected status/content type/required fields,

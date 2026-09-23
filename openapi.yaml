@@ -1021,4 +1021,4 @@ components:
         to reviewers.
       scheme: bearer
 servers:
-- url: https://marshrut.onrender.com
+- url: https://marshrut-tf5o.onrender.com

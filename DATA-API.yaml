@@ -10,7 +10,7 @@ solution:
   teamId: "t818"
 
 api:
-  baseUrl: "https://marshrut.onrender.com"
+  baseUrl: "https://marshrut-tf5o.onrender.com"
   openapi: "./openapi.yaml"
   defaultHeaders:
     Accept: "application/json"

@@ -34,7 +34,7 @@
 ## Проверка API
 
 ```bash
-python tools/run_data_api.py --base-url https://marshrut.onrender.com --token <тестовый токен>
+python tools/run_data_api.py --base-url https://marshrut-tf5o.onrender.com --token <тестовый токен>
 ```
 
 Ожидается `13 passed, 0 failed`.

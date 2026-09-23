@@ -11,7 +11,7 @@
 | Что | Где |
 |---|---|
 | Бот в MAX | [@t818_hakaton_max_bot](https://max.ru/t818_hakaton_max_bot) → `/start` → «Открыть маршрут» |
-| Mini App и API | `https://marshrut.onrender.com` (адрес деплоя) |
+| Mini App и API | `https://marshrut-tf5o.onrender.com` |
 | OpenAPI | [`openapi.yaml`](openapi.yaml), интерактивно — `/docs` |
 | Проверки API | [`DATA-API.yaml`](DATA-API.yaml) |
 | Локальный запуск | `cp .env.example .env && docker compose up --build` → http://localhost:8000 |
@@ -201,7 +201,7 @@ docker compose up --build   # http://localhost:8000
 
 ```bash
 pip install pyyaml
-python tools/run_data_api.py --base-url https://marshrut.onrender.com --token <тестовый токен>
+python tools/run_data_api.py --base-url https://marshrut-tf5o.onrender.com --token <тестовый токен>
 ```
 
 ## Data

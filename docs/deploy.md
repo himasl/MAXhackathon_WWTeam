@@ -14,7 +14,7 @@
 3. Заполнить переменные, помеченные `sync: false`:
    - `DATABASE_URL` — строка из Neon;
    - `MAX_BOT_TOKEN` — токен бота;
-   - `PUBLIC_URL` и `FRONTEND_URL` — адрес сервиса, например `https://marshrut.onrender.com`;
+   - `PUBLIC_URL` и `FRONTEND_URL` — адрес сервиса, например `https://marshrut-tf5o.onrender.com`;
    - `TEST_ACCESS_TOKENS` — например `<случайная строка>:900000001`, для проверяющих.
 
    `SECRET_KEY` и `WEBHOOK_SECRET` Render сгенерирует сам.
