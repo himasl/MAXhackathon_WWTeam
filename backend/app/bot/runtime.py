@@ -38,10 +38,6 @@ class BotRuntime:
         self._tasks: list[asyncio.Task[None]] = []
         self.status = "off"
 
-    @property
-    def enabled(self) -> bool:
-        return self.client is not None
-
     async def start(self) -> None:
         settings = self.settings
         if not settings.max_bot_token or settings.bot_mode == "off":

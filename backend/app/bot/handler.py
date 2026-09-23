@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 
 NEXT_COMMANDS = {"/next", "следующий шаг", "что дальше", "дальше"}
 START_COMMANDS = {"/start", "начать", "старт"}
-HELP_COMMANDS = {"/help", "помощь"}
 
 
 def _user_id(value: Any) -> int | None:
@@ -63,6 +62,7 @@ class BotHandler:
         elif command in NEXT_COMMANDS:
             await self.send_next_step(user_id)
         else:
+            # /help and any other text: answer with the command list.
             await self.notifications.help(user_id)
 
     async def send_next_step(self, max_user_id: int) -> None:

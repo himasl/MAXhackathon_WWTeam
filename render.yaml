@@ -12,8 +12,6 @@ services:
     envVars:
       - key: APP_ENV
         value: production
-      - key: DATA_MODE
-        value: mock
       - key: BOT_MODE
         value: webhook
       - key: DEV_AUTH_ENABLED

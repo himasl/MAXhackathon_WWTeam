@@ -33,12 +33,6 @@ class UserRepository:
         assert user is not None
         return user
 
-    async def create(self, max_user_id: int) -> User:
-        user = User(max_user_id=max_user_id)
-        self.session.add(user)
-        await self.session.flush()
-        return user
-
     async def lock(self, user_id: UUID) -> None:
         await self.session.scalar(select(User).where(User.id == user_id).with_for_update())
 

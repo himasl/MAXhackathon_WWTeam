@@ -57,7 +57,6 @@ class Settings:
     public_url: str = (os.getenv("PUBLIC_URL") or os.getenv("RENDER_EXTERNAL_URL") or "").rstrip("/")
     frontend_dist_dir: Path = Path(os.getenv("FRONTEND_DIST_DIR", "../frontend/dist"))
     scenario_data_dir: Path = Path(os.getenv("SCENARIO_DATA_DIR", "../data/scenarios"))
-    data_mode: str = os.getenv("DATA_MODE", "mock")
 
     dev_auth_enabled: bool = _bool("DEV_AUTH_ENABLED")
     dev_max_user_id: int = int(os.getenv("DEV_MAX_USER_ID", "123456"))

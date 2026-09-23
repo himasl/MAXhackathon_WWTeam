@@ -21,6 +21,3 @@ def open_app_button(
 def link_button(text: str, url: str) -> Button:
     return {"type": "link", "text": text, "url": url}
 
-
-def callback_button(text: str, payload: str) -> Button:
-    return {"type": "callback", "text": text, "payload": payload}

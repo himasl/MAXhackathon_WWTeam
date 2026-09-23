@@ -164,7 +164,8 @@ docker compose up --build   # http://localhost:8000
 | `MAX_BOT_TOKEN` | Токен бота. Только через окружение, в Git не хранится |
 | `MAX_BOT_USERNAME` | Имя бота для кнопок и deep link |
 | `BOT_MODE` | `off`, `polling` (локально) или `webhook` (production) |
-| `WEBHOOK_SECRET` | Секрет заголовка `X-Max-Bot-Api-Secret` |
+| `MAX_BUTTON_MODE` | `link` (подписанная ссылка) или `open_app` (зарегистрированный Mini App) |
+| `WEBHOOK_SECRET` | Секрет заголовка `X-Max-Bot-Api-Secret` (`[A-Za-z0-9_-]`; другие значения приводятся к SHA-256 hex) |
 | `SECRET_KEY` | Ключ подписи токенов доступа (обязателен в production) |
 | `TEST_ACCESS_TOKENS` | Тестовые токены проверяющих: `token:max_user_id,…` |
 | `REMINDERS_ENABLED`, `REMINDER_INTERVAL_SECONDS` | Напоминания о сроках |
@@ -173,7 +174,9 @@ docker compose up --build   # http://localhost:8000
 ## MAX configuration
 
 - Бот: `@t818_hakaton_max_bot`, токен выдан организаторами и задаётся только переменной `MAX_BOT_TOKEN`.
-- Мини-приложение: в настройках бота на платформе MAX для партнёров указывается URL деплоя (`PUBLIC_URL`). Кнопки `open_app` в сообщениях бота открывают его; `payload` вида `step_<id>` открывает конкретный шаг.
+- Кнопки бота (`MAX_BUTTON_MODE`):
+  - `link` (по умолчанию) — кнопка-ссылка на `PUBLIC_URL` с подписанным персональным токеном входа (`?t=…`, 30 дней) и нужным шагом (`&start=step_<id>`). Работает без регистрации Mini App на платформе MAX; приложение открывается во встроенном браузере MAX, пользователь уже авторизован.
+  - `open_app` — кнопка открывает Mini App, зарегистрированный для бота (URL `PUBLIC_URL` указывается в настройках бота на business.max.ru). `payload=step_<id>` открывает конкретный шаг. Если MAX отклоняет кнопку, сообщение уходит со ссылкой.
 - События: в production — webhook `POST {PUBLIC_URL}/max/webhook` с проверкой `X-Max-Bot-Api-Secret`, подписка создаётся автоматически при старте; локально — long polling `GET /updates`.
 - Авторизация мини-приложения: frontend передаёт `window.WebApp.initData` в `POST /api/v1/auth/max`, backend проверяет HMAC-SHA256 подпись токеном бота и срок `auth_date`, после чего выдаёт токен доступа. `user_id` от клиента не принимается.
 - TLS: сертификат `platform-api2.max.ru` выпущен НУЦ Минцифры, поэтому `MAXClient` доверяет публичным CA и сертификатам из `backend/certs/` (подробности — в [`backend/certs/README.md`](backend/certs/README.md)).
@@ -184,7 +187,7 @@ docker compose up --build   # http://localhost:8000
 
 | Метод | Путь | Назначение |
 |---|---|---|
-| GET | `/health` | Доступность |
+| GET | `/health` | Доступность и режим бота (`bot`: `off` / `polling` / `webhook` / `webhook_failed`) |
 | POST | `/api/v1/auth/max` | Обмен MAX initData на токен |
 | GET | `/api/v1/me` | Текущий пользователь |
 | GET / PUT | `/api/v1/profile` | Ответы онбординга |
@@ -227,7 +230,7 @@ python tools/run_data_api.py --base-url https://marshrut-tf5o.onrender.com --tok
 ```bash
 cd backend
 export DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/marshrut_test
-.venv/bin/pytest            # 77 тестов
+.venv/bin/pytest            # 81 тест
 .venv/bin/ruff check .
 .venv/bin/mypy app tests migrations
 
