@@ -54,8 +54,10 @@ add_exception_handlers(app)
 
 
 @app.get("/health", tags=["system"])
-async def health() -> dict[str, str]:
-    return {"status": "ok"}
+async def health(request: Request) -> dict[str, str]:
+    """Liveness. ``bot`` shows how the MAX bot is connected: off, polling, webhook, webhook_failed."""
+    runtime: BotRuntime = request.app.state.bot
+    return {"status": "ok", "bot": runtime.status}
 
 
 @app.post(WEBHOOK_PATH, include_in_schema=False)

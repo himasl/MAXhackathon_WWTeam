@@ -35,6 +35,7 @@ class BotRuntime:
         self.notifications = NotificationService(self.sender)
         self.handler = BotHandler(self.notifications, async_session)
         self._tasks: list[asyncio.Task[None]] = []
+        self.status = "off"
 
     @property
     def enabled(self) -> bool:
@@ -43,7 +44,12 @@ class BotRuntime:
     async def start(self) -> None:
         settings = self.settings
         if not settings.max_bot_token or settings.bot_mode == "off":
-            logger.info("MAX bot disabled (BOT_MODE=%s)", settings.bot_mode)
+            logger.info(
+                "MAX bot disabled (BOT_MODE=%s, token %s)",
+                settings.bot_mode,
+                "set" if settings.max_bot_token else "missing",
+            )
+            self.status = "off"
             return
 
         self.client = MAXClient(
@@ -66,9 +72,10 @@ class BotRuntime:
         self.handler = BotHandler(self.notifications, async_session)
 
         if settings.bot_mode == "webhook":
-            await self._subscribe_webhook()
+            self.status = "webhook" if await self._subscribe_webhook() else "webhook_failed"
         elif settings.bot_mode == "polling":
             self._tasks.append(asyncio.create_task(self._poll(), name="max-polling"))
+            self.status = "polling"
         if settings.reminders_enabled:
             self._tasks.append(asyncio.create_task(self._reminders(), name="reminders"))
 
@@ -82,19 +89,21 @@ class BotRuntime:
         if self.client is not None:
             await self.client.close()
 
-    async def _subscribe_webhook(self) -> None:
+    async def _subscribe_webhook(self) -> bool:
         assert self.client is not None
         if not self.settings.public_url:
             logger.warning("BOT_MODE=webhook requires PUBLIC_URL, webhook not registered")
-            return
+            return False
         url = f"{self.settings.public_url}{WEBHOOK_PATH}"
         try:
             await self.client.create_subscription(
                 url, UPDATE_TYPES, self.settings.webhook_secret or None
             )
             logger.info("MAX webhook registered at %s", url)
+            return True
         except Exception as error:  # noqa: BLE001
             logger.warning("MAX webhook registration failed: %s", error)
+            return False
 
     async def _poll(self) -> None:
         assert self.client is not None

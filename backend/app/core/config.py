@@ -50,7 +50,9 @@ class Settings:
         )
     )
     frontend_url: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
-    public_url: str = os.getenv("PUBLIC_URL", "").rstrip("/")
+    # Render sets RENDER_EXTERNAL_URL automatically, so the webhook works even if
+    # PUBLIC_URL was not filled in.
+    public_url: str = (os.getenv("PUBLIC_URL") or os.getenv("RENDER_EXTERNAL_URL") or "").rstrip("/")
     frontend_dist_dir: Path = Path(os.getenv("FRONTEND_DIST_DIR", "../frontend/dist"))
     scenario_data_dir: Path = Path(os.getenv("SCENARIO_DATA_DIR", "../data/scenarios"))
     data_mode: str = os.getenv("DATA_MODE", "mock")
