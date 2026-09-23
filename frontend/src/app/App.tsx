@@ -14,7 +14,7 @@ import {
   restoreAccessToken,
   setAccessToken,
 } from "../shared/api/client";
-import type { AppConfig, Profile, Route, University } from "../shared/api/types";
+import type { AppConfig, Profile, Region, Route, University } from "../shared/api/types";
 import { maxBridge } from "../shared/max/maxBridge";
 import { ErrorState, Loading, Screen } from "../shared/ui";
 import { InviteButton } from "../features/InviteButton";
@@ -35,6 +35,7 @@ export function App() {
   const [boot, setBoot] = useState<Boot>({ state: "loading" });
   const [route, setRoute] = useState<Route | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [regions, setRegions] = useState<Region[]>([]);
   const [universities, setUniversities] = useState<University[]>([]);
   const [config, setConfig] = useState<AppConfig>({ bot_username: null, bot_url: null });
   const [inviteUniversity, setInviteUniversity] = useState<string | null>(null);
@@ -57,15 +58,17 @@ export function App() {
       } else {
         restoreAccessToken();
       }
-      const [currentRoute, currentProfile, catalog, appConfig] = await Promise.all([
+      const [currentRoute, currentProfile, regionList, catalog, appConfig] = await Promise.all([
         orNull(api.getCurrentRoute()),
         orNull(api.getProfile()),
+        api.getRegions(),
         // The catalog and config are optional: onboarding works without them.
         api.getUniversities().catch(() => [] as University[]),
         api.getConfig().catch(() => ({ bot_username: null, bot_url: null })),
       ]);
       setRoute(currentRoute);
       setProfile(currentProfile);
+      setRegions(regionList);
       setUniversities(catalog);
       setConfig(appConfig);
       if (startParam?.startsWith("uni_")) setInviteUniversity(startParam.slice(4));
@@ -150,6 +153,7 @@ export function App() {
           ? { citizenship: "RU", region_code: invited.region_code, university_code: invited.code }
           : null)
       }
+      regions={regions}
       universities={universities}
       error={submitError}
       onSubmit={submitProfile}

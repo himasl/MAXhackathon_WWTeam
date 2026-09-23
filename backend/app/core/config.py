@@ -107,6 +107,11 @@ class Settings:
         return hashlib.sha256(raw.encode()).hexdigest()
 
     @property
+    def regions_file(self) -> Path:
+        custom = os.getenv("REGIONS_FILE")
+        return Path(custom) if custom else self.scenario_data_dir.parent / "regions.json"
+
+    @property
     def mini_app_url(self) -> str:
         return self.public_url or self.frontend_url
 

@@ -23,6 +23,12 @@ export interface Profile {
   university_code: string | null;
 }
 
+export interface Region {
+  code: string;
+  title: string;
+  popular: boolean;
+}
+
 export interface University {
   code: string;
   title: string;

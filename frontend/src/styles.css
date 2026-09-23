@@ -684,3 +684,21 @@ code {
   background: var(--accent-soft);
   color: var(--accent-ink);
 }
+
+/* Region picker */
+
+.region-picker .choices {
+  max-height: 46vh;
+  overflow-y: auto;
+  margin-top: 8px;
+  padding: 2px 2px 8px;
+}
+
+.region-picker__hint {
+  margin: 12px 4px 0;
+  font-size: 13px;
+}
+
+.input--search {
+  font-size: 16px;
+}

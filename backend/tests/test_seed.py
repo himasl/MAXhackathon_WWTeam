@@ -72,7 +72,7 @@ async def test_seed_is_idempotent() -> None:
             ["oms_check", "clinic_attachment", "transport_kazan", "university_support"],
         ),
         (
-            {"region_code": "00", "education_type": "PART_TIME", "has_registration": True},
+            {"region_code": "54", "education_type": "PART_TIME", "has_registration": True},
             ["oms_check", "clinic_attachment", "pushkin_card", "university_support"],
         ),
     ],
@@ -190,3 +190,13 @@ async def test_step_detail_explains_itself(client: AsyncClient) -> None:
     assert detail["sources"][0]["source_type"] == "OFFICIAL"
     assert detail["sources"][0]["checked_at"] is not None
     assert detail["next_step_id"] == route["steps"][1]["id"]
+
+
+async def test_regions_catalog_and_validation(client: AsyncClient) -> None:
+    regions = (await client.get("/api/v1/regions")).json()
+    unknown = await client.put("/api/v1/profile", json={**PROFILE, "region_code": "00"})
+
+    assert len(regions) == 89
+    assert {"code": "16", "title": "Республика Татарстан", "popular": True} in regions
+    assert unknown.status_code == 422
+    assert unknown.json()["error"]["code"] == "UNKNOWN_REGION"

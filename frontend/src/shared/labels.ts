@@ -1,12 +1,5 @@
 import type { SourceType, StepCategory } from "./api/types";
 
-export const REGIONS = [
-  { code: "77", title: "Москва" },
-  { code: "78", title: "Санкт-Петербург" },
-  { code: "16", title: "Республика Татарстан" },
-  { code: "00", title: "Другой регион" },
-];
-
 export const CATEGORY_LABELS: Record<StepCategory, string> = {
   REGISTRATION: "Регистрация",
   HEALTHCARE: "Здоровье",

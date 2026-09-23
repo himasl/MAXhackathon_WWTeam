@@ -5,9 +5,10 @@ import type {
   EducationType,
   HousingType,
   Profile,
+  Region,
   University,
 } from "../shared/api/types";
-import { REGIONS } from "../shared/labels";
+import { RegionPicker } from "../features/RegionPicker";
 import { Button, Notice, Screen } from "../shared/ui";
 
 type Draft = Partial<Profile>;
@@ -59,7 +60,7 @@ const YES_NO: Option<boolean>[] = [
   { value: false, label: "Нет" },
 ];
 
-function buildQuestions(universities: University[]): Question[] {
+function buildQuestions(regions: Region[], universities: University[]): Question[] {
   const inRegion = (draft: Draft) =>
     universities.filter((item) => item.region_code === draft.region_code);
 
@@ -83,10 +84,11 @@ function buildQuestions(universities: University[]): Question[] {
     {
       id: "region",
       title: "Куда вы переехали?",
-      isAnswered: (d) => Boolean(d.region_code),
+      hint: "Регион, где вы учитесь и живёте сейчас.",
+      isAnswered: (d) => regions.some((region) => region.code === d.region_code),
       render: (d, set) => (
-        <Choices
-          options={REGIONS.map((region) => ({ value: region.code, label: region.title }))}
+        <RegionPicker
+          regions={regions}
           value={d.region_code}
           onChange={(region_code) =>
             // A university belongs to a region: reset it when the region changes.
@@ -199,18 +201,26 @@ function buildQuestions(universities: University[]): Question[] {
 
 interface Props {
   initial: Draft | null;
+  regions: Region[];
   universities: University[];
   onSubmit: (profile: Profile) => Promise<void>;
   onCancel?: () => void;
   error: string | null;
 }
 
-export function OnboardingPage({ initial, universities, onSubmit, onCancel, error }: Props) {
+export function OnboardingPage({
+  initial,
+  regions,
+  universities,
+  onSubmit,
+  onCancel,
+  error,
+}: Props) {
   const [draft, setDraft] = useState<Draft>(initial ?? {});
   const [index, setIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
-  const all = useMemo(() => buildQuestions(universities), [universities]);
+  const all = useMemo(() => buildQuestions(regions, universities), [regions, universities]);
   // The university question is shown only when the region has partner universities.
   const questions = all.filter(
     (question) =>

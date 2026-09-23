@@ -239,6 +239,20 @@ checks:
     timeoutMs: 5000
     repeatable: true
 
+  - id: "regions"
+    name: "Справочник регионов РФ"
+    method: "GET"
+    path: "/api/v1/regions"
+    role: "public"
+    expected:
+      statusCodes: [200]
+      contentType: "application/json"
+      bodySchema:
+        type: "array"
+        minItems: 89
+    timeoutMs: 5000
+    repeatable: true
+
   - id: "universities"
     name: "Каталог вузов-партнёров пилота"
     method: "GET"

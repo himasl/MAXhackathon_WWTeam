@@ -1,4 +1,12 @@
-import type { AppConfig, AuthResponse, Profile, Route, StepDetail, University } from "./types";
+import type {
+  AppConfig,
+  AuthResponse,
+  Profile,
+  Region,
+  Route,
+  StepDetail,
+  University,
+} from "./types";
 
 const BASE_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
@@ -92,6 +100,7 @@ export const api = {
   reopenStep: (routeId: string, stepId: string) =>
     request<Route>(`/api/v1/routes/${routeId}/steps/${stepId}/reopen`, { method: "POST" }),
   getConfig: () => request<AppConfig>("/api/v1/config"),
+  getRegions: () => request<Region[]>("/api/v1/regions"),
   getUniversities: () => request<University[]>("/api/v1/universities"),
   calendarLink: (routeId: string, stepId: string) =>
     request<{ url: string }>(`/api/v1/routes/${routeId}/steps/${stepId}/calendar-link`, {
