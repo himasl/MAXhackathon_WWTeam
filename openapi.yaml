@@ -1275,6 +1275,11 @@ components:
         is_required:
           type: boolean
           title: Is Required
+        estimated_duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Estimated Duration
         deadline:
           anyOf:
           - type: string
@@ -1291,6 +1296,7 @@ components:
       - position
       - status
       - is_required
+      - estimated_duration
       - deadline
       title: RouteStepSummary
     SourceResponse:

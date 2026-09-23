@@ -231,6 +231,7 @@ class RouteService:
                     position=step.position,
                     status=step.status,
                     is_required=step.scenario_step.is_required,
+                    estimated_duration=step.scenario_step.estimated_duration,
                     deadline=step.deadline,
                 )
                 for step in route.steps

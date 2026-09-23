@@ -44,6 +44,7 @@ export interface RouteStepSummary {
   position: number;
   status: StepStatus;
   is_required: boolean;
+  estimated_duration: number | null;
   deadline: string | null;
 }
 

@@ -32,6 +32,7 @@ class RouteStepSummary(BaseModel):
     position: int
     status: RouteStepStatus
     is_required: bool
+    estimated_duration: int | None
     deadline: datetime | None
 
 
