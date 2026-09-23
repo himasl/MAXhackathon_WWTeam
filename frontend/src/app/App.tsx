@@ -174,6 +174,7 @@ export function App() {
         routeId={route.id}
         stepId={view.stepId}
         routeIsArchived={route.status === "ARCHIVED"}
+        regionTitle={regions.find((region) => region.code === profile?.region_code)?.title ?? null}
         onRouteChanged={onRouteChanged}
         onBack={goBack}
       />

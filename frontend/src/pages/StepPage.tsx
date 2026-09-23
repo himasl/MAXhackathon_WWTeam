@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { NearbyPlace } from "../features/NearbyPlace";
 import { api, errorMessage } from "../shared/api/client";
 import type { Route, StepDetail } from "../shared/api/types";
 import { CATEGORY_LABELS, SOURCE_LABELS, formatDate } from "../shared/labels";
@@ -10,11 +11,12 @@ interface Props {
   routeId: string;
   stepId: string;
   routeIsArchived: boolean;
+  regionTitle: string | null;
   onRouteChanged: (route: Route, completedStepId: string | null) => void;
   onBack: () => void;
 }
 
-export function StepPage({ routeId, stepId, routeIsArchived, onRouteChanged, onBack }: Props) {
+export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRouteChanged, onBack }: Props) {
   const [step, setStep] = useState<StepDetail | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -151,6 +153,7 @@ export function StepPage({ routeId, stepId, routeIsArchived, onRouteChanged, onB
       {step.location ? (
         <Section title="Куда обратиться">
           <p>{step.location}</p>
+          <NearbyPlace location={step.location} regionTitle={regionTitle} />
         </Section>
       ) : null}
 

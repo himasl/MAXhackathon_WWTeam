@@ -821,3 +821,15 @@ code {
   background: var(--surface-soft);
   color: var(--muted);
 }
+
+/* "Find nearby" under "Куда обратиться". */
+.nearby {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.nearby__note {
+  font-size: 13px;
+  margin: 0;
+}
