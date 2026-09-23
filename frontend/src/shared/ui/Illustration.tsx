@@ -6,7 +6,26 @@
 
 type Scene = "welcome" | "route" | "done";
 
-export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?: number }) {
+const SUN = { x: 168, y: 46 };
+// Eight short rays evenly around the sun (used on the completion screen).
+const RAYS = Array.from({ length: 8 }, (_, i) => {
+  const angle = (i * Math.PI) / 4;
+  const [inner, outer] = [31, 39];
+  return [
+    SUN.x + inner * Math.cos(angle),
+    SUN.y + inner * Math.sin(angle),
+    SUN.x + outer * Math.cos(angle),
+    SUN.y + outer * Math.sin(angle),
+  ].map((value) => Math.round(value * 10) / 10);
+});
+
+export function Illustration({
+  scene,
+  progress = 0,
+}: {
+  scene: Scene;
+  progress?: number;
+}) {
   // The walker moves along the path as the route progresses.
   const t = Math.max(0, Math.min(1, progress / 100));
   const walkerX = 70 + t * 170;
@@ -14,7 +33,11 @@ export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?:
 
   return (
     <div className={`art art--${scene}`} aria-hidden>
-      <svg viewBox="0 0 320 170" preserveAspectRatio="xMidYMid slice" role="presentation">
+      <svg
+        viewBox="0 0 320 170"
+        preserveAspectRatio="xMidYMid slice"
+        role="presentation"
+      >
         <defs>
           <linearGradient id="sky" x1="0" y1="0" x2="0.4" y2="1">
             <stop offset="0" stopColor="var(--art-sky-top)" />
@@ -22,29 +45,41 @@ export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?:
           </linearGradient>
         </defs>
         <rect width="320" height="170" fill="url(#sky)" />
+        {/* Sun on its own, left of the house, so nothing overlaps it. */}
         <circle
           className="art__sun"
-          cx="258"
-          cy="46"
-          r={scene === "done" ? 30 : 24}
+          cx={SUN.x}
+          cy={SUN.y}
+          r={scene === "done" ? 24 : 20}
           fill="var(--art-sun)"
         />
         {scene === "done" ? (
           <g
             className="art__rays"
             stroke="var(--art-sun)"
-            strokeWidth="4"
+            strokeWidth="3.5"
             strokeLinecap="round"
-            opacity="0.7"
+            opacity="0.75"
           >
-            <line x1="258" y1="4" x2="258" y2="12" />
-            <line x1="300" y1="46" x2="292" y2="46" />
-            <line x1="288" y1="16" x2="282" y2="22" />
-            <line x1="228" y1="16" x2="234" y2="22" />
+            {RAYS.map(([x1, y1, x2, y2]) => (
+              <line key={`${x1}-${y1}`} x1={x1} y1={y1} x2={x2} y2={y2} />
+            ))}
           </g>
         ) : null}
-        <ellipse cx="60" cy="200" rx="170" ry="95" fill="var(--art-hill-back)" />
-        <ellipse cx="290" cy="215" rx="190" ry="100" fill="var(--art-hill-front)" />
+        <ellipse
+          cx="60"
+          cy="200"
+          rx="170"
+          ry="95"
+          fill="var(--art-hill-back)"
+        />
+        <ellipse
+          cx="290"
+          cy="215"
+          rx="190"
+          ry="100"
+          fill="var(--art-hill-front)"
+        />
 
         {/* Path from the bottom-left towards the house. */}
         <path
@@ -58,14 +93,44 @@ export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?:
 
         {/* House. */}
         <g transform="translate(236 64)">
-          <rect x="0" y="16" width="34" height="26" rx="3" fill="var(--art-house)" />
+          <rect
+            x="0"
+            y="16"
+            width="34"
+            height="26"
+            rx="3"
+            fill="var(--art-house)"
+          />
           <path d="M-4 18 L17 0 L38 18 Z" fill="var(--art-roof)" />
-          <rect x="13" y="28" width="9" height="14" rx="2" fill="var(--art-door)" />
-          <rect x="4" y="22" width="7" height="6" rx="1" fill="var(--art-window)" />
+          <rect
+            x="13"
+            y="28"
+            width="9"
+            height="14"
+            rx="2"
+            fill="var(--art-door)"
+          />
+          <rect
+            x="4"
+            y="22"
+            width="7"
+            height="6"
+            rx="1"
+            fill="var(--art-window)"
+          />
           {scene === "done" ? (
+            // Flag on the roof ridge: the pole starts at the top of the roof.
             <g className="art__flag">
-              <line x1="30" y1="2" x2="30" y2="-18" stroke="var(--art-roof)" strokeWidth="2" />
-              <path d="M30 -18 L44 -13 L30 -8 Z" fill="var(--art-flag)" />
+              <line
+                x1="17"
+                y1="1"
+                x2="17"
+                y2="-22"
+                stroke="var(--art-pole)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+              <path d="M18 -22 L33 -17 L18 -12 Z" fill="var(--art-flag)" />
             </g>
           ) : null}
         </g>
@@ -78,9 +143,14 @@ export function Illustration({ scene, progress = 0 }: { scene: Scene; progress?:
         ) : null}
 
         {/* Birds. */}
-        <g fill="none" stroke="var(--art-bird)" strokeWidth="2" strokeLinecap="round">
-          <path d="M60 40 q6 -6 12 0 q6 -6 12 0" />
-          <path d="M104 60 q4 -4 8 0 q4 -4 8 0" />
+        <g
+          fill="none"
+          stroke="var(--art-bird)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <path d="M34 34 q6 -6 12 0 q6 -6 12 0" />
+          <path d="M76 54 q4 -4 8 0 q4 -4 8 0" />
         </g>
       </svg>
     </div>

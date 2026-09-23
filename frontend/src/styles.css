@@ -33,6 +33,7 @@
   --art-door: #d45a4e;
   --art-window: #ffd98a;
   --art-flag: #3f9d6b;
+  --art-pole: #8f3f36;
   --art-walker: #5a2e28;
   --art-bird: #b85a4a;
 
@@ -73,7 +74,8 @@
     --art-hill-front: #b35a4f;
     --art-path: #e0a37c;
     --art-house: #f6e9df;
-    --art-roof: #5a2a25;
+    --art-roof: #c46a5c;
+    --art-pole: #f6e9df;
     --art-door: #b35a4f;
     --art-window: #ffcf6b;
     --art-walker: #2a120d;
