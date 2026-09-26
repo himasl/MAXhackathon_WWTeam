@@ -298,7 +298,7 @@ sh tools/make_release.sh   # архив зафиксированного ком�
 
 ## Сопровождение
 
-Как обновлять данные, разбирать отзывы пользователей, искать ошибку по «коду для поддержки» и откатывать версию — в [`docs/maintenance.md`](docs/maintenance.md). Каждый push проверяет CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): ruff, mypy, миграции, тесты, сборка фронтенда и Docker-образа.
+Как обновлять данные, разбирать отзывы пользователей, искать ошибку по «коду для поддержки» и откатывать версию — в [`docs/maintenance.md`](docs/maintenance.md).
 
 ## Known limitations
 
