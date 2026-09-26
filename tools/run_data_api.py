@@ -11,6 +11,7 @@ and extract with simple JSONPath ($.a.b, $.a[0].b).
 import argparse
 import json
 import re
+import ssl
 import sys
 import time
 import urllib.error
@@ -20,6 +21,21 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+
+def _ssl_context() -> ssl.SSLContext:
+    """System roots plus certifi: python.org builds on macOS ship without system roots."""
+    context = ssl.create_default_context()
+    try:
+        import certifi
+
+        context.load_verify_locations(certifi.where())
+    except ImportError:
+        pass
+    return context
+
+
+SSL_CONTEXT = _ssl_context()
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,7 +75,9 @@ def run_check(check: dict[str, Any], base_url: str, token: str, defaults: dict[s
 
     started = time.monotonic()
     try:
-        with urllib.request.urlopen(req, timeout=check.get("timeoutMs", 5000) / 1000) as resp:
+        with urllib.request.urlopen(
+            req, timeout=check.get("timeoutMs", 5000) / 1000, context=SSL_CONTEXT
+        ) as resp:
             status, content_type, raw = resp.status, resp.headers.get("Content-Type", ""), resp.read()
     except urllib.error.HTTPError as error:
         status, content_type, raw = error.code, error.headers.get("Content-Type", ""), error.read()
