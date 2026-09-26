@@ -19,7 +19,7 @@ import sys
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -115,7 +115,7 @@ def main() -> int:
     if args.promote and working:
         pack = json.loads(PACK.read_text(encoding="utf-8"))
         candidates = json.loads(CANDIDATES.read_text(encoding="utf-8"))
-        today = datetime.now(UTC).date().isoformat()
+        today = datetime.now(timezone.utc).date().isoformat()
         for code, kind in working:
             entry = candidates["regions"][code].pop(kind)
             entry.pop("note", None)
