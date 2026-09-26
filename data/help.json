@@ -10,9 +10,18 @@
         "Если можете говорить только с одной службой: 101 — пожарные, 102 — полиция, 103 — скорая, 104 — газовая служба."
       ],
       "phones": [
-        { "label": "Единый номер", "number": "112" },
-        { "label": "Скорая помощь", "number": "103" },
-        { "label": "Полиция", "number": "102" }
+        {
+          "label": "Единый номер",
+          "number": "112"
+        },
+        {
+          "label": "Скорая помощь",
+          "number": "103"
+        },
+        {
+          "label": "Полиция",
+          "number": "102"
+        }
       ],
       "sources": [
         {
@@ -29,7 +38,11 @@
             "Say what happened and give the address.",
             "Direct numbers: 101 fire, 102 police, 103 ambulance, 104 gas service."
           ],
-          "phones": ["Emergency", "Ambulance", "Police"]
+          "phones": [
+            "Emergency",
+            "Ambulance",
+            "Police"
+          ]
         }
       }
     },
@@ -43,7 +56,12 @@
         "Попросите временное удостоверение личности — оно действует, пока готовится паспорт.",
         "Иностранному студенту: сразу сообщите в международную службу вуза и в посольство своей страны."
       ],
-      "phones": [{ "label": "Полиция", "number": "102" }],
+      "phones": [
+        {
+          "label": "Полиция",
+          "number": "102"
+        }
+      ],
       "sources": [
         {
           "title": "Восстановление паспорта РФ",
@@ -61,7 +79,9 @@
             "Ask for a temporary identity document while the passport is being made.",
             "International students: tell your university's international office and your embassy right away."
           ],
-          "phones": ["Police"]
+          "phones": [
+            "Police"
+          ]
         }
       }
     },
@@ -105,8 +125,14 @@
         "Иностранному студенту: позвоните по номеру на полисе ДМС — там подскажут клинику."
       ],
       "phones": [
-        { "label": "Скорая помощь", "number": "103" },
-        { "label": "Единый номер", "number": "112" }
+        {
+          "label": "Скорая помощь",
+          "number": "103"
+        },
+        {
+          "label": "Единый номер",
+          "number": "112"
+        }
       ],
       "sources": [
         {
@@ -124,7 +150,10 @@
             "Ask the doctor for a certificate for your university.",
             "International students: call the number on your insurance policy to find a clinic."
           ],
-          "phones": ["Ambulance", "Emergency"]
+          "phones": [
+            "Ambulance",
+            "Emergency"
+          ]
         }
       }
     },
@@ -135,15 +164,20 @@
       "actions": [
         "Не переводите деньги и не называйте коды из СМС — даже «сотрудникам банка» или «полиции».",
         "Сохраните договор, переписку, чеки и номера телефонов.",
-        "Подайте заявление в полицию по номеру 102 или через сайт МВД.",
+        "Подайте заявление в полицию: позвоните 102 или обратитесь в ближайший отдел полиции.",
         "Если нужна юридическая помощь — спросите в студенческом совете или юридической клинике вуза."
       ],
-      "phones": [{ "label": "Полиция", "number": "102" }],
+      "phones": [
+        {
+          "label": "Полиция",
+          "number": "102"
+        }
+      ],
       "sources": [
         {
-          "title": "Приём обращений МВД России",
-          "url": "https://xn--b1aew.xn--p1ai/request_main",
-          "organization": "МВД России"
+          "title": "Что делать, если столкнулись с финансовым обманом",
+          "url": "https://www.gosuslugi.ru/life/details/dealt_with_scammers",
+          "organization": "Госуслуги"
         }
       ],
       "i18n": {
@@ -153,10 +187,12 @@
           "actions": [
             "Never transfer money or share SMS codes, even to “bank staff” or “police”.",
             "Keep the contract, messages, receipts and phone numbers.",
-            "Report to the police by 102 or on the Ministry of Internal Affairs website.",
+            "Report to the police: call 102 or go to the nearest police station.",
             "For legal help, ask the student council or the university law clinic."
           ],
-          "phones": ["Police"]
+          "phones": [
+            "Police"
+          ]
         }
       }
     },
@@ -166,18 +202,24 @@
       "summary": "Переезд — это стресс, и это нормально. Поговорите с психологом вуза или позвоните на телефон доверия — бесплатно и анонимно.",
       "actions": [
         "В большинстве вузов есть психологическая служба — спросите в деканате или студенческом совете.",
-        "Если вам нет 18 лет, звоните на телефон доверия 8-800-2000-122 — бесплатно и анонимно.",
+        "Если вам нет 18 лет, звоните на телефон доверия 8-800-2000-122 (с мобильного — 124) — бесплатно и анонимно.",
         "Если есть угроза жизни — звоните 112."
       ],
       "phones": [
-        { "label": "Телефон доверия", "number": "8-800-2000-122" },
-        { "label": "Единый номер", "number": "112" }
+        {
+          "label": "Телефон доверия",
+          "number": "8-800-2000-122"
+        },
+        {
+          "label": "Единый номер",
+          "number": "112"
+        }
       ],
       "sources": [
         {
-          "title": "Телефон доверия для детей, подростков и их родителей",
-          "url": "https://mintrud.gov.ru/social/family/184",
-          "organization": "Минтруд России"
+          "title": "Детский телефон доверия",
+          "url": "https://telefon-doveria.ru/",
+          "organization": "Фонд поддержки детей, находящихся в трудной жизненной ситуации"
         }
       ],
       "i18n": {
@@ -186,10 +228,13 @@
           "summary": "Moving is stressful, and that's normal. Talk to your university psychologist or call a free, anonymous helpline.",
           "actions": [
             "Most universities have a psychological service — ask the dean's office or the student council.",
-            "If you are under 18, call 8-800-2000-122 — free and anonymous.",
+            "If you are under 18, call 8-800-2000-122 (or 124 from a mobile) — free and anonymous.",
             "If life is at risk, call 112."
           ],
-          "phones": ["Helpline", "Emergency"]
+          "phones": [
+            "Helpline",
+            "Emergency"
+          ]
         }
       }
     }
