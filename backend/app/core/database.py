@@ -34,7 +34,9 @@ class TimestampMixin:
     )
 
 
-engine = create_async_engine(settings.database_url)
+# Neon suspends an idle database and drops its connections: check a pooled connection
+# before use (pre_ping) and renew it every few minutes, so a request never gets a dead one.
+engine = create_async_engine(settings.database_url, pool_pre_ping=True, pool_recycle=300)
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 

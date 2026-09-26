@@ -14,6 +14,14 @@ from app.core.config import settings as app_settings
 BOT_TOKEN = "test-bot-token"
 
 
+async def test_garbage_bearer_token_is_401_not_500(client: AsyncClient) -> None:
+    # Headers travel as latin-1, so "«…»" reaches the server as non-ASCII text.
+    for token in ("«quoted»", "3f9a\x85e1c", "a.b", "a.b.c", "x" * 500):
+        header = f"Bearer {token}".encode("latin-1")
+        response = await client.get("/api/v1/me", headers={"Authorization": header})
+        assert response.status_code == 401, token
+
+
 def make_init_data(user_id: int = 777, auth_date: int | None = None, **extra: str) -> str:
     from urllib.parse import urlencode
 

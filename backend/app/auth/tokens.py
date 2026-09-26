@@ -58,7 +58,7 @@ def _verify(token: str, key: str, now: float | None) -> dict[str, object]:
     try:
         body, signature = token.split(".")
         expected = _b64(hmac.new(key.encode(), body.encode(), hashlib.sha256).digest())
-        if not hmac.compare_digest(expected, signature):
+        if not hmac.compare_digest(expected.encode(), signature.encode()):
             raise TokenError("invalid signature")
         data = json.loads(_unb64(body))
         if not isinstance(data, dict):
@@ -68,7 +68,7 @@ def _verify(token: str, key: str, now: float | None) -> dict[str, object]:
         return data
     except TokenError:
         raise
-    except (ValueError, KeyError, TypeError) as error:
+    except (ValueError, KeyError, TypeError, UnicodeError) as error:
         raise TokenError("malformed token") from error
 
 

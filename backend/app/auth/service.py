@@ -49,7 +49,8 @@ class AuthService:
 
     async def _user_from_token(self, token: str) -> User:
         for test_token, max_user_id in settings.test_access_tokens.items():
-            if hmac.compare_digest(token, test_token):
+            # Compare bytes: str comparison raises on non-ASCII input instead of failing.
+            if hmac.compare_digest(token.encode(), test_token.encode()):
                 return await self.get_or_create(max_user_id)
 
         if not settings.signing_key:
