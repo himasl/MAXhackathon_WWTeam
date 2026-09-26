@@ -144,3 +144,5 @@ export interface HelpTopic {
   phones: { label: string; number: string }[];
   sources: { title: string; url: string; organization: string }[];
 }
+
+export type ReportKind = "OUTDATED" | "NOT_APPLICABLE" | "OTHER";

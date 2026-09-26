@@ -1,4 +1,5 @@
 from app.documents.models import Document, ScenarioStepDocument
+from app.feedback.models import StepReport
 from app.routes.models import UserRoute, UserRouteStep
 from app.scenarios.models import Rule, Scenario, ScenarioStep
 from app.sources.models import Source
@@ -12,6 +13,7 @@ __all__ = [
     "ScenarioStep",
     "ScenarioStepDocument",
     "Source",
+    "StepReport",
     "University",
     "User",
     "UserProfile",

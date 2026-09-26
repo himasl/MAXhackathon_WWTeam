@@ -54,8 +54,16 @@ async def http_error_handler(_: Request, error: Exception) -> JSONResponse:
 
 
 async def unhandled_error_handler(request: Request, error: Exception) -> JSONResponse:
-    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
-    return error_response(500, "INTERNAL_ERROR", "Internal server error")
+    request_id = getattr(request.state, "request_id", "-")
+    logger.exception(
+        "Unhandled error on %s %s [request_id=%s]", request.method, request.url.path, request_id
+    )
+    # The id lets support find this exact failure in the logs from a user's screenshot.
+    response = error_response(
+        500, "INTERNAL_ERROR", f"Internal server error (request_id: {request_id})"
+    )
+    response.headers["X-Request-ID"] = request_id
+    return response
 
 
 def add_exception_handlers(app: FastAPI) -> None:

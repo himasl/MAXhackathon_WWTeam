@@ -1,6 +1,7 @@
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import (
@@ -8,6 +9,7 @@ from app.core.exceptions import (
     RouteNotFoundError,
     RouteStepNotFoundError,
 )
+from app.feedback.models import ReportKind, StepReport
 from app.routes.models import RouteStatus, RouteStepStatus, UserRoute, UserRouteStep
 from app.routes.repository import RouteRepository
 from app.routes.schemas import (
@@ -279,6 +281,46 @@ class RouteService:
                 for summary, step in zip(response.steps, route.steps, strict=True)
             ],
         )
+
+    async def report(
+        self, user: User, route_id: UUID, step_id: UUID, kind: ReportKind, comment: str
+    ) -> tuple[StepReport, str | None]:
+        """Save «информация устарела». Returns the report and, for a new one, the text the
+        team gets in the bot chat (a repeat within a day is not sent again)."""
+        route = await self.get_route_model(user, route_id)
+        step = self._find_step(route, step_id)
+        since = datetime.now(UTC) - timedelta(days=1)
+        existing = await self.session.scalar(
+            select(StepReport).where(
+                StepReport.route_step_id == step.id,
+                StepReport.kind == kind,
+                StepReport.created_at >= since,
+            )
+        )
+        if existing is not None:
+            return existing, None
+        report = StepReport(route_step_id=step.id, kind=kind, comment=comment.strip())
+        self.session.add(report)
+        await self.session.commit()
+
+        profile = await self.user_repository.get_profile(user.id)
+        sources = await self.source_service.list_for_step(
+            step.scenario_step_id, region_code=profile.region_code if profile else None
+        )
+        labels = {
+            ReportKind.OUTDATED: "информация устарела",
+            ReportKind.NOT_APPLICABLE: "шаг мне не подходит",
+            ReportKind.OTHER: "другое",
+        }
+        lines = [
+            f"📝 Отзыв о шаге «{step.scenario_step.title}»: {labels[kind]}",
+            f"Сценарий: {route.scenario.code} v{route.scenario_version}, шаг {step.scenario_step.code}",
+            f"Регион: {profile.region_code if profile else '—'}",
+        ]
+        lines.extend(f"Источник: {source.url}" for source in sources)
+        if report.comment:
+            lines.append(f"Комментарий: {report.comment}")
+        return report, "\n".join(lines)
 
     async def _reload(self, route_id: UUID, user: User) -> RouteResponse:
         route = await self.repository.get(route_id, user.id, refresh=True)

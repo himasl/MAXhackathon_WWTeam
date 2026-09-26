@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { NearbyPlace } from "../features/NearbyPlace";
+import { ReportStep } from "../features/ReportStep";
 import { api, errorMessage } from "../shared/api/client";
 import type { Route, StepDetail } from "../shared/api/types";
 import { t } from "../shared/i18n";
@@ -205,6 +206,8 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
           </div>
         ))}
       </Section>
+
+      <ReportStep routeId={routeId} stepId={stepId} />
     </Screen>
   );
 }

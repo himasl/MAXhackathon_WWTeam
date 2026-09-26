@@ -8,6 +8,7 @@ from sqlalchemy import Select, and_, case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.feedback.models import StepReport
 from app.routes.models import RouteStatus, RouteStepStatus, UserRoute, UserRouteStep
 from app.scenarios.models import Scenario, ScenarioStep, StepCategory
 from app.stats.schemas import GroupStats, RouteStats, StatsResponse, StepStats
@@ -71,6 +72,15 @@ class StatsService:
             )
         ).one()
 
+        reported = await self._scalar(
+            self._real_users(
+                select(func.count(StepReport.id))
+                .join(UserRouteStep, UserRouteStep.id == StepReport.route_step_id)
+                .join(UserRoute, UserRoute.id == UserRouteStep.route_id)
+                .join(User, User.id == UserRoute.user_id)
+            )
+        )
+
         registration_seconds = await self.session.scalar(
             self._real_users(
                 step_base.join(ScenarioStep, ScenarioStep.id == UserRouteStep.scenario_step_id)
@@ -99,6 +109,7 @@ class StatsService:
                 done_from_chat=int(row[1]),
                 reminders_sent=int(row[2]),
                 done_after_reminder=int(row[3]),
+                reported=reported,
             ),
             registration_median_days=None
             if registration_seconds is None

@@ -1,19 +1,23 @@
 import hmac
 import logging
+import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Any
+from uuid import uuid4
 
 from fastapi import BackgroundTasks, FastAPI, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 
 from app.api.errors import add_exception_handlers, error_response
 from app.api.v1.router import router as api_v1_router
 from app.bot.runtime import WEBHOOK_PATH, BotRuntime
 from app.core.config import settings
+from app.core.database import engine
 from app.core.logging import configure_logging
 
 configure_logging()
@@ -48,16 +52,47 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Request-ID"],
 )
+
+
+@app.middleware("http")
+async def request_id_middleware(request: Request, call_next: Any) -> Response:
+    """Tag every request with an id: logged on errors and returned in X-Request-ID."""
+    incoming = request.headers.get("x-request-id", "")
+    request_id = incoming if re.fullmatch(r"[A-Za-z0-9_-]{6,64}", incoming) else uuid4().hex[:12]
+    request.state.request_id = request_id
+    response: Response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
+
+
 app.include_router(api_v1_router)
 add_exception_handlers(app)
 
 
 @app.get("/health", tags=["system"])
 async def health(request: Request) -> dict[str, str]:
-    """Liveness. ``bot`` shows how the MAX bot is connected: off, polling, webhook, webhook_failed."""
+    """Liveness for monitoring and reviewers.
+
+    ``bot``: how the MAX bot is connected (off, polling, webhook, webhook_failed);
+    ``database``: ok / unavailable; ``version``: commit of the running build, to check it
+    matches the submitted commit hash.
+    """
     runtime: BotRuntime = request.app.state.bot
-    return {"status": "ok", "bot": runtime.status}
+    try:
+        async with engine.connect() as connection:
+            await connection.execute(text("SELECT 1"))
+        database = "ok"
+    except Exception:  # noqa: BLE001 - reported, not raised: liveness must answer
+        logger.warning("Database is unavailable for /health")
+        database = "unavailable"
+    return {
+        "status": "ok",
+        "bot": runtime.status,
+        "database": database,
+        "version": settings.version,
+    }
 
 
 @app.post(WEBHOOK_PATH, include_in_schema=False)

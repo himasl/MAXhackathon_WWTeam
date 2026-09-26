@@ -1085,3 +1085,57 @@ ul.checklist {
   outline-offset: 2px;
   border-radius: 10px;
 }
+
+/* «Сообщить о неточности»: a quiet link that opens a small form. */
+.report-link {
+  display: block;
+  margin: 18px auto 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.report-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.report-form__kinds {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.report-form__kinds legend {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.report-form__kind {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.report-form__kind input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent-button);
+}
+
+.report-form__comment {
+  display: grid;
+  gap: 6px;
+}
+
+.report-form textarea {
+  resize: vertical;
+  font: inherit;
+}

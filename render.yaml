@@ -36,3 +36,5 @@ services:
         generateValue: true
       - key: TEST_ACCESS_TOKENS
         sync: false
+      - key: SUPPORT_MAX_USER_IDS
+        sync: false

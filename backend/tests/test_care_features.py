@@ -1,9 +1,12 @@
+import dataclasses
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+import pytest
 from httpx import AsyncClient
 
 from app.bot.runtime import BotRuntime
+from app.core.config import settings
 from app.core.database import async_session
 from app.main import app as fastapi_app
 from app.notifications.max_sender import parse_step_payload, step_payload
@@ -134,3 +137,43 @@ async def test_foreign_route_in_english(client: AsyncClient) -> None:
     assert detail.json()["documents"][0]["title"] == "National passport"
     russian = (await client.get("/api/v1/routes/current")).json()
     assert "Медицинское страхование" in [item["title"] for item in russian["steps"]]
+
+
+async def test_step_report_goes_to_support_chat(
+    client: AsyncClient,
+    sender: RecordingSender,  # noqa: F811
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from app.api.v1 import routes as routes_module
+
+    monkeypatch.setattr(
+        routes_module, "settings", dataclasses.replace(settings, support_max_user_ids=(4242,))
+    )
+    route = await route_for(client, region_code="54", housing_type="RENT")
+    step = next(item for item in route["steps"] if item["code"] == "temporary_registration")
+    url = f"/api/v1/routes/{route['id']}/steps/{step['id']}/report"
+
+    first = await client.post(url, json={"kind": "OUTDATED", "comment": "Адрес МФЦ сменился"})
+    assert first.status_code == 201
+    to_support = [message for user_id, message in sender.sent if user_id == 4242]
+    assert len(to_support) == 1
+    text = to_support[0].text
+    assert "Регистрация по месту пребывания" in text and "Адрес МФЦ сменился" in text
+    assert "Регион: 54" in text and "Источник: https://" in text
+
+    again = await client.post(url, json={"kind": "OUTDATED"})
+    assert again.json()["id"] == first.json()["id"]
+    assert len([1 for user_id, _ in sender.sent if user_id == 4242]) == 1
+
+    bad = await client.post(url, json={"kind": "SPAM"})
+    assert bad.status_code == 422
+    stats = (await client.get("/api/v1/stats")).json()
+    assert stats["steps"]["reported"] == 1
+
+
+async def test_health_reports_database_and_version(client: AsyncClient) -> None:
+    response = await client.get("/health", headers={"X-Request-ID": "review-123456"})
+    body = response.json()
+    assert body["status"] == "ok" and body["database"] == "ok" and body["version"]
+    assert response.headers["X-Request-ID"] == "review-123456"
+    assert len((await client.get("/health")).headers["X-Request-ID"]) == 12

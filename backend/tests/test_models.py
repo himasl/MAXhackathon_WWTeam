@@ -17,6 +17,7 @@ def test_model_registry_contains_all_tables() -> None:
         "scenario_steps",
         "scenarios",
         "sources",
+        "step_reports",
         "universities",
         "user_profiles",
         "user_route_steps",

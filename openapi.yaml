@@ -849,6 +849,78 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
       - HTTPBearer: []
+  /api/v1/routes/{route_id}/steps/{step_id}/report:
+    post:
+      tags:
+      - routes
+      summary: Report Step
+      description: '«Информация устарела»: the note goes to the team''s MAX chat (SUPPORT_MAX_USER_IDS)
+
+        with the step, scenario version, region and sources, so data can be fixed
+        quickly.
+
+        Repeating the same note within a day is accepted but not sent again.'
+      operationId: report_step_api_v1_routes__route_id__steps__step_id__report_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StepReportRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepReportResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
   /api/v1/config:
     get:
       tags:
@@ -1220,8 +1292,15 @@ paths:
       tags:
       - system
       summary: Health
-      description: 'Liveness. ``bot`` shows how the MAX bot is connected: off, polling,
-        webhook, webhook_failed.'
+      description: 'Liveness for monitoring and reviewers.
+
+
+        ``bot``: how the MAX bot is connected (off, polling, webhook, webhook_failed);
+
+        ``database``: ok / unavailable; ``version``: commit of the running build,
+        to check it
+
+        matches the submitted commit hash.'
       operationId: health_health_get
       responses:
         '200':
@@ -1640,6 +1719,13 @@ components:
       - sent
       - step_id
       title: ReminderResponse
+    ReportKind:
+      type: string
+      enum:
+      - OUTDATED
+      - NOT_APPLICABLE
+      - OTHER
+      title: ReportKind
     RouteProgress:
       properties:
         completed:
@@ -2077,6 +2163,33 @@ components:
       - description
       - required
       title: StepDocumentResponse
+    StepReportRequest:
+      properties:
+        kind:
+          $ref: '#/components/schemas/ReportKind'
+        comment:
+          type: string
+          maxLength: 500
+          title: Comment
+          default: ''
+      additionalProperties: false
+      type: object
+      required:
+      - kind
+      title: StepReportRequest
+    StepReportResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        kind:
+          $ref: '#/components/schemas/ReportKind'
+      type: object
+      required:
+      - id
+      - kind
+      title: StepReportResponse
     StepStats:
       properties:
         done:
@@ -2091,6 +2204,10 @@ components:
         done_after_reminder:
           type: integer
           title: Done After Reminder
+        reported:
+          type: integer
+          title: Reported
+          default: 0
       type: object
       required:
       - done

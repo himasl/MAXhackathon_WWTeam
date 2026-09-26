@@ -64,6 +64,9 @@ class BotHandler:
         command = command.split("@", 1)[0].lower()
         if command in START_COMMANDS:
             await self.welcome(user_id, argument.strip() or None)
+        elif command == "/id":
+            # For the team: the id to put into SUPPORT_MAX_USER_IDS.
+            await self.notifications.send_text(user_id, f"Ваш MAX ID: {user_id}")
         elif text.lower() in NEXT_COMMANDS or command in NEXT_COMMANDS:
             await self.send_next_step(user_id)
         else:

@@ -12,6 +12,7 @@ from app.core.exceptions import (
     InvalidOperationError,
     RouteStepNotFoundError,
 )
+from app.feedback.schemas import StepReportRequest, StepReportResponse
 from app.notifications.service import NotificationService
 from app.routes.schemas import (
     CalendarLinkResponse,
@@ -203,3 +204,29 @@ async def revoke_share_links(user: CurrentUserDependency, session: SessionDepend
     user.share_version += 1
     await session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post(
+    "/{route_id}/steps/{step_id}/report",
+    response_model=StepReportResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def report_step(
+    request: Request,
+    background: BackgroundTasks,
+    route_id: UUID,
+    step_id: UUID,
+    payload: StepReportRequest,
+    user: CurrentUserDependency,
+    session: SessionDependency,
+) -> StepReportResponse:
+    """«Информация устарела»: the note goes to the team's MAX chat (SUPPORT_MAX_USER_IDS)
+    with the step, scenario version, region and sources, so data can be fixed quickly.
+    Repeating the same note within a day is accepted but not sent again."""
+    report, text = await RouteService(session).report(
+        user, route_id, step_id, payload.kind, payload.comment
+    )
+    if text:
+        for support_id in settings.support_max_user_ids:
+            background.add_task(notifications(request).send_text, support_id, text)
+    return StepReportResponse(id=report.id, kind=report.kind)

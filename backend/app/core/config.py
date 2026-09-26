@@ -67,6 +67,14 @@ class Settings:
         default_factory=lambda: _test_tokens(os.getenv("TEST_ACCESS_TOKENS", ""))
     )
 
+    # MAX user ids of the team: they get «информация устарела» reports in the bot chat.
+    support_max_user_ids: tuple[int, ...] = field(
+        default_factory=lambda: tuple(
+            int(item) for item in os.getenv("SUPPORT_MAX_USER_IDS", "").split(",") if item.strip().isdigit()
+        )
+    )
+    # Commit of the running build: Render sets RENDER_GIT_COMMIT; shown in /health.
+    version: str = (os.getenv("APP_VERSION") or os.getenv("RENDER_GIT_COMMIT") or "dev")[:12]
     max_bot_token: str = os.getenv("MAX_BOT_TOKEN", "")
     max_api_url: str = os.getenv("MAX_API_URL", "https://platform-api2.max.ru").rstrip("/")
     max_ca_bundle: str | None = os.getenv("MAX_CA_BUNDLE") or None

@@ -6,6 +6,7 @@ import type {
   HelpTopic,
   Profile,
   Region,
+  ReportKind,
   Route,
   SharedProgress,
   StepDetail,
@@ -19,6 +20,7 @@ export class ApiError extends Error {
     public readonly status: number,
     public readonly code: string,
     message: string,
+    public readonly requestId: string | null = null,
   ) {
     super(message);
   }
@@ -82,6 +84,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
       response.status,
       error?.code ?? "HTTP_ERROR",
       error?.message ?? `${t("Ошибка", "Error")} ${response.status}`,
+      response.headers.get("X-Request-ID"),
     );
   }
   return body as T;
@@ -120,6 +123,11 @@ export const api = {
   getShared: (token: string) =>
     request<SharedProgress>(`/api/v1/shared/${encodeURIComponent(token)}`),
   getHelp: () => request<HelpTopic[]>("/api/v1/help"),
+  reportStep: (routeId: string, stepId: string, kind: ReportKind, comment: string) =>
+    request<{ id: string }>(`/api/v1/routes/${routeId}/steps/${stepId}/report`, {
+      method: "POST",
+      body: JSON.stringify({ kind, comment }),
+    }),
   remind: (routeId: string) =>
     request<{ sent: boolean; step_id: string | null }>(`/api/v1/routes/${routeId}/remind`, {
       method: "POST",
@@ -135,8 +143,11 @@ export function errorMessage(error: unknown): string {
         "Не удалось подтвердить вход. Откройте маршрут по кнопке из чата с ботом в MAX (команда /start).",
         "We could not sign you in. Open the route with the button in the bot chat in MAX (/start).",
       );
-    if (error.status >= 500)
-      return t("Сервис временно недоступен. Попробуйте ещё раз.", "The service is unavailable. Try again.");
+    if (error.status >= 500) {
+      // The code helps support find this exact failure in the server logs.
+      const code = error.requestId ? ` ${t("Код для поддержки", "Support code")}: ${error.requestId}.` : "";
+      return t("Сервис временно недоступен. Попробуйте ещё раз.", "The service is unavailable. Try again.") + code;
+    }
     return error.message;
   }
   return t("Что-то пошло не так. Попробуйте ещё раз.", "Something went wrong. Try again.");

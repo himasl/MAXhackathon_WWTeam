@@ -15,6 +15,8 @@ class StepStats(BaseModel):
     done_from_chat: int
     reminders_sent: int
     done_after_reminder: int
+    # «Информация устарела» and similar notes from users about steps.
+    reported: int = 0
 
 
 class GroupStats(BaseModel):
