@@ -135,6 +135,15 @@
         "organization": "ТФОМС Нижегородской области",
         "url": "https://www.tfoms.nnov.ru/",
         "checked_at": "2026-09-26"
+      },
+      "student_transport": {
+        "city": "Нижний Новгород",
+        "title": "Карта студента — Ситикард",
+        "url": "https://siticard.ru/cards/karta-studenta/",
+        "organization": "Ситикард (система оплаты проезда Нижегородской области)",
+        "summary": "У оператора оплаты проезда Нижегородской области есть отдельная «Карта студента». Условия и стоимость — на странице источника.",
+        "documents": [],
+        "checked_at": "2026-09-26"
       }
     },
     "63": {
@@ -164,6 +173,15 @@
       "tfoms": {
         "organization": "ТФОМС Ростовской области",
         "url": "https://rostov-tfoms.ru/",
+        "checked_at": "2026-09-26"
+      },
+      "student_transport": {
+        "city": "Ростов-на-Дону",
+        "title": "Проездные билеты — МУП МТК «Ростовпассажиртранс»",
+        "url": "https://xn--80aaafwm0bbalhiafeahek.xn--p1ai/passazhiram/proezdnye-bilety/",
+        "organization": "МУП МТК «Ростовпассажиртранс»",
+        "summary": "МУП «Ростовпассажиртранс» продаёт студенческие проездные билеты. Виды билетов, цены и порядок оформления — на странице источника.",
+        "documents": [],
         "checked_at": "2026-09-26"
       }
     },
@@ -305,6 +323,11 @@
         "organization": "ГАУ РК «МФЦ» (Республика Коми)",
         "url": "https://mydocuments11.ru/",
         "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Республики Коми",
+        "url": "https://komifoms.ru/",
+        "checked_at": "2026-09-26"
       }
     },
     "13": {
@@ -404,6 +427,11 @@
         "organization": "КАУ «МФЦ Алтайского края»",
         "url": "https://mfc22.ru/",
         "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Алтайского края",
+        "url": "https://www.tfoms22.ru/",
+        "checked_at": "2026-09-26"
       }
     },
     "24": {
@@ -423,12 +451,22 @@
         "organization": "КГАУ «МФЦ Приморского края»",
         "url": "https://mfc-25.ru/",
         "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Приморского края",
+        "url": "https://www.omspk.ru/",
+        "checked_at": "2026-09-26"
       }
     },
     "26": {
       "mfc": {
         "organization": "ГКУ СК «МФЦ» (Ставропольский край)",
         "url": "https://umfc26.ru/",
+        "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Ставропольского края",
+        "url": "https://tfomssk.ru/",
         "checked_at": "2026-09-26"
       }
     },
@@ -499,6 +537,11 @@
       "mfc": {
         "organization": "Портал МФЦ Брянской области",
         "url": "https://xn--32-7lc6ak.xn--p1ai/",
+        "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Брянской области",
+        "url": "https://xn--90asehmeeq.xn--p1ai/",
         "checked_at": "2026-09-26"
       }
     },
@@ -605,6 +648,11 @@
         "url": "https://www.kmfc40.ru/",
         "checked_at": "2026-09-26"
       },
+      "tfoms": {
+        "organization": "ТФОМС Калужской области",
+        "url": "https://oms-kaluga.ru/",
+        "checked_at": "2026-09-26"
+      },
       "student_transport": {
         "city": "Калуга",
         "title": "Транспортная карта для студента",
@@ -624,6 +672,15 @@
       "tfoms": {
         "organization": "ТФОМС Камчатского края",
         "url": "https://www.kamtfoms.ru/",
+        "checked_at": "2026-09-26"
+      },
+      "student_transport": {
+        "city": "Петропавловск-Камчатский",
+        "title": "Петропавловск-Камчатский — виды транспортных карт",
+        "url": "https://t-karta.ru/petropavlovsk-kamchatsky/cards",
+        "organization": "Система «Транспортная карта» (Золотая Корона); сервисный центр ООО «Электронный мир»",
+        "summary": "В системе «Транспортная карта» Петропавловска-Камчатского есть «Студенческий проездной». Условия и стоимость уточните на странице источника или в сервисном центре.",
+        "documents": [],
         "checked_at": "2026-09-26"
       }
     },
@@ -734,6 +791,11 @@
         "organization": "МОГАУ «МФЦ» (Магаданская область)",
         "url": "https://mydoc49.ru/",
         "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Магаданской области",
+        "url": "https://www.tfoms-magadan.ru/",
+        "checked_at": "2026-09-26"
       }
     },
     "51": {
@@ -765,6 +827,11 @@
       }
     },
     "55": {
+      "tfoms": {
+        "organization": "ТФОМС Омской области",
+        "url": "https://www.omsomsk.ru/",
+        "checked_at": "2026-09-26"
+      },
       "student_transport": {
         "city": "Омск",
         "title": "Транспортная карта студента — ОМКА",
@@ -779,6 +846,11 @@
       "mfc": {
         "organization": "ГАУ «МФЦ» Оренбургской области",
         "url": "https://orenmfc.orb.ru/",
+        "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Оренбургской области",
+        "url": "https://www.orenfoms.ru/",
         "checked_at": "2026-09-26"
       },
       "student_transport": {
@@ -798,6 +870,11 @@
         "organization": "БУ ОО «МФЦ»",
         "url": "https://mfc-orel.ru/",
         "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Орловской области",
+        "url": "https://www.oreltfoms.ru/",
+        "checked_at": "2026-09-26"
       }
     },
     "58": {
@@ -811,6 +888,15 @@
       "mfc": {
         "organization": "ГБУ ПК «Пермский краевой МФЦ»",
         "url": "https://mfc.permkrai.ru/",
+        "checked_at": "2026-09-26"
+      },
+      "student_transport": {
+        "city": "Пермь",
+        "title": "Проездные документы — город Пермь",
+        "url": "https://www.gorodperm.ru/actions/transport_gh/public/proezd/",
+        "organization": "Администрация города Перми (департамент транспорта)",
+        "summary": "Для студентов в Перми действует льготный проездной документ, его продлевают на учебный год. Порядок оформления — на странице департамента транспорта.",
+        "documents": [],
         "checked_at": "2026-09-26"
       }
     },
@@ -826,6 +912,11 @@
       }
     },
     "62": {
+      "tfoms": {
+        "organization": "ТФОМС Рязанской области",
+        "url": "https://tfoms-rzn.ru/",
+        "checked_at": "2026-09-26"
+      },
       "student_transport": {
         "city": "Рязань",
         "title": "Студентам — ЕЦК (Единая цифровая карта жителя Рязанской области)",
@@ -912,6 +1003,16 @@
       }
     },
     "71": {
+      "mfc": {
+        "organization": "ГБУ ТО «МФЦ» (Тульская область)",
+        "url": "https://mfc71.ru/",
+        "checked_at": "2026-09-26"
+      },
+      "tfoms": {
+        "organization": "ТФОМС Тульской области",
+        "url": "https://www.omstula.ru/",
+        "checked_at": "2026-09-26"
+      },
       "student_transport": {
         "city": "Тула",
         "title": "Социальная транспортная карта (СТК)",
@@ -926,6 +1027,11 @@
       }
     },
     "72": {
+      "mfc": {
+        "organization": "ГАУ ТО «МФЦ» (Тюменская область)",
+        "url": "https://mfcto.ru/",
+        "checked_at": "2026-09-26"
+      },
       "student_transport": {
         "city": "Тюмень",
         "title": "Принятие решения о предоставлении льготного проезда студентам, школьникам и пенсионерам",
@@ -939,6 +1045,20 @@
         "checked_at": "2026-09-26"
       }
     },
+    "76": {
+      "mfc": {
+        "organization": "ГАУ ЯО «МФЦ» (Ярославская область)",
+        "url": "https://mfc76.ru/",
+        "checked_at": "2026-09-26"
+      }
+    },
+    "79": {
+      "tfoms": {
+        "organization": "ТФОМС Еврейской автономной области",
+        "url": "https://www.tfomseao.ru/",
+        "checked_at": "2026-09-26"
+      }
+    },
     "83": {
       "tfoms": {
         "organization": "ТФОМС Ненецкого автономного округа",
@@ -947,6 +1067,11 @@
       }
     },
     "86": {
+      "mfc": {
+        "organization": "АУ «МФЦ Югры»",
+        "url": "https://mfc.admhmao.ru/",
+        "checked_at": "2026-09-26"
+      },
       "tfoms": {
         "organization": "ТФОМС Ханты-Мансийского автономного округа — Югры",
         "url": "https://www.ofoms.ru/",
@@ -961,9 +1086,28 @@
       }
     },
     "89": {
+      "mfc": {
+        "organization": "ГБУ ЯНАО «МФЦ»",
+        "url": "https://mfc.yanao.ru/",
+        "checked_at": "2026-09-26"
+      },
       "tfoms": {
         "organization": "ТФОМС Ямало-Ненецкого автономного округа",
         "url": "https://www.webfoms.ru/",
+        "checked_at": "2026-09-26"
+      }
+    },
+    "90": {
+      "tfoms": {
+        "organization": "ТФОМС Запорожской области",
+        "url": "https://tfomszo.ru/",
+        "checked_at": "2026-09-26"
+      }
+    },
+    "91": {
+      "mfc": {
+        "organization": "ГБУ РК «МФЦ» (Республика Крым)",
+        "url": "https://mfc.rk.gov.ru/",
         "checked_at": "2026-09-26"
       }
     },
@@ -978,6 +1122,13 @@
       "tfoms": {
         "organization": "ТФОМС Донецкой Народной Республики",
         "url": "https://fomsdnr.ru/",
+        "checked_at": "2026-09-26"
+      }
+    },
+    "94": {
+      "mfc": {
+        "organization": "МФЦ ЛНР",
+        "url": "https://mfclnr.ru/",
         "checked_at": "2026-09-26"
       }
     }

@@ -1,33 +1,11 @@
 {
   "_comment": "Кандидаты, которые не удалось проверить (сайт не открылся или источник неофициальный). Не загружаются в сервис; после проверки переносятся в regional_services.json (tools/check_sources.py --candidates).",
   "regions": {
-    "52": {
-      "student_transport": {
-        "city": "Нижний Новгород",
-        "title": "Карта студента — Ситикард",
-        "url": "https://siticard.ru/cards/karta-studenta/",
-        "organization": "Ситикард (система оплаты проезда Нижегородской области)",
-        "summary": "У оператора есть раздел «Карта студента» и новость «Новые единые проездные и льготный электронный кошелёк для студентов»; условия не проверены.",
-        "documents": [],
-        "note": "siticard.ru не открылся через WebFetch (слишком много редиректов) — данные только по заголовкам поиска. Отдельно nnkd.ru (Нижегородские канатные дороги) даёт студентам льготные проездные на канатную дорогу."
-      }
-    },
     "63": {
       "tfoms": {
         "organization": "ТФОМС Самарской области",
         "url": "https://www.samtfoms.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      }
-    },
-    "61": {
-      "student_transport": {
-        "city": "Ростов-на-Дону",
-        "title": "Проездные билеты — МУП МТК «Ростовпассажиртранс»",
-        "url": "https://xn--80aaafwm0bbalhiafeahek.xn--p1ai/passazhiram/proezdnye-bilety/",
-        "organization": "МУП МТК «Ростовпассажиртранс»",
-        "summary": "Студенческий проездной существует (новости о сохранении его стоимости), но условия на официальной странице не проверены.",
-        "documents": [],
-        "note": "Страница оператора и rostov-gorod.ru не открылись через WebFetch. «Социальная карта учащегося» (prostor.tech/card-student/, 50%) прямо исключает студентов вузов — только школьники и колледжи с интегрированными программами."
       }
     },
     "74": {
@@ -49,13 +27,6 @@
         "organization": "ТФОМС Карачаево-Черкесской Республики",
         "url": "https://xn--09-7lchqdo.xn--p1ai/",
         "note": "Cyrillic domain тфомс09.рф; Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (IDN)"
-      }
-    },
-    "11": {
-      "tfoms": {
-        "organization": "ТФОМС Республики Коми",
-        "url": "https://komifoms.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (timeout)"
       }
     },
     "12": {
@@ -108,11 +79,6 @@
       }
     },
     "22": {
-      "tfoms": {
-        "organization": "ТФОМС Алтайского края",
-        "url": "https://www.tfoms22.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      },
       "student_transport": {
         "city": "Барнаул",
         "title": "С 15 августа в Барнауле можно приобрести единые школьные и студенческие проездные",
@@ -124,20 +90,6 @@
           "passport"
         ],
         "note": "Страница открылась, но она от 09.08.2022 — цена и условия могли измениться. Страница оператора tk-barn.ru (МБУ «Центртранс») вернула 403."
-      }
-    },
-    "25": {
-      "tfoms": {
-        "organization": "ТФОМС Приморского края",
-        "url": "https://www.omspk.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (connection failed)"
-      }
-    },
-    "26": {
-      "tfoms": {
-        "organization": "ТФОМС Ставропольского края",
-        "url": "https://tfomssk.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
       }
     },
     "27": {
@@ -161,13 +113,6 @@
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
       }
     },
-    "32": {
-      "tfoms": {
-        "organization": "ТФОМС Брянской области",
-        "url": "https://xn--90asehmeeq.xn--p1ai/",
-        "note": "Cyrillic domain тфомсбрк.рф; Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (IDN)"
-      }
-    },
     "35": {
       "tfoms": {
         "organization": "ТФОМС Вологодской области",
@@ -187,24 +132,6 @@
         "organization": "ТФОМС Ивановской области",
         "url": "https://tfoms.ivanovo.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      }
-    },
-    "40": {
-      "tfoms": {
-        "organization": "ТФОМС Калужской области",
-        "url": "https://oms-kaluga.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (HTTP 403)"
-      }
-    },
-    "41": {
-      "student_transport": {
-        "city": "Петропавловск-Камчатский",
-        "title": "Петропавловск-Камчатский — виды транспортных карт",
-        "url": "https://t-karta.ru/petropavlovsk-kamchatsky/cards",
-        "organization": "Система «Транспортная карта» (Золотая Корона); сервисный центр ООО «Электронный мир»",
-        "summary": "В перечне карт указан «Студенческий проездной»; цена и условия на странице не приведены.",
-        "documents": [],
-        "note": "Страница лишь упоминает вид карты, без условий. Официальная новость администрации pkgo.ru/news/42115 («Стоимость льготных проездных билетов в краевой столице изменится…») не открылась (таймаут). Требует ручной проверки."
       }
     },
     "44": {
@@ -228,39 +155,11 @@
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS); legacy-looking domain, check before use"
       }
     },
-    "49": {
-      "tfoms": {
-        "organization": "ТФОМС Магаданской области",
-        "url": "https://www.tfoms-magadan.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (robots.txt)"
-      }
-    },
     "51": {
       "tfoms": {
         "organization": "ТФОМС Мурманской области",
         "url": "https://www.omsmurm.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (connection failed)"
-      }
-    },
-    "55": {
-      "tfoms": {
-        "organization": "ТФОМС Омской области",
-        "url": "https://www.omsomsk.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      }
-    },
-    "56": {
-      "tfoms": {
-        "organization": "ТФОМС Оренбургской области",
-        "url": "https://www.orenfoms.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (timeout)"
-      }
-    },
-    "57": {
-      "tfoms": {
-        "organization": "ТФОМС Орловской области",
-        "url": "https://www.oreltfoms.ru/",
-        "note": "site responds but content unreadable; listed in the TFOMS ChR directory"
       }
     },
     "58": {
@@ -275,15 +174,6 @@
         "organization": "ТФОМС Пермского края",
         "url": "https://www.pkfoms.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      },
-      "student_transport": {
-        "city": "Пермь",
-        "title": "Проездные документы — город Пермь",
-        "url": "https://www.gorodperm.ru/actions/transport_gh/public/proezd/",
-        "organization": "Администрация города Перми (департамент транспорта)",
-        "summary": "Для студентов существует льготный проездной документ (ЛПД), который нужно продлевать на учебный год.",
-        "documents": [],
-        "note": "gorodperm.ru и gortransperm.ru не открылись (сервер разорвал соединение). Факт льготы — из сниппетов поиска и новостей о продлении студенческих проездных; цену и документы проверить не удалось."
       }
     },
     "60": {
@@ -291,13 +181,6 @@
         "organization": "ТФОМС Псковской области",
         "url": "https://www.ptfoms.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (timeout)"
-      }
-    },
-    "62": {
-      "tfoms": {
-        "organization": "ТФОМС Рязанской области",
-        "url": "https://tfoms-rzn.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (robots.txt)"
       }
     },
     "64": {
@@ -331,24 +214,7 @@
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
       }
     },
-    "71": {
-      "mfc": {
-        "organization": "ГБУ ТО «МФЦ» (Тульская область)",
-        "url": "https://mfc71.ru/",
-        "note": "domain resolves but fetch failed; from prior knowledge"
-      },
-      "tfoms": {
-        "organization": "ТФОМС Тульской области",
-        "url": "https://www.omstula.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      }
-    },
     "72": {
-      "mfc": {
-        "organization": "ГАУ ТО «МФЦ» (Тюменская область)",
-        "url": "https://mfcto.ru/",
-        "note": "domain resolves but fetch failed; from prior knowledge"
-      },
       "tfoms": {
         "organization": "ТФОМС Тюменской области",
         "url": "https://www.tfoms.ru/",
@@ -370,62 +236,17 @@
       }
     },
     "76": {
-      "mfc": {
-        "organization": "ГАУ ЯО «МФЦ» (Ярославская область)",
-        "url": "https://mfc76.ru/",
-        "note": "domain resolves (403) but not loaded; from prior knowledge"
-      },
       "tfoms": {
         "organization": "ТФОМС Ярославской области",
         "url": "https://www.yartfoms.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (timeout)"
       }
     },
-    "79": {
-      "tfoms": {
-        "organization": "ТФОМС Еврейской автономной области",
-        "url": "https://www.tfomseao.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      }
-    },
-    "86": {
-      "mfc": {
-        "organization": "АУ «МФЦ Югры»",
-        "url": "https://mfc.admhmao.ru/",
-        "note": "domain resolves but fetch failed; from prior knowledge"
-      }
-    },
-    "89": {
-      "mfc": {
-        "organization": "ГБУ ЯНАО «МФЦ»",
-        "url": "https://mfc.yanao.ru/",
-        "note": "domain resolves but fetch failed; from prior knowledge"
-      }
-    },
-    "90": {
-      "tfoms": {
-        "organization": "ТФОМС Запорожской области",
-        "url": "https://tfomszo.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (timeout)"
-      }
-    },
     "91": {
-      "mfc": {
-        "organization": "ГБУ РК «МФЦ» (Республика Крым)",
-        "url": "https://mfc.rk.gov.ru/",
-        "note": "appeared in search results as «Государственное бюджетное учреждение Республики…»; fetch failed"
-      },
       "tfoms": {
         "organization": "ТФОМС Республики Крым",
         "url": "https://tfomsrk.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (timeout)"
-      }
-    },
-    "94": {
-      "mfc": {
-        "organization": "МФЦ ЛНР",
-        "url": "https://mfclnr.ru/",
-        "note": "appeared in search results titled «Официальный сайт МФЦ»; fetch failed, organization not confirmed"
       }
     },
     "95": {
