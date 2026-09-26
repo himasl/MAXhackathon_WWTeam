@@ -833,3 +833,12 @@ code {
   font-size: 13px;
   margin: 0;
 }
+
+/* Which official regional data the chosen region has. */
+.region-picker__coverage {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface-soft, rgba(0, 0, 0, 0.04));
+  font-size: 14px;
+}

@@ -7,6 +7,7 @@ from app.api.dependencies import SessionDependency
 from app.api.errors import ERROR_RESPONSES
 from app.core.config import settings
 from app.regions.catalog import Region, load_regions
+from app.regions.services import RegionalKind, regional_coverage
 from app.universities.repository import UniversityRepository
 from app.universities.schemas import UniversityResponse
 
@@ -28,10 +29,22 @@ async def get_config() -> AppConfigResponse:
     )
 
 
-@router.get("/regions", response_model=list[Region])
-async def list_regions() -> list[Region]:
-    """All 89 constituent entities of Russia; ``popular`` ones are offered first."""
-    return list(load_regions())
+class RegionResponse(Region):
+    services: list[RegionalKind]
+
+
+@router.get("/regions", response_model=list[RegionResponse])
+async def list_regions() -> list[RegionResponse]:
+    """All 89 constituent entities of Russia; ``popular`` ones are offered first.
+
+    ``services`` lists the official regional data the route uses for the region:
+    ``mfc`` (regional МФЦ), ``tfoms`` (territorial ОМС fund), ``student_transport``.
+    """
+    coverage = regional_coverage()
+    return [
+        RegionResponse(**region.model_dump(), services=list(coverage.get(region.code, ())))
+        for region in load_regions()
+    ]
 
 
 @router.get("/universities", response_model=list[UniversityResponse])

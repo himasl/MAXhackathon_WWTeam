@@ -117,6 +117,13 @@ class Settings:
         return Path(custom) if custom else self.scenario_data_dir.parent / "universities.json"
 
     @property
+    def regional_services_file(self) -> Path:
+        custom = os.getenv("REGIONAL_SERVICES_FILE")
+        return (
+            Path(custom) if custom else self.scenario_data_dir.parent / "regional_services.json"
+        )
+
+    @property
     def mini_app_url(self) -> str:
         return self.public_url or self.frontend_url
 

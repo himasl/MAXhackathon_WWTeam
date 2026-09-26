@@ -648,8 +648,13 @@ paths:
       tags:
       - catalog
       summary: List Regions
-      description: All 89 constituent entities of Russia; ``popular`` ones are offered
+      description: 'All 89 constituent entities of Russia; ``popular`` ones are offered
         first.
+
+
+        ``services`` lists the official regional data the route uses for the region:
+
+        ``mfc`` (regional МФЦ), ``tfoms`` (territorial ОМС fund), ``student_transport``.'
       operationId: list_regions_api_v1_regions_get
       responses:
         '200':
@@ -658,7 +663,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Region'
+                  $ref: '#/components/schemas/RegionResponse'
                 type: array
                 title: Response List Regions Api V1 Regions Get
         '401':
@@ -1087,7 +1092,7 @@ components:
       - has_registration
       - has_clinic_attachment
       title: ProfileResponse
-    Region:
+    RegionResponse:
       properties:
         code:
           type: string
@@ -1100,12 +1105,22 @@ components:
           type: boolean
           title: Popular
           default: false
+        services:
+          items:
+            type: string
+            enum:
+            - mfc
+            - tfoms
+            - student_transport
+          type: array
+          title: Services
       additionalProperties: false
       type: object
       required:
       - code
       - title
-      title: Region
+      - services
+      title: RegionResponse
     ReminderResponse:
       properties:
         sent:

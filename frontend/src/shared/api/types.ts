@@ -23,10 +23,14 @@ export interface Profile {
   university_code: string | null;
 }
 
+export type RegionalService = "mfc" | "tfoms" | "student_transport";
+
 export interface Region {
   code: string;
   title: string;
   popular: boolean;
+  /** Official regional data the route uses for this region. */
+  services: RegionalService[];
 }
 
 export interface University {

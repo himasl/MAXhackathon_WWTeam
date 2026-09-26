@@ -102,7 +102,11 @@ class RouteService:
     ) -> RouteStepDetailResponse:
         route = await self.get_route_model(user, route_id)
         step = self._find_step(route, step_id)
-        sources = await self.source_service.list_for_step(step.scenario_step_id)
+        # Regional sources (МФЦ, ТФОМС) are linked for every region: keep only the user's one.
+        profile = await self.user_repository.get_profile(user.id)
+        sources = await self.source_service.list_for_step(
+            step.scenario_step_id, region_code=profile.region_code if profile else None
+        )
         scenario_step = step.scenario_step
         following = next(
             (

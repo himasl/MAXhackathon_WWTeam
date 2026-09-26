@@ -205,6 +205,7 @@ async def test_regions_catalog_and_validation(client: AsyncClient) -> None:
     unknown = await client.put("/api/v1/profile", json={**PROFILE, "region_code": "00"})
 
     assert len(regions) == 89
-    assert {"code": "16", "title": "Республика Татарстан", "popular": True} in regions
+    tatarstan = next(region for region in regions if region["code"] == "16")
+    assert tatarstan["title"] == "Республика Татарстан" and tatarstan["popular"] is True
     assert unknown.status_code == 422
     assert unknown.json()["error"]["code"] == "UNKNOWN_REGION"
