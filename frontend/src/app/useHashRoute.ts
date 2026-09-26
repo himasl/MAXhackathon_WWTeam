@@ -6,13 +6,20 @@ export type View =
   | { name: "onboarding" }
   | { name: "support" }
   | { name: "done" }
+  | { name: "checklist" }
   | { name: "step"; stepId: string };
 
 export function parseHash(hash: string): View {
   const path = hash.replace(/^#\/?/, "");
   const [head, param] = path.split("/");
   if (head === "step" && param) return { name: "step", stepId: decodeURIComponent(param) };
-  if (head === "welcome" || head === "onboarding" || head === "support" || head === "done") {
+  if (
+    head === "welcome" ||
+    head === "onboarding" ||
+    head === "support" ||
+    head === "done" ||
+    head === "checklist"
+  ) {
     return { name: head };
   }
   return { name: "route" };

@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { NearbyPlace } from "../features/NearbyPlace";
 import { api, errorMessage } from "../shared/api/client";
 import type { Route, StepDetail } from "../shared/api/types";
-import { CATEGORY_LABELS, SOURCE_LABELS, formatDate } from "../shared/labels";
+import { t } from "../shared/i18n";
+import { CATEGORY_LABELS, SOURCE_LABELS, STATUS_LABELS, formatDate } from "../shared/labels";
 import { maxBridge } from "../shared/max/maxBridge";
 import { Button, ErrorState, Loading, Notice, Screen, Section } from "../shared/ui";
 
@@ -75,7 +76,7 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
           onRetry={load}
           action={
             <Button variant="ghost" onClick={onBack}>
-              К маршруту
+              {t("К маршруту", "Back to route")}
             </Button>
           }
         />
@@ -85,7 +86,7 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
   if (!step) {
     return (
       <Screen>
-        <Loading text="Загружаем шаг…" />
+        <Loading text={t("Загружаем шаг…", "Loading the step…")} />
       </Screen>
     );
   }
@@ -99,47 +100,52 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
       footer={
         routeIsArchived ? null : (
           <Button variant={done ? "secondary" : "primary"} onClick={toggle} loading={saving}>
-            {done ? "Вернуть в работу" : "Отметить выполненным"}
+            {done ? t("Вернуть в работу", "Mark as not done") : t("Отметить выполненным", "Mark as done")}
           </Button>
         )
       }
     >
       <button type="button" className="back-link" onClick={onBack}>
-        ‹ Маршрут
+        ‹ {t("Маршрут", "Route")}
       </button>
       <div className="step-header">
         <span className="tag">{CATEGORY_LABELS[step.category]}</span>
-        {done ? <span className="tag tag--done">Выполнено</span> : null}
-        {!step.is_required ? <span className="tag">По желанию</span> : null}
+        {done ? <span className="tag tag--done">{STATUS_LABELS.DONE}</span> : null}
+        {step.status === "IN_PROGRESS" ? <span className="tag">{STATUS_LABELS.IN_PROGRESS}</span> : null}
+        {!step.is_required ? <span className="tag">{t("По желанию", "Optional")}</span> : null}
       </div>
       <h1>{step.title}</h1>
       <p className="lead">{step.short_description}</p>
 
       {actionError ? <Notice tone="error">{actionError}</Notice> : null}
 
-      <Section title="Почему этот шаг появился?">
+      <Section title={t("Почему этот шаг появился?", "Why is this step here?")}>
         <p>{step.reason}</p>
       </Section>
 
-      <Section title="Что сделать">
+      <Section title={t("Что сделать", "What to do")}>
         <ol className="list">
           {actions.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ol>
         {step.estimated_duration ? (
-          <p className="muted">Займёт примерно {step.estimated_duration} мин.</p>
+          <p className="muted">
+            {t(`Займёт примерно ${step.estimated_duration} мин.`, `Takes about ${step.estimated_duration} min.`)}
+          </p>
         ) : null}
       </Section>
 
       {step.documents.length > 0 ? (
-        <Section title="Документы">
+        <Section title={t("Документы", "Documents")}>
           <ul className="documents">
             {step.documents.map((document) => (
               <li key={document.code}>
                 <span className="documents__title">
                   {document.title}
-                  {!document.required ? <span className="muted"> — если есть</span> : null}
+                  {!document.required ? (
+                    <span className="muted"> — {t("если есть", "if you have it")}</span>
+                  ) : null}
                 </span>
                 {document.description ? (
                   <span className="muted documents__description">{document.description}</span>
@@ -151,41 +157,49 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
       ) : null}
 
       {step.location ? (
-        <Section title="Куда обратиться">
+        <Section title={t("Куда обратиться", "Where to go")}>
           <p>{step.location}</p>
           <NearbyPlace location={step.location} regionTitle={regionTitle} />
         </Section>
       ) : null}
 
       {deadline && !done ? (
-        <Section title="Рекомендуемый срок">
-          <p>До {deadline}</p>
+        <Section title={t("Рекомендуемый срок", "Recommended date")}>
+          <p>{t(`До ${deadline}`, `By ${deadline}`)}</p>
           <p className="muted">
-            Срок рассчитан сервисом как рекомендация и не является юридическим требованием.
+            {t(
+              "Срок рассчитан сервисом как рекомендация и не является юридическим требованием.",
+              "The date is a recommendation calculated by the service, not a legal requirement.",
+            )}
           </p>
           <Button variant="secondary" onClick={addToCalendar}>
-            Добавить в календарь
+            {t("Добавить в календарь", "Add to calendar")}
           </Button>
           {calendarError ? <Notice tone="error">{calendarError}</Notice> : null}
         </Section>
       ) : null}
 
-      <Section title="Источник">
+      <Section title={t("Источник", "Source")}>
         {step.sources.map((source) => (
           <div key={source.id} className={`source source--${source.source_type.toLowerCase()}`}>
             <span className="source__type">{SOURCE_LABELS[source.source_type]}</span>
             <strong>{source.title}</strong>
             <span className="muted">{source.organization}</span>
             {source.checked_at ? (
-              <span className="muted">Проверено: {formatDate(source.checked_at, true)}</span>
+              <span className="muted">
+                {t("Проверено:", "Checked:")} {formatDate(source.checked_at, true)}
+              </span>
             ) : null}
             {source.source_type === "MOCK" ? (
               <span className="muted">
-                Демонстрационные данные: официальный источник для этого шага ещё не внесён.
+                {t(
+                  "Демонстрационные данные: официальный источник для этого шага ещё не внесён.",
+                  "Demo data: an official source for this step has not been added yet.",
+                )}
               </span>
             ) : (
               <Button variant="secondary" onClick={() => maxBridge.openLink(source.url)}>
-                Открыть официальный источник
+                {t("Открыть официальный источник", "Open the official source")}
               </Button>
             )}
           </div>

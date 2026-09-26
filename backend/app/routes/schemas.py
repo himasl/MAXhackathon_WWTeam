@@ -85,3 +85,41 @@ class CalendarLinkResponse(BaseModel):
 class ReminderResponse(BaseModel):
     sent: bool
     step_id: UUID | None
+
+
+class ChecklistGroup(BaseModel):
+    """Documents to take to one place, gathered from the open steps that go there."""
+
+    place: str
+    steps: list[str]
+    documents: list[StepDocumentResponse]
+
+
+class ChecklistResponse(BaseModel):
+    groups: list[ChecklistGroup]
+
+
+class ChecklistSentResponse(BaseModel):
+    sent: bool
+
+
+class ShareLinkResponse(BaseModel):
+    url: str
+    expires_in: int
+
+
+class SharedStep(BaseModel):
+    title: str
+    category: StepCategory
+    status: RouteStepStatus
+    completed_at: datetime | None
+
+
+class SharedProgressResponse(BaseModel):
+    """What a parent sees by the link: step titles and progress only, no personal data."""
+
+    status: RouteStatus
+    progress: RouteProgress
+    created_at: datetime
+    completed_at: datetime | None
+    steps: list[SharedStep]

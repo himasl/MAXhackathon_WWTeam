@@ -18,19 +18,31 @@ logger = logging.getLogger(__name__)
 type LinkTokenFactory = Callable[[int], str | None]
 
 DONE_PREFIX = "done:"
+# Callback actions on a step: done, remind tomorrow, already in progress.
+STEP_ACTIONS = ("done", "snooze", "doing")
 
 
 def done_payload(step_id: UUID) -> str:
     return f"{DONE_PREFIX}{step_id}"
 
 
-def parse_done_payload(payload: str) -> UUID | None:
-    if not payload.startswith(DONE_PREFIX):
+def step_payload(action: str, step_id: UUID) -> str:
+    return f"{action}:{step_id}"
+
+
+def parse_step_payload(payload: str) -> tuple[str, UUID] | None:
+    action, _, raw = payload.partition(":")
+    if action not in STEP_ACTIONS:
         return None
     try:
-        return UUID(payload.removeprefix(DONE_PREFIX))
+        return action, UUID(raw)
     except ValueError:
         return None
+
+
+def parse_done_payload(payload: str) -> UUID | None:
+    parsed = parse_step_payload(payload)
+    return parsed[1] if parsed and parsed[0] == "done" else None
 
 
 class MaxMessageSender:
@@ -88,6 +100,17 @@ class MaxMessageSender:
             rows.append([button])
         if message.done_step_id is not None:
             rows.append([callback_button("✅ Выполнено", done_payload(message.done_step_id))])
+            if message.snooze:
+                rows.append(
+                    [
+                        callback_button(
+                            "⏰ Напомнить завтра", step_payload("snooze", message.done_step_id)
+                        ),
+                        callback_button(
+                            "🚶 Уже в процессе", step_payload("doing", message.done_step_id)
+                        ),
+                    ]
+                )
         rows.extend([link_button(text, url)] for text, url in message.extra_links)
         return [keyboard(*rows)] if rows else []
 

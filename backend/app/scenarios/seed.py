@@ -63,6 +63,7 @@ async def _upsert_documents(
             session.add(document)
         document.title = item.title
         document.description = item.description
+        document.i18n = {lang: text.model_dump() for lang, text in item.i18n.items()}
         result[item.code] = document
     return result
 
@@ -138,6 +139,7 @@ async def sync_scenario(session: AsyncSession, definition: ScenarioDefinition) -
                 estimated_duration=step.estimated_duration,
                 recommended_days=step.recommended_days,
                 is_required=step.is_required,
+                i18n={lang: text.model_dump() for lang, text in step.i18n.items()},
                 rules=[
                     Rule(field=rule.field, operator=rule.operator, value=rule.value)
                     for rule in step.rules

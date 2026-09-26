@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import type { ReactNode } from "react";
 
 export function Screen({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
@@ -40,7 +41,7 @@ export function Button({
   );
 }
 
-export function Loading({ text = "Загружаем…" }: { text?: string }) {
+export function Loading({ text = t("Загружаем…", "Loading…") }: { text?: string }) {
   return (
     <div className="state" role="status">
       <span className="spinner" aria-hidden />
@@ -66,7 +67,7 @@ export function ErrorState({
       <p>{message}</p>
       {onRetry ? (
         <Button variant="secondary" onClick={onRetry}>
-          Повторить
+          {t("Повторить", "Try again")}
         </Button>
       ) : null}
       {action}
@@ -96,10 +97,21 @@ export function ProgressBar({ percent }: { percent: number }) {
   );
 }
 
-export function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({
+  title,
+  children,
+  id,
+}: {
+  title: string;
+  children: ReactNode;
+  id?: string;
+}) {
+  const headingId = id ? `${id}-title` : undefined;
   return (
-    <section className="section">
-      <h2 className="section__title">{title}</h2>
+    <section className="section" aria-labelledby={headingId}>
+      <h2 className="section__title" id={headingId}>
+        {title}
+      </h2>
       {children}
     </section>
   );

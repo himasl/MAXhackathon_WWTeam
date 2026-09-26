@@ -1,6 +1,6 @@
 {
   "code": "foreign_student_v1",
-  "version": 2,
+  "version": 4,
   "title": "Иностранный студент после приезда",
   "description": "Маршрут для иностранного студента, который приехал на учёбу в Россию. Второй сценарий на том же движке правил: добавлен одним файлом без изменения кода. Тексты шагов — памятки команды проекта; требования зависят от страны и цели въезда, поэтому порядок действий нужно сверять с официальным источником и международной службой вуза.",
   "is_active": true,
@@ -39,13 +39,6 @@
       "checked_at": "2026-09-23"
     },
     {
-      "code": "demo_foreign_insurance",
-      "title": "Демонстрационная памятка: медицинское страхование иностранного студента",
-      "url": "https://example.com/marshrut-demo/foreign-insurance",
-      "organization": "Демонстрационные данные проекта «Маршрут»",
-      "source_type": "MOCK"
-    },
-    {
       "code": "demo_international_office",
       "title": "Демонстрационная памятка: международная служба вуза",
       "url": "https://example.com/marshrut-demo/international-office",
@@ -58,31 +51,69 @@
       "url": "https://example.com/marshrut-demo/fingerprinting",
       "organization": "Демонстрационные данные проекта «Маршрут»",
       "source_type": "MOCK"
+    },
+    {
+      "code": "studyinrussia_health_insurance",
+      "title": "Обязательно ли покупать медицинский полис на время учёбы в России?",
+      "url": "https://studyinrussia.ru/actual/faq/do-i-need-purchase-health-insurance-while-studying-in-russia/",
+      "organization": "Портал «Учёба в России» (Минобрнауки России)",
+      "source_type": "OFFICIAL",
+      "checked_at": "2026-09-26"
     }
   ],
   "documents": [
     {
       "code": "foreign_passport",
       "title": "Национальный паспорт",
-      "description": "Документ, по которому вы въехали в Россию."
+      "description": "Документ, по которому вы въехали в Россию.",
+      "i18n": {
+        "en": {
+          "title": "National passport",
+          "description": "The document you used to enter Russia."
+        }
+      }
     },
     {
       "code": "migration_card",
       "title": "Миграционная карта",
-      "description": "Выдаётся при въезде, если требуется для вашей страны."
+      "description": "Выдаётся при въезде, если требуется для вашей страны.",
+      "i18n": {
+        "en": {
+          "title": "Migration card",
+          "description": "Issued at entry if it is required for your country."
+        }
+      }
     },
     {
       "code": "visa",
       "title": "Виза",
-      "description": "Если въезд в Россию для вас визовый."
+      "description": "Если въезд в Россию для вас визовый.",
+      "i18n": {
+        "en": {
+          "title": "Visa",
+          "description": "If you need a visa to enter Russia."
+        }
+      }
     },
     {
       "code": "enrollment_confirmation",
-      "title": "Документ о зачислении или студенческий билет"
+      "title": "Документ о зачислении или студенческий билет",
+      "i18n": {
+        "en": {
+          "title": "Enrollment letter or student ID",
+          "description": ""
+        }
+      }
     },
     {
       "code": "insurance_policy",
-      "title": "Полис медицинского страхования"
+      "title": "Полис медицинского страхования",
+      "i18n": {
+        "en": {
+          "title": "Health insurance policy",
+          "description": ""
+        }
+      }
     }
   ],
   "steps": [
@@ -114,7 +145,16 @@
         {
           "code": "enrollment_confirmation"
         }
-      ]
+      ],
+      "i18n": {
+        "en": {
+          "title": "Meet your university's international office",
+          "short_description": "Find out who helps international students at your university.",
+          "full_description": "Find the international office (the department for international students) at your university.\nAsk which documents to hand in after arrival and by when.\nSave the contacts of the person who handles your migration documents.",
+          "reason": "You said you are not a Russian citizen: universities usually help international students with documents after arrival.",
+          "location": "University international office"
+        }
+      }
     },
     {
       "code": "migration_registration",
@@ -157,7 +197,16 @@
       ],
       "regional_sources": [
         "mfc"
-      ]
+      ],
+      "i18n": {
+        "en": {
+          "title": "Migration registration at your address",
+          "short_description": "Check that your migration registration has been done.",
+          "full_description": "Read on Gosuslugi how a foreign citizen is registered at the place of stay: the notification is filed by the host (university, dormitory or landlord).\nAsk your university or landlord who will file the arrival notification and when.\nKeep the tear-off part of the notification — it proves you are registered.",
+          "reason": "You said you have not yet completed migration registration at your new address.",
+          "location": "Host: university, dormitory or landlord"
+        }
+      }
     },
     {
       "code": "kfu_migration_registration",
@@ -201,7 +250,16 @@
         {
           "code": "enrollment_confirmation"
         }
-      ]
+      ],
+      "i18n": {
+        "en": {
+          "title": "Migration registration at KFU",
+          "short_description": "Hand in your documents for migration registration through KFU.",
+          "full_description": "Open the KFU page on migration registration and choose your case: visa-free or visa entry.\nHand in the documents to the migration support office on time.\nKeep the tear-off part of the arrival notification.",
+          "reason": "You study at KFU and have not yet completed migration registration at your new address.",
+          "location": "KFU migration support office"
+        }
+      }
     },
     {
       "code": "fingerprinting",
@@ -232,7 +290,16 @@
           "code": "migration_card",
           "required": false
         }
-      ]
+      ],
+      "i18n": {
+        "en": {
+          "title": "Fingerprinting and medical examination",
+          "short_description": "Find out whether you need these procedures.",
+          "full_description": "Ask the international office whether fingerprinting and a medical examination are mandatory for you — it depends on your country and length of stay.\nIf they are, find out the address and the deadline.",
+          "reason": "For some foreign citizens these procedures are mandatory after entry — check whether this applies to you.",
+          "location": "University international office"
+        }
+      }
     },
     {
       "code": "kfu_fingerprinting",
@@ -263,13 +330,22 @@
           "code": "migration_card",
           "required": false
         }
-      ]
+      ],
+      "i18n": {
+        "en": {
+          "title": "Fingerprinting and medical examination for KFU students",
+          "short_description": "Check how these procedures work at KFU.",
+          "full_description": "Open the KFU page on fingerprinting and the medical examination.\nCheck whether the requirement applies to you and sign up as instructed.",
+          "reason": "You study at KFU — the university publishes how international students go through these procedures.",
+          "location": "KFU migration support office"
+        }
+      }
     },
     {
       "code": "health_insurance",
       "title": "Медицинское страхование",
-      "short_description": "Проверьте, есть ли у вас действующий полис.",
-      "full_description": "Проверьте срок действия вашего полиса медицинского страхования.\nУточните в вузе, какой полис принимается и где получить медицинскую помощь.",
+      "short_description": "Оформите полис медицинского страхования (ДМС) на время учёбы.",
+      "full_description": "Полис медицинского страхования нужен каждому иностранному студенту.\nЕго покупают за свой счёт — в страховой компании или через международный отдел вуза.\nПроверьте срок действия полиса и уточните в вузе, в какие клиники он позволяет обращаться.",
       "reason": "Иностранному студенту понадобится полис медицинского страхования для обращения к врачу.",
       "location": "Международная служба вуза или страховая компания",
       "position": 40,
@@ -277,7 +353,7 @@
       "estimated_duration": 30,
       "recommended_days": 14,
       "sources": [
-        "demo_foreign_insurance"
+        "studyinrussia_health_insurance"
       ],
       "documents": [
         {
@@ -287,7 +363,16 @@
           "code": "insurance_policy",
           "required": false
         }
-      ]
+      ],
+      "i18n": {
+        "en": {
+          "title": "Health insurance",
+          "short_description": "Get a voluntary health insurance (DMS) policy for your studies.",
+          "full_description": "Every international student needs a health insurance policy.\nYou buy it yourself — from an insurance company or through the university's international office.\nCheck the policy's validity and ask which clinics it covers.",
+          "reason": "As an international student you need health insurance to see a doctor.",
+          "location": "University international office or insurance company"
+        }
+      }
     }
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "foreign_student_v1": {
+    "version": 4,
+    "sha256": "3ade877a0906e42cca64a1623d6994cc4d03d351fa0d7bfa6919aa1995d60dc9"
+  },
+  "student_relocation_v1": {
+    "version": 4,
+    "sha256": "ec7c1f248ff0eb538c58d9f73211d3dd4b7fc7a5ea69710963d4c2215047c452"
+  }
+}

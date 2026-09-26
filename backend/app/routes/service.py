@@ -11,10 +11,14 @@ from app.core.exceptions import (
 from app.routes.models import RouteStatus, RouteStepStatus, UserRoute, UserRouteStep
 from app.routes.repository import RouteRepository
 from app.routes.schemas import (
+    ChecklistGroup,
+    ChecklistResponse,
     RouteProgress,
     RouteResponse,
     RouteStepDetailResponse,
     RouteStepSummary,
+    SharedProgressResponse,
+    SharedStep,
     StepDocumentResponse,
 )
 from app.scenarios.engine import RouteGenerator
@@ -31,13 +35,21 @@ FINISHED_STATUSES = {RouteStepStatus.DONE, RouteStepStatus.SKIPPED}
 DEADLINE_ORIGIN_CALCULATED = "calculated"
 
 
+def localized(item: object, field: str, lang: str) -> str:
+    """Text in the requested language when a translation exists, otherwise Russian."""
+    translations = getattr(item, "i18n", None) or {}
+    value = (translations.get(lang) or {}).get(field)
+    return str(value) if value else str(getattr(item, field))
+
+
 def next_open_step(route: UserRoute) -> UserRouteStep | None:
     return next((step for step in route.steps if step.status in OPEN_STATUSES), None)
 
 
 class RouteService:
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(self, session: AsyncSession, lang: str = "ru") -> None:
         self.session = session
+        self.lang = lang
         self.repository = RouteRepository(session)
         self.user_repository = UserRepository(session)
         self.user_service = UserService(session)
@@ -83,7 +95,7 @@ class RouteService:
         return await self._reload(route.id, user)
 
     async def get_current(self, user: User) -> RouteResponse:
-        return self.route_response(await self.get_current_model(user))
+        return self.route_response(await self.get_current_model(user), self.lang)
 
     async def get_current_model(self, user: User) -> UserRoute:
         route = await self.repository.get_current(user.id)
@@ -120,11 +132,11 @@ class RouteService:
             id=step.id,
             route_id=route.id,
             code=scenario_step.code,
-            title=scenario_step.title,
-            short_description=scenario_step.short_description,
-            full_description=scenario_step.full_description,
-            reason=scenario_step.reason,
-            location=scenario_step.location,
+            title=localized(scenario_step, "title", self.lang),
+            short_description=localized(scenario_step, "short_description", self.lang),
+            full_description=localized(scenario_step, "full_description", self.lang),
+            reason=localized(scenario_step, "reason", self.lang),
+            location=localized(scenario_step, "location", self.lang),
             category=scenario_step.category,
             estimated_duration=scenario_step.estimated_duration,
             is_required=scenario_step.is_required,
@@ -136,8 +148,8 @@ class RouteService:
             documents=[
                 StepDocumentResponse(
                     code=link.document.code,
-                    title=link.document.title,
-                    description=link.document.description,
+                    title=localized(link.document, "title", self.lang),
+                    description=localized(link.document, "description", self.lang),
                     required=link.required,
                 )
                 for link in sorted(
@@ -194,11 +206,85 @@ class RouteService:
         await self.session.commit()
         return await self._reload(route.id, user)
 
+    async def _chat_step(self, user: User, step_id: UUID) -> tuple[UserRoute, UserRouteStep]:
+        route = await self.repository.get_by_step(step_id, user.id)
+        if route is None:
+            raise RouteStepNotFoundError
+        step = self._find_step(route, step_id)
+        if route.status != RouteStatus.ACTIVE or step.status not in OPEN_STATUSES:
+            raise InvalidOperationError("Route step is not open")
+        return route, step
+
+    async def snooze_from_chat(self, user: User, step_id: UUID, days: int = 1) -> str:
+        """"⏰ Завтра" in the chat: remind about the step again in ``days``."""
+        _, step = await self._chat_step(user, step_id)
+        step.snoozed_until = datetime.now(UTC) + timedelta(days=days)
+        step.reminded_at = None
+        await self.session.commit()
+        return step.scenario_step.title
+
+    async def start_from_chat(self, user: User, step_id: UUID, days: int = 3) -> str:
+        """"Уже в процессе": mark the step as started and check back in ``days``."""
+        _, step = await self._chat_step(user, step_id)
+        step.status = RouteStepStatus.IN_PROGRESS
+        step.snoozed_until = datetime.now(UTC) + timedelta(days=days)
+        step.reminded_at = None
+        await self.session.commit()
+        return step.scenario_step.title
+
+    async def checklist(self, user: User, route_id: UUID) -> ChecklistResponse:
+        """Documents of the open steps grouped by where to go with them."""
+        route = await self.get_route_model(user, route_id)
+        groups: dict[str, ChecklistGroup] = {}
+        for step in route.steps:
+            if step.status not in OPEN_STATUSES or not step.scenario_step.documents:
+                continue
+            scenario_step = step.scenario_step
+            place = localized(scenario_step, "location", self.lang) or "—"
+            group = groups.setdefault(place, ChecklistGroup(place=place, steps=[], documents=[]))
+            group.steps.append(localized(scenario_step, "title", self.lang))
+            known = {document.code: document for document in group.documents}
+            for link in scenario_step.documents:
+                existing = known.get(link.document.code)
+                if existing is not None:
+                    existing.required = existing.required or link.required
+                    continue
+                document = StepDocumentResponse(
+                    code=link.document.code,
+                    title=localized(link.document, "title", self.lang),
+                    description=localized(link.document, "description", self.lang),
+                    required=link.required,
+                )
+                group.documents.append(document)
+                known[document.code] = document
+        for group in groups.values():
+            group.documents.sort(key=lambda item: (not item.required, item.title))
+        return ChecklistResponse(groups=list(groups.values()))
+
+    @staticmethod
+    def shared_progress(route: UserRoute, lang: str = "ru") -> SharedProgressResponse:
+        response = RouteService.route_response(route, lang)
+        return SharedProgressResponse(
+            status=response.status,
+            progress=response.progress,
+            created_at=response.created_at,
+            completed_at=response.completed_at,
+            steps=[
+                SharedStep(
+                    title=summary.title,
+                    category=summary.category,
+                    status=summary.status,
+                    completed_at=step.completed_at,
+                )
+                for summary, step in zip(response.steps, route.steps, strict=True)
+            ],
+        )
+
     async def _reload(self, route_id: UUID, user: User) -> RouteResponse:
         route = await self.repository.get(route_id, user.id, refresh=True)
         if route is None:
             raise RouteNotFoundError
-        return self.route_response(route)
+        return self.route_response(route, self.lang)
 
     def _find_step(self, route: UserRoute, step_id: UUID) -> UserRouteStep:
         step = next((item for item in route.steps if item.id == step_id), None)
@@ -207,7 +293,7 @@ class RouteService:
         return step
 
     @staticmethod
-    def route_response(route: UserRoute) -> RouteResponse:
+    def route_response(route: UserRoute, lang: str = "ru") -> RouteResponse:
         completed = sum(step.status == RouteStepStatus.DONE for step in route.steps)
         total = len(route.steps)
         progress = RouteProgress(
@@ -229,8 +315,8 @@ class RouteService:
                 RouteStepSummary(
                     id=step.id,
                     code=step.scenario_step.code,
-                    title=step.scenario_step.title,
-                    short_description=step.scenario_step.short_description,
+                    title=localized(step.scenario_step, "title", lang),
+                    short_description=localized(step.scenario_step, "short_description", lang),
                     category=step.scenario_step.category,
                     position=step.position,
                     status=step.status,

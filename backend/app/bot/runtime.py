@@ -151,7 +151,8 @@ class BotRuntime:
         sent = 0
         async with async_session() as session:
             repository = RouteRepository(session)
-            for step in await repository.list_due_for_reminder(current + timedelta(days=1)):
+            due = await repository.list_due_for_reminder(current + timedelta(days=1), current)
+            for step in due:
                 delivered = await self.notifications.reminder(
                     step.route.user.max_user_id,
                     step.id,
@@ -160,6 +161,7 @@ class BotRuntime:
                 )
                 # Mark even when delivery failed so a user who blocked the bot is not spammed.
                 step.reminded_at = current
+                step.snoozed_until = None
                 sent += int(delivered)
             await session.commit()
         return sent

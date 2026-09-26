@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, Header
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -27,3 +27,11 @@ async def get_current_user(
 
 
 CurrentUserDependency = Annotated[User, Depends(get_current_user)]
+
+
+def get_language(accept_language: Annotated[str | None, Header()] = None) -> str:
+    """"en" when the client asks for English (the interface language switch), else "ru"."""
+    return "en" if (accept_language or "").lower().startswith("en") else "ru"
+
+
+LanguageDependency = Annotated[str, Depends(get_language)]

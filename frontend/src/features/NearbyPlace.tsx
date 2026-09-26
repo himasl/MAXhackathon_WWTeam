@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { t } from "../shared/i18n";
 import { maxBridge } from "../shared/max/maxBridge";
 import { Button } from "../shared/ui";
 
@@ -19,21 +20,28 @@ interface Place {
 
 const PLACES: Place[] = [
   {
-    pattern: /МФЦ/i,
+    pattern: /МФЦ|\bMFC\b/i,
     query: "МФЦ",
-    label: "Найти МФЦ рядом",
-    note: "Большинство услуг МФЦ оказывает в любом офисе, а не только по прописке — удобнее идти в ближайший к дому.",
+    label: t("Найти МФЦ рядом", "Find an MFC nearby"),
+    note: t(
+      "Большинство услуг МФЦ оказывает в любом офисе, а не только по прописке — удобнее идти в ближайший к дому.",
+      "Most MFC services are available in any office, not only where you are registered — go to the nearest one.",
+    ),
   },
-  { pattern: /поликлиник/i, query: "поликлиника", label: "Найти поликлинику рядом" },
   {
-    pattern: /страхов\S* медицинск/i,
-    query: "страховая медицинская организация ОМС",
-    label: "Найти офис страховой рядом",
+    pattern: /поликлиник|\bclinic\b/i,
+    query: "поликлиника",
+    label: t("Найти поликлинику рядом", "Find a clinic nearby"),
+  },
+  {
+    pattern: /страхов\S* (медицинск|компан)|insurance company/i,
+    query: "страховая медицинская организация",
+    label: t("Найти офис страховой рядом", "Find an insurance office nearby"),
   },
   {
     pattern: /транспортных карт/i,
     query: "пункт обслуживания транспортных карт",
-    label: "Найти пункт рядом",
+    label: t("Найти пункт рядом", "Find a service point nearby"),
   },
 ];
 
@@ -95,8 +103,11 @@ export function NearbyPlace({
     if (!coords) {
       setHint(
         regionTitle
-          ? `Геолокация недоступна — показываем ${place.query} в регионе «${regionTitle}».`
-          : "Геолокация недоступна — показываем поиск на карте.",
+          ? t(
+              `Геолокация недоступна — показываем ${place.query} в регионе «${regionTitle}».`,
+              `Location is unavailable — showing results in ${regionTitle}.`,
+            )
+          : t("Геолокация недоступна — показываем поиск на карте.", "Location is unavailable — showing a map search."),
       );
     }
     if (tab) {
@@ -114,7 +125,11 @@ export function NearbyPlace({
         📍 {place.label}
       </Button>
       <p className="muted nearby__note">
-        {hint ?? `${place.note ? `${place.note} ` : ""}Местоположение нужно только для карты и не сохраняется.`}
+        {hint ??
+          `${place.note ? `${place.note} ` : ""}${t(
+            "Местоположение нужно только для карты и не сохраняется.",
+            "Your location is used only for the map and is not stored.",
+          )}`}
       </p>
     </div>
   );

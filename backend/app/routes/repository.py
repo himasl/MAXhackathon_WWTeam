@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, cast
 from uuid import UUID
 
-from sqlalchemy import select, update
+from sqlalchemy import and_, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
 
@@ -75,15 +75,30 @@ class RouteRepository:
         )
         return cast(UserRoute | None, await self.session.scalar(query))
 
-    async def list_due_for_reminder(self, due_before: datetime) -> list[UserRouteStep]:
+    async def list_due_for_reminder(
+        self, due_before: datetime, now: datetime | None = None
+    ) -> list[UserRouteStep]:
+        """Open steps to remind about: the deadline is near (and not snoozed further),
+        or a snooze from the chat has run out."""
+        current = now or datetime.now(UTC)
+        not_snoozed = or_(
+            UserRouteStep.snoozed_until.is_(None), UserRouteStep.snoozed_until <= current
+        )
+        deadline_near = and_(
+            UserRouteStep.deadline.is_not(None),
+            UserRouteStep.deadline <= due_before,
+            not_snoozed,
+        )
+        snooze_over = and_(
+            UserRouteStep.snoozed_until.is_not(None), UserRouteStep.snoozed_until <= current
+        )
         query = (
             select(UserRouteStep)
             .join(UserRoute, UserRoute.id == UserRouteStep.route_id)
             .where(
                 UserRoute.status == RouteStatus.ACTIVE,
                 UserRouteStep.status.in_([RouteStepStatus.TODO, RouteStepStatus.IN_PROGRESS]),
-                UserRouteStep.deadline.is_not(None),
-                UserRouteStep.deadline <= due_before,
+                or_(deadline_near, snooze_over),
                 UserRouteStep.reminded_at.is_(None),
             )
             .options(

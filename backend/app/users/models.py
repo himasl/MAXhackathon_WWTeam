@@ -34,6 +34,10 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     __tablename__ = "users"
 
     max_user_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False)
+    # Part of every parent (progress) link; incrementing it revokes all issued links.
+    share_version: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
 
     profile: Mapped[UserProfile | None] = relationship(
         back_populates="user", cascade="all, delete-orphan", uselist=False

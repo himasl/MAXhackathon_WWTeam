@@ -1,9 +1,13 @@
+import { lang, t } from "../i18n";
 import type {
   AppConfig,
   AuthResponse,
+  Checklist,
+  HelpTopic,
   Profile,
   Region,
   Route,
+  SharedProgress,
   StepDetail,
   University,
 } from "./types";
@@ -60,6 +64,7 @@ export function consumeLinkToken(): string | null {
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
+  headers.set("Accept-Language", lang());
   if (init.body) headers.set("Content-Type", "application/json");
   if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
 
@@ -67,16 +72,16 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   try {
     response = await fetch(`${BASE_URL}${path}`, { ...init, headers });
   } catch {
-    throw new ApiError(0, "NETWORK_ERROR", "Нет соединения с сервером");
+    throw new ApiError(0, "NETWORK_ERROR", t("Нет соединения с сервером", "No connection to the server"));
   }
 
-  const body = await response.json().catch(() => null);
+  const body = response.status === 204 ? null : await response.json().catch(() => null);
   if (!response.ok) {
     const error = body?.error;
     throw new ApiError(
       response.status,
       error?.code ?? "HTTP_ERROR",
-      error?.message ?? `Ошибка ${response.status}`,
+      error?.message ?? `${t("Ошибка", "Error")} ${response.status}`,
     );
   }
   return body as T;
@@ -106,6 +111,15 @@ export const api = {
     request<{ url: string }>(`/api/v1/routes/${routeId}/steps/${stepId}/calendar-link`, {
       method: "POST",
     }),
+  getChecklist: (routeId: string) => request<Checklist>(`/api/v1/routes/${routeId}/checklist`),
+  sendChecklist: (routeId: string) =>
+    request<{ sent: boolean }>(`/api/v1/routes/${routeId}/checklist/send`, { method: "POST" }),
+  createShareLink: () =>
+    request<{ url: string; expires_in: number }>("/api/v1/routes/share", { method: "POST" }),
+  revokeShareLinks: () => request<null>("/api/v1/routes/share", { method: "DELETE" }),
+  getShared: (token: string) =>
+    request<SharedProgress>(`/api/v1/shared/${encodeURIComponent(token)}`),
+  getHelp: () => request<HelpTopic[]>("/api/v1/help"),
   remind: (routeId: string) =>
     request<{ sent: boolean; step_id: string | null }>(`/api/v1/routes/${routeId}/remind`, {
       method: "POST",
@@ -114,11 +128,16 @@ export const api = {
 
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) {
-    if (error.status === 0) return "Нет соединения с сервером. Проверьте интернет.";
+    if (error.status === 0)
+      return t("Нет соединения с сервером. Проверьте интернет.", "No connection. Check the internet.");
     if (error.status === 401)
-      return "Не удалось подтвердить вход. Откройте маршрут по кнопке из чата с ботом в MAX (команда /start).";
-    if (error.status >= 500) return "Сервис временно недоступен. Попробуйте ещё раз.";
+      return t(
+        "Не удалось подтвердить вход. Откройте маршрут по кнопке из чата с ботом в MAX (команда /start).",
+        "We could not sign you in. Open the route with the button in the bot chat in MAX (/start).",
+      );
+    if (error.status >= 500)
+      return t("Сервис временно недоступен. Попробуйте ещё раз.", "The service is unavailable. Try again.");
     return error.message;
   }
-  return "Что-то пошло не так. Попробуйте ещё раз.";
+  return t("Что-то пошло не так. Попробуйте ещё раз.", "Something went wrong. Try again.");
 }

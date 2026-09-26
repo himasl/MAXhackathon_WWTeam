@@ -3,6 +3,7 @@
 
     python3 tools/check_sources.py                 # links from data/regional_services.json
     python3 tools/check_sources.py --candidates    # unverified links from data/regional_candidates.json
+    python3 tools/check_sources.py --help-links    # official links of the «Помощь» section
     python3 tools/check_sources.py --candidates --promote
         # move candidates that answered 2xx/3xx into regional_services.json (checked_at = today)
 
@@ -25,6 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "data" / "regional_services.json"
 CANDIDATES = ROOT / "data" / "regional_candidates.json"
+HELP = ROOT / "data" / "help.json"
 CA_BUNDLE = ROOT / "backend" / "certs" / "russian_trusted_ca.pem"
 KINDS = ("mfc", "tfoms", "student_transport")
 
@@ -77,10 +79,18 @@ def entries(path: Path) -> list[tuple[str, str, dict[str, object]]]:
     ]
 
 
+def help_entries() -> list[tuple[str, str, dict[str, object]]]:
+    topics = json.loads(HELP.read_text(encoding="utf-8"))["topics"]
+    return [
+        (topic["code"], "help", source) for topic in topics for source in topic["sources"]
+    ]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--candidates", action="store_true", help="check unverified candidates")
     parser.add_argument("--promote", action="store_true", help="move working candidates to pack")
+    parser.add_argument("--help-links", action="store_true", help="check links of data/help.json")
     parser.add_argument("--timeout", type=float, default=15.0)
     parser.add_argument(
         "--no-verify",
@@ -91,8 +101,8 @@ def main() -> int:
     if args.promote and not args.candidates:
         parser.error("--promote works together with --candidates")
 
-    path = CANDIDATES if args.candidates else PACK
-    items = entries(path)
+    path = HELP if args.help_links else CANDIDATES if args.candidates else PACK
+    items = help_entries() if args.help_links else entries(path)
     context = ssl_context()
     fallback = ssl_context(verify=False) if args.no_verify else None
     with ThreadPoolExecutor(max_workers=12) as pool:

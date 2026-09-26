@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { ChecklistPage } from "../pages/ChecklistPage";
 import { CompletionPage } from "../pages/CompletionPage";
 import { OnboardingPage } from "../pages/OnboardingPage";
 import { RoutePage } from "../pages/RoutePage";
+import { SharedProgressPage } from "../pages/SharedProgressPage";
 import { StepPage } from "../pages/StepPage";
 import { SupportPage } from "../pages/SupportPage";
 import { WelcomePage } from "../pages/WelcomePage";
@@ -15,6 +17,7 @@ import {
   setAccessToken,
 } from "../shared/api/client";
 import type { AppConfig, Profile, Region, Route, University } from "../shared/api/types";
+import { t } from "../shared/i18n";
 import { maxBridge } from "../shared/max/maxBridge";
 import { ErrorState, Loading, Screen } from "../shared/ui";
 import { InviteButton } from "../features/InviteButton";
@@ -31,7 +34,17 @@ async function orNull<T>(promise: Promise<T>): Promise<T | null> {
   }
 }
 
+/** A parent opened the student's progress link: a public page, no sign-in. */
+function sharedToken(): string | null {
+  return new URLSearchParams(window.location.search).get("share");
+}
+
 export function App() {
+  const share = sharedToken();
+  return share ? <SharedProgressPage token={share} /> : <StudentApp />;
+}
+
+function StudentApp() {
   const [boot, setBoot] = useState<Boot>({ state: "loading" });
   const [route, setRoute] = useState<Route | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -97,7 +110,12 @@ export function App() {
   const goBack = useCallback(() => navigate({ name: "route" }), [navigate]);
 
   useEffect(() => {
-    if (view.name === "step" || view.name === "support" || (view.name === "onboarding" && route)) {
+    if (
+      view.name === "step" ||
+      view.name === "support" ||
+      view.name === "checklist" ||
+      (view.name === "onboarding" && route)
+    ) {
       return maxBridge.showBackButton(goBack);
     }
     return undefined;
@@ -132,7 +150,7 @@ export function App() {
   if (boot.state === "loading") {
     return (
       <Screen>
-        <Loading text="Открываем маршрут…" />
+        <Loading text={t("Открываем маршрут…", "Opening your route…")} />
       </Screen>
     );
   }
@@ -162,6 +180,7 @@ export function App() {
   );
   const welcome = <WelcomePage onStart={() => navigate({ name: "onboarding" })} />;
 
+  const regionTitle = regions.find((region) => region.code === profile?.region_code)?.title ?? null;
   let content;
   if (!route) {
     content = view.name === "onboarding" ? onboarding : welcome;
@@ -174,7 +193,7 @@ export function App() {
         routeId={route.id}
         stepId={view.stepId}
         routeIsArchived={route.status === "ARCHIVED"}
-        regionTitle={regions.find((region) => region.code === profile?.region_code)?.title ?? null}
+        regionTitle={regionTitle}
         onRouteChanged={onRouteChanged}
         onBack={goBack}
       />
@@ -183,6 +202,8 @@ export function App() {
     content = (
       <CompletionPage
         route={route}
+        regionTitle={regionTitle}
+        botUrl={config.bot_url}
         onShowRoute={goBack}
         onNewRoute={() => navigate({ name: "onboarding" })}
         invite={<InviteButton botUrl={config.bot_url} universityCode={profile?.university_code ?? null} />}
@@ -190,12 +211,15 @@ export function App() {
     );
   } else if (view.name === "support") {
     content = <SupportPage />;
+  } else if (view.name === "checklist") {
+    content = <ChecklistPage routeId={route.id} regionTitle={regionTitle} onBack={goBack} />;
   } else {
     content = (
       <RoutePage
         route={route}
         onOpenStep={(stepId) => navigate({ name: "step", stepId })}
         onEditProfile={() => navigate({ name: "onboarding" })}
+        onOpenChecklist={() => navigate({ name: "checklist" })}
         invite={<InviteButton botUrl={config.bot_url} universityCode={profile?.university_code ?? null} />}
       />
     );
@@ -206,20 +230,22 @@ export function App() {
     <div className={`app ${showTabs ? "app--tabs" : ""}`}>
       {content}
       {showTabs ? (
-        <nav className="tabs" aria-label="Разделы">
+        <nav className="tabs" aria-label={t("Разделы", "Sections")}>
           <button
             type="button"
             className={view.name === "route" ? "tab tab--active" : "tab"}
             onClick={() => navigate({ name: "route" })}
+            aria-current={view.name === "route" ? "page" : undefined}
           >
-            Маршрут
+            {t("Маршрут", "Route")}
           </button>
           <button
             type="button"
             className={view.name === "support" ? "tab tab--active" : "tab"}
             onClick={() => navigate({ name: "support" })}
+            aria-current={view.name === "support" ? "page" : undefined}
           >
-            Поддержка
+            {t("Помощь", "Help")}
           </button>
         </nav>
       ) : null}

@@ -148,8 +148,12 @@ async def test_route_uses_sources_of_the_users_region(client: AsyncClient) -> No
 
 
 async def test_region_without_data_falls_back(client: AsyncClient) -> None:
-    covered = set(load_regional_pack().regions)
-    region = next(code for code in sorted(region_codes()) if code not in covered)
+    pack = load_regional_pack().regions
+    region = next(
+        code
+        for code in sorted(region_codes() - {"77", "78", "16"})
+        if code not in pack or not (pack[code].mfc or pack[code].student_transport)
+    )
     route = await route_for(client, region_code=region, housing_type="RENT")
     codes = {step["code"] for step in route["steps"]}
     assert "transport_other_region" in codes

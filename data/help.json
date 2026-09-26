@@ -1,0 +1,197 @@
+{
+  "_comment": "Раздел «Если что-то пошло не так». Тексты — памятки команды, ссылки — официальные страницы. Проверка ссылок: python3 tools/check_sources.py --help-links.",
+  "topics": [
+    {
+      "code": "emergency",
+      "title": "Срочно нужна помощь",
+      "summary": "Звоните 112 — единый номер экстренных служб. Он работает бесплатно, даже без денег на счёте и без SIM-карты.",
+      "actions": [
+        "Скажите, что случилось, и назовите адрес.",
+        "Если можете говорить только с одной службой: 101 — пожарные, 102 — полиция, 103 — скорая, 104 — газовая служба."
+      ],
+      "phones": [
+        { "label": "Единый номер", "number": "112" },
+        { "label": "Скорая помощь", "number": "103" },
+        { "label": "Полиция", "number": "102" }
+      ],
+      "sources": [
+        {
+          "title": "Вызов экстренных служб",
+          "url": "https://78.mchs.gov.ru/deyatelnost/propaganda/propaganda-sredi-naseleniya/polezno-znat/vyzov-ekstrennyh-sluzhb",
+          "organization": "МЧС России"
+        }
+      ],
+      "i18n": {
+        "en": {
+          "title": "I need help urgently",
+          "summary": "Call 112, the single emergency number. It is free and works without credit or a SIM card.",
+          "actions": [
+            "Say what happened and give the address.",
+            "Direct numbers: 101 fire, 102 police, 103 ambulance, 104 gas service."
+          ],
+          "phones": ["Emergency", "Ambulance", "Police"]
+        }
+      }
+    },
+    {
+      "code": "lost_passport",
+      "title": "Потерял паспорт",
+      "summary": "Паспорт нужно заменить. Пока его делают, можно получить временное удостоверение личности.",
+      "actions": [
+        "Если паспорт украли — сообщите в полицию (102).",
+        "Подайте заявление на новый паспорт на Госуслугах, в МФЦ или в подразделении МВД по вопросам миграции.",
+        "Попросите временное удостоверение личности — оно действует, пока готовится паспорт.",
+        "Иностранному студенту: сразу сообщите в международную службу вуза и в посольство своей страны."
+      ],
+      "phones": [{ "label": "Полиция", "number": "102" }],
+      "sources": [
+        {
+          "title": "Восстановление паспорта РФ",
+          "url": "https://www.gosuslugi.ru/situation/uterya_dokumentov/pasport_rf",
+          "organization": "Госуслуги"
+        }
+      ],
+      "i18n": {
+        "en": {
+          "title": "I lost my passport",
+          "summary": "The passport has to be replaced; meanwhile a temporary identity document can be issued.",
+          "actions": [
+            "If it was stolen, report it to the police (102).",
+            "Russian citizens apply for a new passport on Gosuslugi, at an MFC or at the migration office of the police.",
+            "Ask for a temporary identity document while the passport is being made.",
+            "International students: tell your university's international office and your embassy right away."
+          ],
+          "phones": ["Police"]
+        }
+      }
+    },
+    {
+      "code": "lost_oms",
+      "title": "Потерял полис ОМС",
+      "summary": "Полис никуда не пропал: он хранится в едином реестре. Для врача обычно достаточно паспорта, выписку можно получить заново.",
+      "actions": [
+        "Посмотрите номер полиса в профиле на Госуслугах.",
+        "Или обратитесь в свою страховую медицинскую организацию — там выдадут выписку.",
+        "В поликлинике назовите номер полиса или покажите паспорт."
+      ],
+      "phones": [],
+      "sources": [
+        {
+          "title": "Восстановление полиса ОМС",
+          "url": "https://www.gosuslugi.ru/situation/uterya_dokumentov/polis_oms",
+          "organization": "Госуслуги"
+        }
+      ],
+      "i18n": {
+        "en": {
+          "title": "I lost my health insurance policy (OMS)",
+          "summary": "The OMS policy is stored in a national register; a passport is usually enough, and you can get a new extract.",
+          "actions": [
+            "Find the policy number in your Gosuslugi profile.",
+            "Or ask your insurance company for an extract.",
+            "At the clinic, give the policy number or show your passport."
+          ],
+          "phones": []
+        }
+      }
+    },
+    {
+      "code": "got_sick",
+      "title": "Заболел",
+      "summary": "Если состояние угрожает жизни — звоните 103 или 112. В остальных случаях вызовите врача на дом или запишитесь в поликлинику.",
+      "actions": [
+        "Вызовите врача на дом через Госуслуги или по телефону своей поликлиники.",
+        "Для справки в вуз попросите у врача больничный или справку для учёбы.",
+        "Иностранному студенту: позвоните по номеру на полисе ДМС — там подскажут клинику."
+      ],
+      "phones": [
+        { "label": "Скорая помощь", "number": "103" },
+        { "label": "Единый номер", "number": "112" }
+      ],
+      "sources": [
+        {
+          "title": "Вызов врача на дом",
+          "url": "https://www.gosuslugi.ru/600361/1",
+          "organization": "Госуслуги"
+        }
+      ],
+      "i18n": {
+        "en": {
+          "title": "I got sick",
+          "summary": "If life is at risk, call 103 or 112. Otherwise call a doctor home or book an appointment.",
+          "actions": [
+            "Call a doctor home via Gosuslugi or your clinic's phone.",
+            "Ask the doctor for a certificate for your university.",
+            "International students: call the number on your insurance policy to find a clinic."
+          ],
+          "phones": ["Ambulance", "Emergency"]
+        }
+      }
+    },
+    {
+      "code": "landlord_or_fraud",
+      "title": "Обманули с жильём или деньгами",
+      "summary": "Если обманул арендодатель, пропали деньги или звонят мошенники — сохраните переписку и чеки и обратитесь в полицию.",
+      "actions": [
+        "Не переводите деньги и не называйте коды из СМС — даже «сотрудникам банка» или «полиции».",
+        "Сохраните договор, переписку, чеки и номера телефонов.",
+        "Подайте заявление в полицию по номеру 102 или через сайт МВД.",
+        "Если нужна юридическая помощь — спросите в студенческом совете или юридической клинике вуза."
+      ],
+      "phones": [{ "label": "Полиция", "number": "102" }],
+      "sources": [
+        {
+          "title": "Приём обращений МВД России",
+          "url": "https://xn--b1aew.xn--p1ai/request_main",
+          "organization": "МВД России"
+        }
+      ],
+      "i18n": {
+        "en": {
+          "title": "I was cheated over housing or money",
+          "summary": "If a landlord cheated you, money disappeared or scammers call — keep the messages and receipts and contact the police.",
+          "actions": [
+            "Never transfer money or share SMS codes, even to “bank staff” or “police”.",
+            "Keep the contract, messages, receipts and phone numbers.",
+            "Report to the police by 102 or on the Ministry of Internal Affairs website.",
+            "For legal help, ask the student council or the university law clinic."
+          ],
+          "phones": ["Police"]
+        }
+      }
+    },
+    {
+      "code": "hard_times",
+      "title": "Тяжело, не с кем поговорить",
+      "summary": "Переезд — это стресс, и это нормально. Поговорите с психологом вуза или позвоните на телефон доверия — бесплатно и анонимно.",
+      "actions": [
+        "В большинстве вузов есть психологическая служба — спросите в деканате или студенческом совете.",
+        "Если вам нет 18 лет, звоните на телефон доверия 8-800-2000-122 — бесплатно и анонимно.",
+        "Если есть угроза жизни — звоните 112."
+      ],
+      "phones": [
+        { "label": "Телефон доверия", "number": "8-800-2000-122" },
+        { "label": "Единый номер", "number": "112" }
+      ],
+      "sources": [
+        {
+          "title": "Телефон доверия для детей, подростков и их родителей",
+          "url": "https://mintrud.gov.ru/social/family/184",
+          "organization": "Минтруд России"
+        }
+      ],
+      "i18n": {
+        "en": {
+          "title": "It's hard and there is no one to talk to",
+          "summary": "Moving is stressful, and that's normal. Talk to your university psychologist or call a free, anonymous helpline.",
+          "actions": [
+            "Most universities have a psychological service — ask the dean's office or the student council.",
+            "If you are under 18, call 8-800-2000-122 — free and anonymous.",
+            "If life is at risk, call 112."
+          ],
+          "phones": ["Helpline", "Emergency"]
+        }
+      }
+    }
+  ]
+}

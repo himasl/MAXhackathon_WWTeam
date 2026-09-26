@@ -270,6 +270,36 @@ checks:
     timeoutMs: 5000
     repeatable: true
 
+  - id: "checklist"
+    name: "Что взять с собой: документы открытых шагов по местам"
+    method: "GET"
+    path: "/api/v1/routes/{route_id}/checklist"
+    role: "user"
+    dependsOn: ["create-route"]
+    request:
+      path:
+        route_id: "${routeId}"
+    expected:
+      statusCodes: [200]
+      contentType: "application/json"
+      requiredFields: ["groups"]
+    timeoutMs: 5000
+    repeatable: true
+
+  - id: "help"
+    name: "Раздел «Если что-то пошло не так»"
+    method: "GET"
+    path: "/api/v1/help"
+    role: "public"
+    expected:
+      statusCodes: [200]
+      contentType: "application/json"
+      bodySchema:
+        type: "array"
+        minItems: 6
+    timeoutMs: 5000
+    repeatable: true
+
   - id: "stats"
     name: "Обезличенные метрики пилота"
     method: "GET"

@@ -70,6 +70,8 @@ class UserRouteStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     reminded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # "⏰ Завтра" / "Уже в процессе" in the chat: remind again at this moment.
+    snoozed_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     # Where the step was marked done: "app" (Mini App / web) or "chat" (bot button).
     completed_via: Mapped[str | None] = mapped_column(String(16))
 

@@ -92,6 +92,10 @@ class ScenarioStep(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     reason: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
     location: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
     recommended_days: Mapped[int | None] = mapped_column(Integer)
+    # Translations of the texts: {"en": {"title": ..., "short_description": ...}}.
+    i18n: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default="{}"
+    )
 
     scenario: Mapped[Scenario] = relationship(back_populates="steps")
     rules: Mapped[list[Rule]] = relationship(

@@ -210,6 +210,17 @@ paths:
       description: Build a personal route from the saved profile. A previous active
         route is archived.
       operationId: create_route_api_v1_routes_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
       responses:
         '201':
           description: Successful Response
@@ -218,43 +229,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/RouteResponse'
         '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Unprocessable Content
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '503':
-          description: Service Unavailable
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - HTTPBearer: []
+          description: Service Unavailable
   /api/v1/routes/current:
     get:
       tags:
       - routes
       summary: Get Current Route
       operationId: get_current_route_api_v1_routes_current_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
       responses:
         '200':
           description: Successful Response
@@ -263,37 +283,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/RouteResponse'
         '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Unprocessable Content
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '503':
-          description: Service Unavailable
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - HTTPBearer: []
+          description: Service Unavailable
   /api/v1/routes/{route_id}/steps/{step_id}:
     get:
       tags:
@@ -317,6 +335,14 @@ paths:
           type: string
           format: uuid
           title: Step Id
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
       responses:
         '200':
           description: Successful Response
@@ -377,6 +403,14 @@ paths:
           type: string
           format: uuid
           title: Step Id
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
       responses:
         '200':
           description: Successful Response
@@ -437,6 +471,14 @@ paths:
           type: string
           format: uuid
           title: Step Id
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
       responses:
         '200':
           description: Successful Response
@@ -599,6 +641,214 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Service Unavailable
+  /api/v1/routes/{route_id}/checklist:
+    get:
+      tags:
+      - routes
+      summary: Get Checklist
+      description: 'What to take with you: documents of the open steps grouped by
+        place.'
+      operationId: get_checklist_api_v1_routes__route_id__checklist_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/routes/{route_id}/checklist/send:
+    post:
+      tags:
+      - routes
+      summary: Send Checklist
+      description: Send the checklist to the user's MAX chat, to have it at hand in
+        the queue.
+      operationId: send_checklist_api_v1_routes__route_id__checklist_send_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistSentResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/routes/share:
+    post:
+      tags:
+      - routes
+      summary: Create Share Link
+      description: 'Read-only link to the route progress for parents: step titles
+        and statuses only,
+
+        without answers, region, university or contacts. Revoke with DELETE /routes/share.'
+      operationId: create_share_link_api_v1_routes_share_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareLinkResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - routes
+      summary: Revoke Share Links
+      description: Revoke every progress link issued before.
+      operationId: revoke_share_links_api_v1_routes_share_delete
+      responses:
+        '204':
+          description: Successful Response
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
   /api/v1/config:
     get:
       tags:
@@ -849,6 +1099,122 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Service Unavailable
+  /api/v1/shared/{token}:
+    get:
+      tags:
+      - public
+      summary: Get Shared Progress
+      description: Progress page a student shares with parents (link from POST /routes/share).
+      operationId: get_shared_progress_api_v1_shared__token__get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedProgressResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/help:
+    get:
+      tags:
+      - public
+      summary: Get Help
+      description: '«Если что-то пошло не так»: what to do and where to call, with
+        official links.'
+      operationId: get_help_api_v1_help_get
+      parameters:
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HelpTopic'
+                title: Response Get Help Api V1 Help Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
   /health:
     get:
       tags:
@@ -925,6 +1291,49 @@ components:
       - url
       - expires_in
       title: CalendarLinkResponse
+    ChecklistGroup:
+      properties:
+        place:
+          type: string
+          title: Place
+        steps:
+          items:
+            type: string
+          type: array
+          title: Steps
+        documents:
+          items:
+            $ref: '#/components/schemas/StepDocumentResponse'
+          type: array
+          title: Documents
+      type: object
+      required:
+      - place
+      - steps
+      - documents
+      title: ChecklistGroup
+      description: Documents to take to one place, gathered from the open steps that
+        go there.
+    ChecklistResponse:
+      properties:
+        groups:
+          items:
+            $ref: '#/components/schemas/ChecklistGroup'
+          type: array
+          title: Groups
+      type: object
+      required:
+      - groups
+      title: ChecklistResponse
+    ChecklistSentResponse:
+      properties:
+        sent:
+          type: boolean
+          title: Sent
+      type: object
+      required:
+      - sent
+      title: ChecklistSentResponse
     Citizenship:
       type: string
       enum:
@@ -993,6 +1402,100 @@ components:
       - routes
       - completed
       title: GroupStats
+    HelpPhone:
+      properties:
+        label:
+          type: string
+          title: Label
+        number:
+          type: string
+          title: Number
+      additionalProperties: false
+      type: object
+      required:
+      - label
+      - number
+      title: HelpPhone
+    HelpSource:
+      properties:
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        organization:
+          type: string
+          title: Organization
+      additionalProperties: false
+      type: object
+      required:
+      - title
+      - url
+      - organization
+      title: HelpSource
+    HelpTopic:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        actions:
+          items:
+            type: string
+          type: array
+          title: Actions
+        phones:
+          items:
+            $ref: '#/components/schemas/HelpPhone'
+          type: array
+          title: Phones
+        sources:
+          items:
+            $ref: '#/components/schemas/HelpSource'
+          type: array
+          title: Sources
+      additionalProperties: false
+      type: object
+      required:
+      - code
+      - title
+      - summary
+      - actions
+      title: HelpTopic
+    HelpTranslation:
+      properties:
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        actions:
+          items:
+            type: string
+          type: array
+          title: Actions
+        phones:
+          items:
+            type: string
+          type: array
+          title: Phones
+      additionalProperties: false
+      type: object
+      required:
+      - title
+      - summary
+      - actions
+      title: HelpTranslation
     HousingType:
       type: string
       enum:
@@ -1386,6 +1889,72 @@ components:
       - estimated_duration
       - deadline
       title: RouteStepSummary
+    ShareLinkResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+        expires_in:
+          type: integer
+          title: Expires In
+      type: object
+      required:
+      - url
+      - expires_in
+      title: ShareLinkResponse
+    SharedProgressResponse:
+      properties:
+        status:
+          $ref: '#/components/schemas/RouteStatus'
+        progress:
+          $ref: '#/components/schemas/RouteProgress'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        steps:
+          items:
+            $ref: '#/components/schemas/SharedStep'
+          type: array
+          title: Steps
+      type: object
+      required:
+      - status
+      - progress
+      - created_at
+      - completed_at
+      - steps
+      title: SharedProgressResponse
+      description: 'What a parent sees by the link: step titles and progress only,
+        no personal data.'
+    SharedStep:
+      properties:
+        title:
+          type: string
+          title: Title
+        category:
+          $ref: '#/components/schemas/StepCategory'
+        status:
+          $ref: '#/components/schemas/RouteStepStatus'
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - title
+      - category
+      - status
+      - completed_at
+      title: SharedStep
     SourceResponse:
       properties:
         id:

@@ -6,16 +6,18 @@
   --surface: #ffffff;
   --surface-soft: #fff1e4;
   --text: #2d1f1a;
-  --muted: #8a6f5c;
+  /* Text colours meet WCAG AA (≥ 4.5:1) on the backgrounds they are used on. */
+  --muted: #7a5f4d;
   --border: #f3e2d3;
   --accent: #e46f63;
   --accent-strong: #d45a4e;
   --accent-soft: #ffe6d3;
   --accent-ink: #a2512e;
   --accent-text: #ffffff;
-  --success: #3f9d6b;
+  --accent-button: #c0473b;
+  --success: #276b46;
   --success-soft: #e3f4e9;
-  --danger: #c9443a;
+  --danger: #b23b31;
   --danger-soft: #fde6e2;
   --warning-soft: #fff1cf;
   --warning-ink: #8a5a00;
@@ -59,6 +61,7 @@
     --accent-soft: #43291f;
     --accent-ink: #ffc2a6;
     --accent-text: #2a120d;
+    --accent-button: #f08a7c;
     --success: #6fcf98;
     --success-soft: #1f3a2a;
     --danger: #ff8a7d;
@@ -254,7 +257,7 @@ code {
 }
 
 .button--primary {
-  background: var(--accent);
+  background: var(--accent-button);
   color: var(--accent-text);
   box-shadow: 0 6px 16px rgb(228 111 99 / 28%);
 }
@@ -413,7 +416,7 @@ code {
 
 .soft-card--main {
   margin-top: 10px;
-  background: var(--accent);
+  background: var(--accent-button);
   color: var(--accent-text);
   box-shadow: 0 10px 24px rgb(228 111 99 / 30%);
 }
@@ -841,4 +844,244 @@ code {
   border-radius: 12px;
   background: var(--surface-soft, rgba(0, 0, 0, 0.04));
   font-size: 14px;
+}
+
+/* ---- Care features: language, plan by days, checklist, parents, help, achievement ---- */
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.lang-switch,
+.link-button {
+  padding: 6px 2px;
+  border: 0;
+  background: none;
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+
+ul.soft-list,
+ul.shared-steps,
+ul.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin: 16px 0 12px;
+  border-radius: 16px;
+  background: var(--surface-soft);
+}
+
+.segmented button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.day-plan__group + .day-plan__group {
+  margin-top: 14px;
+}
+
+.day-plan__title {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--accent-ink);
+}
+
+.day-plan__title::first-letter {
+  text-transform: uppercase;
+}
+
+.share-progress {
+  display: grid;
+  gap: 8px;
+}
+
+.share-progress .notice {
+  display: grid;
+  gap: 6px;
+}
+
+.share-progress__link {
+  word-break: break-all;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.checklist-group__steps {
+  margin: -4px 0 10px;
+  font-size: 14px;
+}
+
+.checklist__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.checklist__item input {
+  width: 22px;
+  height: 22px;
+  margin: 1px 0 0;
+  flex: none;
+  accent-color: var(--accent-button);
+}
+
+.checklist__item input:checked + span .checklist__title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.checklist__description {
+  display: block;
+  font-size: 14px;
+}
+
+.help-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  margin-bottom: 10px;
+}
+
+.help-card__summary {
+  padding: 14px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.help-card__body {
+  padding: 0 16px 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.help-card__phones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.phone-link {
+  display: grid;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.phone-link__number {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.phone-link__label {
+  font-size: 13px;
+}
+
+.achievement {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 20px 0 8px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent-soft), var(--surface-soft));
+  border: 1px solid var(--border);
+}
+
+.achievement__icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.achievement figcaption {
+  display: grid;
+  gap: 2px;
+}
+
+.achievement__title {
+  font-size: 18px;
+}
+
+.achievement__meta {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.shared-step {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.shared-step__mark {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.shared-step--done .shared-step__mark {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.shared-step__body {
+  display: grid;
+  gap: 2px;
+}
+
+.shared-step__title {
+  font-weight: 700;
+}
+
+/* Visible keyboard focus everywhere, not only on the main controls. */
+.lang-switch:focus-visible,
+.link-button:focus-visible,
+.segmented button:focus-visible,
+.help-card__summary:focus-visible,
+.phone-link:focus-visible,
+.tab:focus-visible,
+.back-link:focus-visible,
+.checklist__item input:focus-visible {
+  outline: 3px solid var(--accent-ink);
+  outline-offset: 2px;
+  border-radius: 10px;
 }

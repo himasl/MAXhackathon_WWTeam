@@ -12,7 +12,7 @@ from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import ApplicationError, InvalidOperationError
-from app.notifications.max_sender import parse_done_payload
+from app.notifications.max_sender import parse_step_payload
 from app.notifications.service import NotificationService
 from app.routes.models import RouteStatus
 from app.routes.repository import RouteRepository
@@ -86,11 +86,15 @@ class BotHandler:
     async def _on_callback(self, callback: dict[str, Any]) -> None:
         callback_id = callback.get("callback_id")
         user_id = _user_id(callback.get("user"))
-        step_id = parse_done_payload(str(callback.get("payload") or ""))
+        parsed = parse_step_payload(str(callback.get("payload") or ""))
         if not isinstance(callback_id, str) or user_id is None:
             return
-        if step_id is None:
+        if parsed is None:
             await self.notifications.callback_notice(callback_id, "Кнопка устарела")
+            return
+        action, step_id = parsed
+        if action in ("snooze", "doing"):
+            await self._postpone(callback_id, user_id, step_id, action)
             return
 
         async with self.session_factory() as session:
@@ -114,6 +118,31 @@ class BotHandler:
 
         await self.notifications.callback_done(callback_id, title)
         await self.notifications.step_completed(user_id, route)
+
+    async def _postpone(self, callback_id: str, user_id: int, step_id: Any, action: str) -> None:
+        async with self.session_factory() as session:
+            user = await UserRepository(session).get_by_max_user_id(user_id)
+            if user is None:
+                await self.notifications.callback_notice(callback_id, "Маршрут не найден")
+                return
+            service = RouteService(session)
+            try:
+                if action == "snooze":
+                    title = await service.snooze_from_chat(user, step_id)
+                else:
+                    title = await service.start_from_chat(user, step_id)
+            except InvalidOperationError:
+                await self.notifications.callback_notice(
+                    callback_id, "Шаг уже закрыт — откройте актуальный через /next"
+                )
+                return
+            except ApplicationError:
+                await self.notifications.callback_notice(callback_id, "Шаг не найден")
+                return
+        if action == "snooze":
+            await self.notifications.callback_snoozed(callback_id, title)
+        else:
+            await self.notifications.callback_started(callback_id, title)
 
     async def send_next_step(self, max_user_id: int) -> None:
         async with self.session_factory() as session:

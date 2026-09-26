@@ -4,7 +4,9 @@ Kinds share one format and are told apart by their payload key:
 - access token (``sub`` = user UUID) issued after MAX initData validation;
 - link token (``mid`` = MAX user id) embedded in bot buttons, so a user opening the app
   from the chat is signed in without a Mini App registration;
-- calendar token (``cal`` = route step UUID) in a public .ics link. It grants no login.
+- calendar token (``cal`` = route step UUID) in a public .ics link. It grants no login;
+- share token (``shr`` = user UUID, ``v`` = share version) for the read-only progress page
+  a student sends to parents. Raising the user's share version revokes every such link.
 """
 
 import base64
@@ -104,3 +106,21 @@ def verify_token(token: str, key: str, now: float | None = None) -> UUID:
     if subject.user_id is None:
         raise TokenError("not an access token")
     return subject.user_id
+
+
+def issue_share_token(
+    user_id: UUID, version: int, key: str, ttl_seconds: int, now: float | None = None
+) -> str:
+    issued = int(time.time() if now is None else now)
+    return _sign({"shr": str(user_id), "v": version, "exp": issued + ttl_seconds}, key)
+
+
+def verify_share_token(token: str, key: str, now: float | None = None) -> tuple[UUID, int]:
+    data = _verify(token, key, now)
+    try:
+        version = data["v"]
+        if not isinstance(version, int) or isinstance(version, bool):
+            raise TokenError("malformed token")
+        return UUID(str(data["shr"])), version
+    except (ValueError, KeyError) as error:
+        raise TokenError("not a share token") from error

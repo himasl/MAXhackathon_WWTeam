@@ -110,3 +110,37 @@ export interface AuthResponse {
   access_token: string;
   start_param: string | null;
 }
+
+export interface ChecklistDocument {
+  code: string;
+  title: string;
+  description: string;
+  required: boolean;
+}
+
+export interface ChecklistGroup {
+  place: string;
+  steps: string[];
+  documents: ChecklistDocument[];
+}
+
+export interface Checklist {
+  groups: ChecklistGroup[];
+}
+
+export interface SharedProgress {
+  status: RouteStatus;
+  progress: { completed: number; total: number; percent: number };
+  created_at: string;
+  completed_at: string | null;
+  steps: { title: string; category: StepCategory; status: StepStatus; completed_at: string | null }[];
+}
+
+export interface HelpTopic {
+  code: string;
+  title: string;
+  summary: string;
+  actions: string[];
+  phones: { label: string; number: string }[];
+  sources: { title: string; url: string; organization: string }[];
+}

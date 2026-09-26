@@ -1,3 +1,4 @@
+import { t } from "../shared/i18n";
 import { useMemo, useState } from "react";
 
 import type { University } from "../shared/api/types";
@@ -35,13 +36,13 @@ export function UniversityPicker({ universities, value, onChange }: Props) {
         <input
           className="input input--search"
           type="search"
-          placeholder="Найти вуз или колледж: МГУ, «финансовый»…"
+          placeholder={t("Найти вуз или колледж: МГУ, «финансовый»…", "Find a university or college (in Russian)")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          aria-label="Поиск вуза или колледжа"
+          aria-label={t("Поиск вуза или колледжа", "University search")}
         />
       ) : null}
-      {large && !query ? <p className="muted region-picker__hint">Часто выбирают</p> : null}
+      {large && !query ? <p className="muted region-picker__hint">{t("Часто выбирают", "Popular")}</p> : null}
       <div className="choices" role="radiogroup">
         {options.map((item) => (
           <button
@@ -54,12 +55,14 @@ export function UniversityPicker({ universities, value, onChange }: Props) {
           >
             <span className="choice__title">{item.short_title}</span>
             <span className="choice__subtitle">{item.title}</span>
-            {item.partner ? <span className="choice__tag">Официальные памятки вуза</span> : null}
-            {item.kind === "college" ? <span className="choice__tag choice__tag--muted">Колледж</span> : null}
+            {item.partner ? <span className="choice__tag">{t("Официальные памятки вуза", "Official university guides")}</span> : null}
+            {item.kind === "college" ? <span className="choice__tag choice__tag--muted">{t("Колледж", "College")}</span> : null}
           </button>
         ))}
         {query && options.length === 0 ? (
-          <p className="muted">Не нашли — выберите «Другой вуз или колледж» ниже.</p>
+          <p className="muted">
+            {t("Не нашли — выберите «Другой вуз или колледж» ниже.", "Not listed? Choose “Another university or college” below.")}
+          </p>
         ) : null}
         <button
           type="button"
@@ -68,12 +71,15 @@ export function UniversityPicker({ universities, value, onChange }: Props) {
           className={`choice ${value === null ? "choice--selected" : ""}`}
           onClick={() => onChange(null)}
         >
-          Другой вуз или колледж
+          {t("Другой вуз или колледж", "Another university or college")}
         </button>
       </div>
       {large && !query ? (
         <p className="muted region-picker__hint">
-          В регионе {universities.length} учебных заведений — остальные найдутся через поиск.
+          {t(
+            `В регионе ${universities.length} учебных заведений — остальные найдутся через поиск.`,
+            `${universities.length} institutions in the region — search to find the rest.`,
+          )}
         </p>
       ) : null}
     </div>

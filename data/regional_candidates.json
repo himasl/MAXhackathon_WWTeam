@@ -30,11 +30,6 @@
       }
     },
     "12": {
-      "mfc": {
-        "organization": "АУ Республики Марий Эл «Дирекция МФЦ»",
-        "url": "https://mari-el.gov.ru/ministries/dis/mfc/",
-        "note": "section on the official Mari El government portal (offices list); no standalone MFC site found"
-      },
       "tfoms": {
         "organization": "ТФОМС Республики Марий Эл",
         "url": "https://rfoms.mari-el.ru/",
@@ -162,17 +157,17 @@
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (connection failed)"
       }
     },
+    "55": {
+      "mfc": {
+        "organization": "БУ Омской области «МФЦ» (Мои документы)",
+        "url": "https://xn----ttbebjtrq.xn--p1ai/",
+        "note": "найден по поиску, официальный статус не подтверждён"
+      }
+    },
     "58": {
       "tfoms": {
         "organization": "ТФОМС Пензенской области",
         "url": "https://www.omspenza.ru/",
-        "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
-      }
-    },
-    "59": {
-      "tfoms": {
-        "organization": "ТФОМС Пермского края",
-        "url": "https://www.pkfoms.ru/",
         "note": "Listed on the TFOMS Chechen Republic link directory of territorial funds; WebFetch failed (TLS)"
       }
     },

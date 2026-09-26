@@ -1,3 +1,4 @@
+import { t } from "../shared/i18n";
 import { useMemo, useState } from "react";
 
 import type { Region, RegionalService } from "../shared/api/types";
@@ -11,18 +12,22 @@ interface Props {
 }
 
 const SERVICE_LABELS: Record<RegionalService, string> = {
-  mfc: "МФЦ",
-  tfoms: "фонд ОМС",
-  student_transport: "студенческий проезд",
+  mfc: t("МФЦ", "MFC (public services centre)"),
+  tfoms: t("фонд ОМС", "health insurance fund"),
+  student_transport: t("студенческий проезд", "student transport"),
 };
 
 /** Tells what official regional data the route will use for the chosen region. */
 function coverageNote(region: Region): string {
   const services = region.services ?? [];
   if (services.length === 0) {
-    return "Для региона возьмём федеральные правила и Госуслуги; региональные подсказки помечены как демонстрационные.";
+    return t(
+      "Для региона возьмём федеральные правила и Госуслуги; региональные подсказки помечены как демонстрационные.",
+      "For this region we use federal rules and Gosuslugi; regional tips are marked as demo data.",
+    );
   }
-  return `Для региона есть официальные данные: ${services.map((kind) => SERVICE_LABELS[kind]).join(", ")}.`;
+  const list = services.map((kind) => SERVICE_LABELS[kind]).join(", ");
+  return t(`Для региона есть официальные данные: ${list}.`, `Official data for this region: ${list}.`);
 }
 
 /** All 89 regions: popular ones first, the rest are found by typing a name. */
@@ -51,12 +56,12 @@ export function RegionPicker({ regions, value, onChange }: Props) {
       <input
         className="input input--search"
         type="search"
-        placeholder="Найти регион по названию"
+        placeholder={t("Найти регион по названию", "Find a region by name (in Russian)")}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        aria-label="Поиск региона"
+        aria-label={t("Поиск региона", "Region search")}
       />
-      {!query ? <p className="muted region-picker__hint">Часто выбирают</p> : null}
+      {!query ? <p className="muted region-picker__hint">{t("Часто выбирают", "Popular")}</p> : null}
       <div className="choices" role="radiogroup">
         {options.map((region) => (
           <button
@@ -71,13 +76,16 @@ export function RegionPicker({ regions, value, onChange }: Props) {
           </button>
         ))}
         {query && options.length === 0 ? (
-          <p className="muted">Ничего не нашлось. Попробуйте другое написание.</p>
+          <p className="muted">{t("Ничего не нашлось. Попробуйте другое написание.", "Nothing found. Try another spelling.")}</p>
         ) : null}
       </div>
       {selected ? <p className="region-picker__coverage">{coverageNote(selected)}</p> : null}
       {!query ? (
         <p className="muted region-picker__hint">
-          Всего {regions.length} регионов — остальные найдутся через поиск.
+          {t(
+            `Всего ${regions.length} регионов — остальные найдутся через поиск.`,
+            `${regions.length} regions in total — search to find the rest.`,
+          )}
         </p>
       ) : null}
     </div>

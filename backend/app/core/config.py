@@ -124,6 +124,11 @@ class Settings:
         )
 
     @property
+    def help_file(self) -> Path:
+        custom = os.getenv("HELP_FILE")
+        return Path(custom) if custom else self.scenario_data_dir.parent / "help.json"
+
+    @property
     def mini_app_url(self) -> str:
         return self.public_url or self.frontend_url
 

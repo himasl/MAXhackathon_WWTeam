@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Self
+from typing import Literal, Self
 
 from pydantic import (
     BaseModel,
@@ -18,6 +18,26 @@ from app.sources.models import SourceType
 from app.universities.schemas import UniversityDefinition
 
 CODE_PATTERN = r"^[a-z0-9_]+$"
+
+# Languages scenario texts can be translated to (Russian is the source language).
+Language = Literal["en"]
+
+
+class StepTranslation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: StrictStr
+    short_description: StrictStr = ""
+    full_description: StrictStr = ""
+    reason: StrictStr = ""
+    location: StrictStr = ""
+
+
+class DocumentTranslation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: StrictStr
+    description: StrictStr = ""
 
 
 class SourceDefinition(BaseModel):
@@ -39,6 +59,7 @@ class DocumentDefinition(BaseModel):
     code: StrictStr = Field(pattern=CODE_PATTERN)
     title: StrictStr
     description: StrictStr = ""
+    i18n: dict[Language, DocumentTranslation] = Field(default_factory=dict)
 
 
 class StepDocumentReference(BaseModel):
@@ -65,6 +86,7 @@ class ScenarioStepDefinition(BaseModel):
     rules: list[RuleDefinition] = Field(default_factory=list)
     sources: list[StrictStr] = Field(default_factory=list)
     documents: list[StepDocumentReference] = Field(default_factory=list)
+    i18n: dict[Language, StepTranslation] = Field(default_factory=dict)
 
 
 class ScenarioDefinition(BaseModel):

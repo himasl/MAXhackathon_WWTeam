@@ -22,6 +22,8 @@ class OutgoingMessage:
     start_param: str | None = None
     # Adds a "✅ Выполнено" callback button that completes this step from the chat.
     done_step_id: UUID | None = None
+    # With done_step_id: adds "⏰ Напомнить завтра" and "🚶 Уже в процессе" buttons.
+    snooze: bool = False
     extra_links: list[tuple[str, str]] = field(default_factory=list)
 
 
@@ -70,7 +72,8 @@ HELP_TEXT = (
     "Команды:\n"
     "/start — начать и открыть маршрут\n"
     "/next — следующий шаг маршрута\n"
-    "Кнопка «✅ Выполнено» под шагом отмечает его прямо в чате\n"
+    "Кнопка «✅ Выполнено» под шагом отмечает его прямо в чате, "
+    "«⏰ Напомнить завтра» переносит напоминание, «🚶 Уже в процессе» — отмечает, что дело начато\n"
     "/help — эта подсказка"
 )
 
@@ -166,6 +169,27 @@ class NotificationService:
                 button_text="Открыть шаг",
                 start_param=step_start_param(step_id),
                 done_step_id=step_id,
+                snooze=True,
+            ),
+        )
+
+    async def send_text(self, max_user_id: int, text: str) -> bool:
+        return await self.sender.send(
+            max_user_id, OutgoingMessage(text=text, button_text="Открыть маршрут")
+        )
+
+    async def callback_snoozed(self, callback_id: str, title: str) -> bool:
+        return await self.sender.acknowledge(
+            callback_id, "Напомню завтра", replace_text=f"⏰ Напомню завтра о шаге «{title}»"
+        )
+
+    async def callback_started(self, callback_id: str, title: str) -> bool:
+        return await self.sender.acknowledge(
+            callback_id,
+            "Отметил: в процессе",
+            replace_text=(
+                f"🚶 «{title}» — в процессе. Загляну через 3 дня; отметить выполненным "
+                "можно в маршруте или командой /next."
             ),
         )
 
