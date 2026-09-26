@@ -121,7 +121,7 @@ export function RoutePage({ route, onOpenStep, onEditProfile, onOpenChecklist, i
   const next = route.steps.find((step) => step.id === route.next_step_id) ?? null;
   const open = route.steps.filter((step) => step.status !== "DONE" && step.status !== "SKIPPED");
   const later = open.filter((step) => step.id !== next?.id);
-  const done = route.steps.filter((step) => step.status === "DONE");
+  const done = route.steps.filter((step) => step.status === "DONE" || step.status === "SKIPPED");
   const { title, subtitle } = headline(route);
 
   const setMode = (value: Mode) => {
@@ -227,8 +227,9 @@ export function RoutePage({ route, onOpenStep, onEditProfile, onOpenChecklist, i
         <div className="done-chips" aria-label={t("Выполненные шаги", "Completed steps")}>
           {done.map((step) => (
             <button type="button" key={step.id} className="chip" onClick={() => onOpenStep(step.id)}>
-              <span aria-hidden>✓ </span>
+              <span aria-hidden>{step.status === "SKIPPED" ? "– " : "✓ "}</span>
               {step.title}
+              {step.status === "SKIPPED" ? <span className="visually-hidden"> ({STATUS_LABELS.SKIPPED})</span> : null}
             </button>
           ))}
         </div>

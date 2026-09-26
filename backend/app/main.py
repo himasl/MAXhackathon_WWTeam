@@ -132,7 +132,9 @@ def mount_frontend(application: FastAPI, dist: Path) -> None:
             return error_response(404, "NOT_FOUND", "Not Found")
         candidate = (dist / path).resolve()
         if path and candidate.is_file() and candidate.is_relative_to(dist.resolve()):
-            return FileResponse(candidate)
+            # The service worker must be re-checked on every visit to pick up new versions.
+            headers = {"Cache-Control": "no-cache"} if path == "sw.js" else None
+            return FileResponse(candidate, headers=headers)
         return FileResponse(index, headers={"Cache-Control": "no-cache"})
 
 

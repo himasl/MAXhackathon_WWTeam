@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import Any
 
@@ -10,6 +11,8 @@ from starlette.exceptions import HTTPException
 from app.core.exceptions import ApplicationError
 
 logger = logging.getLogger(__name__)
+# Keeps references to fire-and-forget alert tasks until they finish.
+_ALERT_TASKS: set[asyncio.Task[bool]] = set()
 
 
 class ErrorDetail(BaseModel):
@@ -63,6 +66,16 @@ async def unhandled_error_handler(request: Request, error: Exception) -> JSONRes
         500, "INTERNAL_ERROR", f"Internal server error (request_id: {request_id})"
     )
     response.headers["X-Request-ID"] = request_id
+    runtime = getattr(request.app.state, "bot", None)
+    if runtime is not None:
+        text = (
+            f"⚠️ Ошибка 500: {request.method} {request.url.path}\n"
+            f"{type(error).__name__}: {str(error)[:200]}\n"
+            f"Код для поддержки: {request_id} — ищите его в логах Render."
+        )
+        task = asyncio.create_task(runtime.alert_team(text))
+        _ALERT_TASKS.add(task)
+        task.add_done_callback(_ALERT_TASKS.discard)
     return response
 
 

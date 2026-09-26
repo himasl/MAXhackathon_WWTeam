@@ -99,15 +99,19 @@ class MaxMessageSender:
                 )
             rows.append([button])
         if message.done_step_id is not None:
-            rows.append([callback_button("✅ Выполнено", done_payload(message.done_step_id))])
+            en = message.lang == "en"
+            done_text = "✅ Done" if en else "✅ Выполнено"
+            rows.append([callback_button(done_text, done_payload(message.done_step_id))])
             if message.snooze:
                 rows.append(
                     [
                         callback_button(
-                            "⏰ Напомнить завтра", step_payload("snooze", message.done_step_id)
+                            "⏰ Remind tomorrow" if en else "⏰ Напомнить завтра",
+                            step_payload("snooze", message.done_step_id),
                         ),
                         callback_button(
-                            "🚶 Уже в процессе", step_payload("doing", message.done_step_id)
+                            "🚶 Already on it" if en else "🚶 Уже в процессе",
+                            step_payload("doing", message.done_step_id),
                         ),
                     ]
                 )

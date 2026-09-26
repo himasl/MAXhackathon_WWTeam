@@ -54,7 +54,7 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
     setSaving(true);
     setActionError(null);
     try {
-      const done = step.status === "DONE";
+      const done = step.status === "DONE" || step.status === "SKIPPED";
       const route = done
         ? await api.reopenStep(routeId, stepId)
         : await api.completeStep(routeId, stepId);
@@ -63,6 +63,20 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
       if (done) await load();
     } catch (error) {
       maxBridge.notify("error");
+      setActionError(errorMessage(error));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const skip = async () => {
+    setSaving(true);
+    setActionError(null);
+    try {
+      const route = await api.skipStep(routeId, stepId);
+      maxBridge.notify("success");
+      onRouteChanged(route, stepId);
+    } catch (error) {
       setActionError(errorMessage(error));
     } finally {
       setSaving(false);
@@ -93,6 +107,8 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
   }
 
   const done = step.status === "DONE";
+  const skipped = step.status === "SKIPPED";
+  const closed = done || skipped;
   const deadline = formatDate(step.deadline, true);
   const actions = step.full_description.split("\n").filter(Boolean);
 
@@ -100,9 +116,18 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
     <Screen
       footer={
         routeIsArchived ? null : (
-          <Button variant={done ? "secondary" : "primary"} onClick={toggle} loading={saving}>
-            {done ? t("Вернуть в работу", "Mark as not done") : t("Отметить выполненным", "Mark as done")}
-          </Button>
+          <div className="footer-stack">
+            <Button variant={closed ? "secondary" : "primary"} onClick={toggle} loading={saving}>
+              {closed
+                ? t("Вернуть в работу", "Back to the plan")
+                : t("Отметить выполненным", "Mark as done")}
+            </Button>
+            {!closed ? (
+              <Button variant="ghost" onClick={skip} disabled={saving}>
+                {t("Мне это не нужно", "I don't need this")}
+              </Button>
+            ) : null}
+          </div>
         )
       }
     >
@@ -112,6 +137,7 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
       <div className="step-header">
         <span className="tag">{CATEGORY_LABELS[step.category]}</span>
         {done ? <span className="tag tag--done">{STATUS_LABELS.DONE}</span> : null}
+        {skipped ? <span className="tag">{STATUS_LABELS.SKIPPED}</span> : null}
         {step.status === "IN_PROGRESS" ? <span className="tag">{STATUS_LABELS.IN_PROGRESS}</span> : null}
         {!step.is_required ? <span className="tag">{t("По желанию", "Optional")}</span> : null}
       </div>

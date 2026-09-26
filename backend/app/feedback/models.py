@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import StrEnum
 from uuid import UUID
 
-from sqlalchemy import DateTime, Enum, ForeignKey, String, func
+from sqlalchemy import DateTime, Enum, ForeignKey, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base, UUIDPrimaryKeyMixin
@@ -29,3 +29,7 @@ class StepReport(UUIDPrimaryKeyMixin, Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+    # What the team reads: step, scenario version, region, sources, comment.
+    summary: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
+    # Set when the report went out in the team's daily digest.
+    notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

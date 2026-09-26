@@ -1,6 +1,7 @@
 import dataclasses
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 import pytest
 from httpx import AsyncClient
@@ -11,6 +12,7 @@ from app.core.database import async_session
 from app.main import app as fastapi_app
 from app.notifications.max_sender import parse_step_payload, step_payload
 from app.routes.models import RouteStepStatus, UserRouteStep
+from tests.conftest import awake
 from tests.test_pilot_features import RecordingSender, route_for, sender  # noqa: F401
 
 
@@ -44,7 +46,7 @@ async def test_snooze_from_chat_reminds_tomorrow(
     assert sender.acks[-1][2] == f"⏰ Напомню завтра о шаге «{step['title']}»"
     now = datetime.now(UTC)
     assert await runtime.send_due_reminders(now + timedelta(hours=2)) == 0
-    sent = await runtime.send_due_reminders(now + timedelta(days=1, hours=1))
+    sent = await runtime.send_due_reminders(awake(now + timedelta(days=1, hours=1)))
     assert sent == 1
     reminder = sender.sent[-1][1]
     assert reminder.done_step_id == UUID(step["id"])
@@ -139,15 +141,14 @@ async def test_foreign_route_in_english(client: AsyncClient) -> None:
     assert "Медицинское страхование" in [item["title"] for item in russian["steps"]]
 
 
-async def test_step_report_goes_to_support_chat(
+async def test_step_reports_go_to_the_team_in_a_daily_digest(
     client: AsyncClient,
     sender: RecordingSender,  # noqa: F811
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from app.api.v1 import routes as routes_module
-
+    runtime: BotRuntime = fastapi_app.state.bot
     monkeypatch.setattr(
-        routes_module, "settings", dataclasses.replace(settings, support_max_user_ids=(4242,))
+        runtime, "settings", dataclasses.replace(settings, support_max_user_ids=(4242,))
     )
     route = await route_for(client, region_code="54", housing_type="RENT")
     step = next(item for item in route["steps"] if item["code"] == "temporary_registration")
@@ -155,20 +156,116 @@ async def test_step_report_goes_to_support_chat(
 
     first = await client.post(url, json={"kind": "OUTDATED", "comment": "Адрес МФЦ сменился"})
     assert first.status_code == 201
-    to_support = [message for user_id, message in sender.sent if user_id == 4242]
-    assert len(to_support) == 1
-    text = to_support[0].text
-    assert "Регистрация по месту пребывания" in text and "Адрес МФЦ сменился" in text
-    assert "Регион: 54" in text and "Источник: https://" in text
-
     again = await client.post(url, json={"kind": "OUTDATED"})
     assert again.json()["id"] == first.json()["id"]
-    assert len([1 for user_id, _ in sender.sent if user_id == 4242]) == 1
+    assert (await client.post(url, json={"kind": "SPAM"})).status_code == 422
+    assert not [1 for user_id, _ in sender.sent if user_id == 4242]
 
-    bad = await client.post(url, json={"kind": "SPAM"})
-    assert bad.status_code == 422
+    assert await runtime.send_team_digest(force=True) == 1
+    digest = next(message for user_id, message in sender.sent if user_id == 4242).text
+    assert "Отзывы о шагах за сутки: 1" in digest
+    assert "Регистрация по месту пребывания" in digest and "Адрес МФЦ сменился" in digest
+    assert "регион 54" in digest and "https://" in digest
+    assert await runtime.send_team_digest(force=True) == 0  # already sent
     stats = (await client.get("/api/v1/stats")).json()
     assert stats["steps"]["reported"] == 1
+
+
+async def test_stale_sources_listed_on_mondays(
+    client: AsyncClient,
+    sender: RecordingSender,  # noqa: F811
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime: BotRuntime = fastapi_app.state.bot
+    monkeypatch.setattr(
+        runtime, "settings", dataclasses.replace(settings, support_max_user_ids=(4242,))
+    )
+    await route_for(client)
+    monday_next_year = datetime(2027, 12, 6, 7, 0, tzinfo=UTC)  # 10:00 in Moscow, sources > 90 days
+    assert await runtime.send_team_digest(now=monday_next_year) == 1
+    assert "проверенные больше 90 дней назад" in sender.sent[-1][1].text
+
+
+async def test_quiet_hours_and_english_reminder(
+    client: AsyncClient,
+    sender: RecordingSender,  # noqa: F811
+) -> None:
+    route = await route_for(client, region_code="25")  # Vladivostok, UTC+10
+    assert (await client.put("/api/v1/me/language", json={"lang": "en"})).status_code == 204
+    runtime: BotRuntime = fastapi_app.state.bot
+    due = datetime.now(UTC) + timedelta(days=7)
+    night = due.astimezone(ZoneInfo("Asia/Vladivostok")).replace(hour=23).astimezone(UTC)
+    morning = awake(night, "Asia/Vladivostok")
+
+    assert await runtime.send_due_reminders(night) == 0
+    assert await runtime.send_due_reminders(morning) == 1
+    reminder = sender.sent[-1][1]
+    assert reminder.text.startswith("Reminder") and reminder.lang == "en"
+    assert route["steps"]
+
+
+async def test_weekly_digest_on_sunday_evening(
+    client: AsyncClient,
+    sender: RecordingSender,  # noqa: F811
+) -> None:
+    route = await route_for(client)
+    await client.post(f"/api/v1/routes/{route['id']}/steps/{route['steps'][0]['id']}/complete")
+    runtime: BotRuntime = fastapi_app.state.bot
+    now = datetime.now(UTC)
+    days = (6 - now.astimezone(ZoneInfo("Europe/Moscow")).weekday()) % 7
+    sunday = (now + timedelta(days=days)).astimezone(ZoneInfo("Europe/Moscow"))
+    sunday_evening = sunday.replace(hour=19, minute=0).astimezone(UTC)
+
+    assert await runtime.send_weekly_digests(sunday_evening) == 1
+    text = sender.sent[-1][1].text
+    assert text.startswith("Итоги недели") and "Осталось:" in text
+    assert await runtime.send_weekly_digests(sunday_evening + timedelta(hours=1)) == 0
+
+
+async def test_skip_step_leaves_the_plan(client: AsyncClient) -> None:
+    route = await route_for(client)
+    step = route["steps"][-1]
+    skipped = await client.post(f"/api/v1/routes/{route['id']}/steps/{step['id']}/skip")
+    assert skipped.status_code == 200
+    body = skipped.json()
+    assert body["progress"]["total"] == route["progress"]["total"] - 1
+    assert body["steps"][-1]["status"] == "SKIPPED"
+    again = await client.post(f"/api/v1/routes/{route['id']}/steps/{step['id']}/skip")
+    assert again.status_code == 409
+    back = await client.post(f"/api/v1/routes/{route['id']}/steps/{step['id']}/reopen")
+    assert back.json()["progress"]["total"] == route["progress"]["total"]
+
+
+async def test_team_alert_is_rate_limited(monkeypatch: pytest.MonkeyPatch) -> None:
+    runtime: BotRuntime = fastapi_app.state.bot
+    monkeypatch.setattr(
+        runtime, "settings", dataclasses.replace(settings, support_max_user_ids=(4242,))
+    )
+    monkeypatch.setattr(runtime, "_last_alert", None)
+    now = datetime.now(UTC)
+    assert await runtime.alert_team("⚠️ test", now) is True
+    assert await runtime.alert_team("⚠️ test", now + timedelta(minutes=5)) is False
+    assert await runtime.alert_team("⚠️ test", now + timedelta(minutes=11)) is True
+
+
+async def test_stats_command_only_for_the_team(
+    client: AsyncClient,
+    sender: RecordingSender,  # noqa: F811
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime: BotRuntime = fastapi_app.state.bot
+    monkeypatch.setattr(runtime.handler, "support_ids", (4242,))
+
+    def message(user_id: int) -> dict[str, object]:
+        return {
+            "update_type": "message_created",
+            "message": {"sender": {"user_id": user_id}, "body": {"text": "/stats"}},
+        }
+
+    await runtime.handler.handle(message(4242))
+    assert sender.sent[-1][1].text.startswith("📊 Метрики пилота")
+    await runtime.handler.handle(message(777))
+    assert not sender.sent[-1][1].text.startswith("📊")
 
 
 async def test_health_reports_database_and_version(client: AsyncClient) -> None:

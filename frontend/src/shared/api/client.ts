@@ -30,6 +30,25 @@ export class ApiError extends Error {
   }
 }
 
+/** True when the last answer came from the offline copy (service worker). */
+let offline = false;
+const offlineListeners = new Set<(value: boolean) => void>();
+
+export function isOffline(): boolean {
+  return offline;
+}
+
+export function onOfflineChange(listener: (value: boolean) => void): () => void {
+  offlineListeners.add(listener);
+  return () => offlineListeners.delete(listener);
+}
+
+function setOffline(value: boolean) {
+  if (value === offline) return;
+  offline = value;
+  offlineListeners.forEach((listener) => listener(value));
+}
+
 const TOKEN_KEY = "marshrut.token";
 let accessToken: string | null = null;
 
@@ -77,6 +96,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     throw new ApiError(0, "NETWORK_ERROR", t("Нет соединения с сервером", "No connection to the server"));
   }
 
+  if ((init.method ?? "GET") === "GET") setOffline(response.headers.get("X-Offline") === "1");
   const body = response.status === 204 ? null : await response.json().catch(() => null);
   if (!response.ok) {
     const error = body?.error;
@@ -105,6 +125,10 @@ export const api = {
     request<StepDetail>(`/api/v1/routes/${routeId}/steps/${stepId}`),
   completeStep: (routeId: string, stepId: string) =>
     request<Route>(`/api/v1/routes/${routeId}/steps/${stepId}/complete`, { method: "POST" }),
+  skipStep: (routeId: string, stepId: string) =>
+    request<Route>(`/api/v1/routes/${routeId}/steps/${stepId}/skip`, { method: "POST" }),
+  setLanguage: (value: "ru" | "en") =>
+    request<null>("/api/v1/me/language", { method: "PUT", body: JSON.stringify({ lang: value }) }),
   reopenStep: (routeId: string, stepId: string) =>
     request<Route>(`/api/v1/routes/${routeId}/steps/${stepId}/reopen`, { method: "POST" }),
   getConfig: () => request<AppConfig>("/api/v1/config"),

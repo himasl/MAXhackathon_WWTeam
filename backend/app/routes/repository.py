@@ -9,6 +9,7 @@ from sqlalchemy.orm import joinedload, selectinload
 from app.documents.models import ScenarioStepDocument
 from app.routes.models import RouteStatus, RouteStepStatus, UserRoute, UserRouteStep
 from app.scenarios.models import ScenarioStep
+from app.users.models import User
 
 
 class RouteRepository:
@@ -102,10 +103,21 @@ class RouteRepository:
                 UserRouteStep.reminded_at.is_(None),
             )
             .options(
-                joinedload(UserRouteStep.route).joinedload(UserRoute.user),
+                joinedload(UserRouteStep.route).joinedload(UserRoute.user).joinedload(User.profile),
                 joinedload(UserRouteStep.scenario_step),
             )
             .order_by(UserRouteStep.deadline)
             .limit(100)
         )
         return list(await self.session.scalars(query))
+
+    async def list_active_with_users(self) -> list[UserRoute]:
+        query = (
+            select(UserRoute)
+            .where(UserRoute.status == RouteStatus.ACTIVE)
+            .options(
+                *self._with_details(),
+                joinedload(UserRoute.user).joinedload(User.profile),
+            )
+        )
+        return list((await self.session.scalars(query)).unique())

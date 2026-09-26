@@ -16,9 +16,12 @@ function initialLang(): Lang {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "en" || stored === "ru") return stored;
   } catch {
-    // Storage may be unavailable; fall back to Russian.
+    // Storage may be unavailable; fall back to the phone's language.
   }
-  return "ru";
+  // No choice yet: follow the phone. Russian for ru and the CIS languages people often
+  // read Russian in, English for everything else.
+  const phone = (navigator.languages?.[0] ?? navigator.language ?? "ru").toLowerCase();
+  return /^(ru|be|uk|kk|ky|uz|tg|hy|az)/.test(phone) ? "ru" : "en";
 }
 
 let current: Lang = typeof window === "undefined" ? "ru" : initialLang();

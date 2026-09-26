@@ -20,7 +20,7 @@ from app.notifications.service import NotificationService, OutgoingMessage
 from app.routes.models import UserRouteStep
 from app.scenarios.loader import ScenarioLoader
 from app.scenarios.seed import sync_all
-from tests.conftest import PROFILE
+from tests.conftest import PROFILE, awake
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "scenarios"
 
@@ -88,7 +88,7 @@ async def test_manual_reminder_endpoint(client: AsyncClient, sender: RecordingSe
 async def test_due_reminders_are_sent_once(client: AsyncClient, sender: RecordingSender) -> None:
     route = await seeded_route(client)
     runtime: BotRuntime = fastapi_app.state.bot
-    later = datetime.now(UTC) + timedelta(days=7)
+    later = awake(datetime.now(UTC) + timedelta(days=7))
 
     first = await runtime.send_due_reminders(now=later)
     second = await runtime.send_due_reminders(now=later)

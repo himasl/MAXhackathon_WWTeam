@@ -32,9 +32,7 @@ async def test_full_route_api_scenario(
     assert current.json()["id"] == route["id"]
 
     first_step = route["steps"][0]
-    detail = await client.get(
-        f"/api/v1/routes/{route['id']}/steps/{first_step['id']}"
-    )
+    detail = await client.get(f"/api/v1/routes/{route['id']}/steps/{first_step['id']}")
     assert detail.status_code == 200
     assert detail.json()["code"] == "adult_step"
 
@@ -60,9 +58,7 @@ async def test_full_route_api_scenario(
         "percent": 100,
     }
 
-    reopened = await client.post(
-        f"/api/v1/routes/{route['id']}/steps/{first_step['id']}/reopen"
-    )
+    reopened = await client.post(f"/api/v1/routes/{route['id']}/steps/{first_step['id']}/reopen")
     assert reopened.status_code == 200
     assert reopened.json()["status"] == "ACTIVE"
     assert reopened.json()["progress"] == {
@@ -160,10 +156,7 @@ async def test_invalid_operation_returns_conflict(
     route = (await client.post("/api/v1/routes")).json()
     step = route["steps"][0]
 
-    response = await client.post(
-        f"/api/v1/routes/{route['id']}/steps/{step['id']}/reopen"
-    )
+    response = await client.post(f"/api/v1/routes/{route['id']}/steps/{step['id']}/reopen")
 
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "INVALID_OPERATION"
-

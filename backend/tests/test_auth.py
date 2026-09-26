@@ -116,9 +116,7 @@ async def test_login_with_max_then_use_token(client: AsyncClient, auth_settings:
     assert response.status_code == 200
     body = response.json()
     assert body["user"]["max_user_id"] == 555
-    me = await client.get(
-        "/api/v1/me", headers={"Authorization": f"Bearer {body['access_token']}"}
-    )
+    me = await client.get("/api/v1/me", headers={"Authorization": f"Bearer {body['access_token']}"})
     assert me.status_code == 200
     assert me.json()["max_user_id"] == 555
 
@@ -159,9 +157,7 @@ async def test_reviewer_test_token(client: AsyncClient, auth_settings: None) -> 
 async def test_dev_auth_is_ignored_in_production(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    patched = dataclasses.replace(
-        app_settings, app_env="production", dev_auth_enabled=True
-    )
+    patched = dataclasses.replace(app_settings, app_env="production", dev_auth_enabled=True)
     monkeypatch.setattr(auth_service, "settings", patched)
 
     response = await client.get("/api/v1/me")

@@ -40,4 +40,3 @@ async def test_validation_error_uses_error_format(client: AsyncClient) -> None:
     assert response.json() == {
         "error": {"code": "VALIDATION_ERROR", "message": "Request validation failed"}
     }
-

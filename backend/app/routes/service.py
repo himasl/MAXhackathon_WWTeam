@@ -188,15 +188,31 @@ class RouteService:
         route = await self.repository.get_by_step(step_id, user.id)
         if route is None:
             raise RouteStepNotFoundError
-        title = self._find_step(route, step_id).scenario_step.title
+        title = localized(self._find_step(route, step_id).scenario_step, "title", self.lang)
         return title, await self.complete(user, route.id, step_id, via="chat")
+
+    async def skip(self, user: User, route_id: UUID, step_id: UUID) -> RouteResponse:
+        route = await self.get_route_model(user, route_id)
+        if route.status != RouteStatus.ACTIVE:
+            raise InvalidOperationError("Only an active route can be updated")
+        step = self._find_step(route, step_id)
+        if step.status not in OPEN_STATUSES:
+            raise InvalidOperationError("Only an open route step can be skipped")
+        now = datetime.now(UTC)
+        step.status = RouteStepStatus.SKIPPED
+        step.snoozed_until = None
+        if all(item.status in FINISHED_STATUSES for item in route.steps):
+            route.status = RouteStatus.COMPLETED
+            route.completed_at = now
+        await self.session.commit()
+        return await self._reload(route.id, user)
 
     async def reopen(self, user: User, route_id: UUID, step_id: UUID) -> RouteResponse:
         route = await self.get_route_model(user, route_id)
         if route.status == RouteStatus.ARCHIVED:
             raise InvalidOperationError("Archived route cannot be updated")
         step = self._find_step(route, step_id)
-        if step.status != RouteStepStatus.DONE:
+        if step.status not in FINISHED_STATUSES:
             raise InvalidOperationError("Only a completed route step can be reopened")
 
         step.status = RouteStepStatus.TODO
@@ -223,7 +239,7 @@ class RouteService:
         step.snoozed_until = datetime.now(UTC) + timedelta(days=days)
         step.reminded_at = None
         await self.session.commit()
-        return step.scenario_step.title
+        return localized(step.scenario_step, "title", self.lang)
 
     async def start_from_chat(self, user: User, step_id: UUID, days: int = 3) -> str:
         """"Уже в процессе": mark the step as started and check back in ``days``."""
@@ -232,7 +248,7 @@ class RouteService:
         step.snoozed_until = datetime.now(UTC) + timedelta(days=days)
         step.reminded_at = None
         await self.session.commit()
-        return step.scenario_step.title
+        return localized(step.scenario_step, "title", self.lang)
 
     async def checklist(self, user: User, route_id: UUID) -> ChecklistResponse:
         """Documents of the open steps grouped by where to go with them."""
@@ -284,9 +300,9 @@ class RouteService:
 
     async def report(
         self, user: User, route_id: UUID, step_id: UUID, kind: ReportKind, comment: str
-    ) -> tuple[StepReport, str | None]:
-        """Save «информация устарела». Returns the report and, for a new one, the text the
-        team gets in the bot chat (a repeat within a day is not sent again)."""
+    ) -> StepReport:
+        """Save «Сообщить о неточности». The team gets it in the daily digest; the same note
+        about the same step within a day is not stored twice."""
         route = await self.get_route_model(user, route_id)
         step = self._find_step(route, step_id)
         since = datetime.now(UTC) - timedelta(days=1)
@@ -298,10 +314,7 @@ class RouteService:
             )
         )
         if existing is not None:
-            return existing, None
-        report = StepReport(route_step_id=step.id, kind=kind, comment=comment.strip())
-        self.session.add(report)
-        await self.session.commit()
+            return existing
 
         profile = await self.user_repository.get_profile(user.id)
         sources = await self.source_service.list_for_step(
@@ -309,18 +322,25 @@ class RouteService:
         )
         labels = {
             ReportKind.OUTDATED: "информация устарела",
-            ReportKind.NOT_APPLICABLE: "шаг мне не подходит",
+            ReportKind.NOT_APPLICABLE: "шаг не подходит",
             ReportKind.OTHER: "другое",
         }
         lines = [
-            f"📝 Отзыв о шаге «{step.scenario_step.title}»: {labels[kind]}",
-            f"Сценарий: {route.scenario.code} v{route.scenario_version}, шаг {step.scenario_step.code}",
-            f"Регион: {profile.region_code if profile else '—'}",
+            f"«{step.scenario_step.title}» — {labels[kind]}",
+            (
+                f"{route.scenario.code} v{route.scenario_version} · шаг {step.scenario_step.code}"
+                f" · регион {profile.region_code if profile else '—'}"
+            ),
         ]
-        lines.extend(f"Источник: {source.url}" for source in sources)
-        if report.comment:
-            lines.append(f"Комментарий: {report.comment}")
-        return report, "\n".join(lines)
+        lines.extend(f"{source.url}" for source in sources)
+        if comment.strip():
+            lines.append(f"Комментарий: {comment.strip()}")
+        report = StepReport(
+            route_step_id=step.id, kind=kind, comment=comment.strip(), summary="\n".join(lines)
+        )
+        self.session.add(report)
+        await self.session.commit()
+        return report
 
     async def _reload(self, route_id: UUID, user: User) -> RouteResponse:
         route = await self.repository.get(route_id, user.id, refresh=True)
@@ -336,8 +356,9 @@ class RouteService:
 
     @staticmethod
     def route_response(route: UserRoute, lang: str = "ru") -> RouteResponse:
+        # Skipped steps («Мне это не нужно») are not part of the plan any more.
         completed = sum(step.status == RouteStepStatus.DONE for step in route.steps)
-        total = len(route.steps)
+        total = sum(step.status != RouteStepStatus.SKIPPED for step in route.steps)
         progress = RouteProgress(
             completed=completed,
             total=total,

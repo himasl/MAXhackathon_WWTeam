@@ -1139,3 +1139,27 @@ ul.checklist {
   resize: vertical;
   font: inherit;
 }
+
+.offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 8px 16px;
+  background: var(--warning-soft);
+  color: var(--warning-ink);
+  font-size: 14px;
+  text-align: center;
+}
+
+.skip-button {
+  margin-top: 8px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

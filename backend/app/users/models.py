@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import BigInteger, Boolean, Enum, ForeignKey, Integer, String
+from sqlalchemy import BigInteger, Boolean, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -38,6 +39,9 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     share_version: Mapped[int] = mapped_column(
         Integer, nullable=False, default=0, server_default="0"
     )
+    # Interface language chosen in the app: bot messages use it too ("ru" / "en").
+    lang: Mapped[str] = mapped_column(String(2), nullable=False, default="ru", server_default="ru")
+    digest_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     profile: Mapped[UserProfile | None] = relationship(
         back_populates="user", cascade="all, delete-orphan", uselist=False

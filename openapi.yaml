@@ -113,6 +113,8 @@ paths:
       - users
       summary: Get Profile
       operationId: get_profile_api_v1_profile_get
+      security:
+      - HTTPBearer: []
       responses:
         '200':
           description: Successful Response
@@ -121,48 +123,57 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProfileResponse'
         '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Unprocessable Content
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '503':
-          description: Service Unavailable
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      security:
-      - HTTPBearer: []
+          description: Service Unavailable
     put:
       tags:
       - users
       summary: Save Profile
       operationId: save_profile_api_v1_profile_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ProfilePayload'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -170,6 +181,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProfileResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/me/language:
+    put:
+      tags:
+      - users
+      summary: Set Language
+      description: The interface language; the bot writes to the user in it too.
+      operationId: set_language_api_v1_me_language_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LanguagePayload'
+        required: true
+      responses:
+        '204':
+          description: Successful Response
         '401':
           description: Unauthorized
           content:
@@ -386,6 +443,78 @@ paths:
       - routes
       summary: Complete Route Step
       operationId: complete_route_step_api_v1_routes__route_id__steps__step_id__complete_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: route_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Route Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/routes/{route_id}/steps/{step_id}/skip:
+    post:
+      tags:
+      - routes
+      summary: Skip Route Step
+      description: '«Мне это не нужно»: the step leaves the plan and no longer counts
+        in the progress.
+
+        It can be returned with /reopen.'
+      operationId: skip_route_step_api_v1_routes__route_id__steps__step_id__skip_post
       security:
       - HTTPBearer: []
       parameters:
@@ -854,12 +983,13 @@ paths:
       tags:
       - routes
       summary: Report Step
-      description: '«Информация устарела»: the note goes to the team''s MAX chat (SUPPORT_MAX_USER_IDS)
+      description: '«Сообщить о неточности». Notes reach the team (SUPPORT_MAX_USER_IDS)
+        once a day in a
 
-        with the step, scenario version, region and sources, so data can be fixed
-        quickly.
+        digest with the step, scenario version, region and sources. A repeat of the
+        same note
 
-        Repeating the same note within a day is accepted but not sent again.'
+        about the same step within a day is accepted but not stored twice.'
       operationId: report_step_api_v1_routes__route_id__steps__step_id__report_post
       security:
       - HTTPBearer: []
@@ -1588,6 +1718,18 @@ components:
       enum:
       - university
       - college
+    LanguagePayload:
+      properties:
+        lang:
+          type: string
+          enum:
+          - ru
+          - en
+          title: Lang
+      type: object
+      required:
+      - lang
+      title: LanguagePayload
     MaxAuthRequest:
       properties:
         init_data:
@@ -1687,6 +1829,10 @@ components:
           type: boolean
           title: Popular
           default: false
+        timezone:
+          type: string
+          title: Timezone
+          default: Europe/Moscow
         services:
           items:
             type: string

@@ -40,9 +40,7 @@ def test_each_operator(
     operator: RuleOperator,
     value: object,
 ) -> None:
-    rule = RuleDefinition.model_validate(
-        {"field": field, "operator": operator, "value": value}
-    )
+    rule = RuleDefinition.model_validate({"field": field, "operator": operator, "value": value})
 
     assert evaluate(rule, context)
 
@@ -85,9 +83,7 @@ def test_array_value(context: UserContext) -> None:
 
 def test_multiple_rules_use_and(context: UserContext) -> None:
     matching = RuleDefinition(field="age", operator=RuleOperator.GTE, value=18)
-    not_matching = RuleDefinition(
-        field="has_registration", operator=RuleOperator.EQ, value=True
-    )
+    not_matching = RuleDefinition(field="has_registration", operator=RuleOperator.EQ, value=True)
 
     assert not evaluate_all([matching, not_matching], context)
 
@@ -145,4 +141,3 @@ def test_unknown_field_is_rejected() -> None:
         RuleDefinition.model_validate(
             {"field": "unknown", "operator": RuleOperator.EQ, "value": True}
         )
-

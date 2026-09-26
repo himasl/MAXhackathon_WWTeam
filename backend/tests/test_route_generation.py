@@ -101,4 +101,3 @@ def test_step_is_excluded_when_one_of_multiple_rules_fails() -> None:
     route = RouteGenerator().generate(context(), scenario)
 
     assert route.steps == []
-

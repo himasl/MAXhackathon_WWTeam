@@ -13,7 +13,7 @@ from app.core.exceptions import (
     RouteStepNotFoundError,
 )
 from app.feedback.schemas import StepReportRequest, StepReportResponse
-from app.notifications.service import NotificationService
+from app.notifications.service import NotificationService, tr
 from app.routes.schemas import (
     CalendarLinkResponse,
     ChecklistResponse,
@@ -23,7 +23,7 @@ from app.routes.schemas import (
     RouteStepDetailResponse,
     ShareLinkResponse,
 )
-from app.routes.service import RouteService, next_open_step
+from app.routes.service import RouteService, localized, next_open_step
 
 router = APIRouter(prefix="/routes", tags=["routes"], responses=ERROR_RESPONSES)
 
@@ -43,7 +43,7 @@ async def create_route(
 ) -> RouteResponse:
     """Build a personal route from the saved profile. A previous active route is archived."""
     route = await RouteService(session, lang).generate(user)
-    background.add_task(notifications(request).route_created, user.max_user_id, route)
+    background.add_task(notifications(request).route_created, user.max_user_id, route, lang)
     return route
 
 
@@ -78,8 +78,21 @@ async def complete_route_step(
     lang: LanguageDependency,
 ) -> RouteResponse:
     route = await RouteService(session, lang).complete(user, route_id, step_id, via="app")
-    background.add_task(notifications(request).step_completed, user.max_user_id, route)
+    background.add_task(notifications(request).step_completed, user.max_user_id, route, lang)
     return route
+
+
+@router.post("/{route_id}/steps/{step_id}/skip", response_model=RouteResponse)
+async def skip_route_step(
+    route_id: UUID,
+    step_id: UUID,
+    user: CurrentUserDependency,
+    session: SessionDependency,
+    lang: LanguageDependency,
+) -> RouteResponse:
+    """«Мне это не нужно»: the step leaves the plan and no longer counts in the progress.
+    It can be returned with /reopen."""
+    return await RouteService(session, lang).skip(user, route_id, step_id)
 
 
 @router.post("/{route_id}/steps/{step_id}/reopen", response_model=RouteResponse)
@@ -109,7 +122,11 @@ async def send_reminder(
     if step is None:
         return ReminderResponse(sent=False, step_id=None)
     sent = await notifications(request).reminder(
-        user.max_user_id, step.id, step.scenario_step.title, format_deadline(step.deadline)
+        user.max_user_id,
+        step.id,
+        localized(step.scenario_step, "title", user.lang),
+        format_deadline(step.deadline),
+        user.lang,
     )
     return ReminderResponse(sent=sent, step_id=step.id)
 
@@ -117,9 +134,7 @@ async def send_reminder(
 CALENDAR_LINK_TTL_SECONDS = 30 * 24 * 3600
 
 
-@router.post(
-    "/{route_id}/steps/{step_id}/calendar-link", response_model=CalendarLinkResponse
-)
+@router.post("/{route_id}/steps/{step_id}/calendar-link", response_model=CalendarLinkResponse)
 async def create_calendar_link(
     request: Request,
     route_id: UUID,
@@ -166,16 +181,18 @@ async def send_checklist(
     session: SessionDependency,
 ) -> ChecklistSentResponse:
     """Send the checklist to the user's MAX chat, to have it at hand in the queue."""
-    checklist = await RouteService(session).checklist(user, route_id)
+    lang = user.lang
+    checklist = await RouteService(session, lang).checklist(user, route_id)
     if not checklist.groups:
         return ChecklistSentResponse(sent=False)
-    lines = ["Что взять с собой"]
+    optional = tr(lang, " (если есть)", " (if you have it)")
+    lines = [tr(lang, "Что взять с собой", "What to take with you")]
     for group in checklist.groups:
         lines.append(f"\n📍 {group.place} — {', '.join(group.steps)}")
         lines.extend(
-            f"• {item.title}{'' if item.required else ' (если есть)'}" for item in group.documents
+            f"• {item.title}{'' if item.required else optional}" for item in group.documents
         )
-    sent = await notifications(request).send_text(user.max_user_id, "\n".join(lines))
+    sent = await notifications(request).send_text(user.max_user_id, "\n".join(lines), lang)
     return ChecklistSentResponse(sent=sent)
 
 
@@ -212,21 +229,16 @@ async def revoke_share_links(user: CurrentUserDependency, session: SessionDepend
     status_code=status.HTTP_201_CREATED,
 )
 async def report_step(
-    request: Request,
-    background: BackgroundTasks,
     route_id: UUID,
     step_id: UUID,
     payload: StepReportRequest,
     user: CurrentUserDependency,
     session: SessionDependency,
 ) -> StepReportResponse:
-    """«Информация устарела»: the note goes to the team's MAX chat (SUPPORT_MAX_USER_IDS)
-    with the step, scenario version, region and sources, so data can be fixed quickly.
-    Repeating the same note within a day is accepted but not sent again."""
-    report, text = await RouteService(session).report(
+    """«Сообщить о неточности». Notes reach the team (SUPPORT_MAX_USER_IDS) once a day in a
+    digest with the step, scenario version, region and sources. A repeat of the same note
+    about the same step within a day is accepted but not stored twice."""
+    report = await RouteService(session).report(
         user, route_id, step_id, payload.kind, payload.comment
     )
-    if text:
-        for support_id in settings.support_max_user_ids:
-            background.add_task(notifications(request).send_text, support_id, text)
     return StepReportResponse(id=report.id, kind=report.kind)

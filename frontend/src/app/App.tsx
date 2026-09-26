@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { OfflineBanner } from "../features/OfflineBanner";
+
 import { ChecklistPage } from "../pages/ChecklistPage";
 import { CompletionPage } from "../pages/CompletionPage";
 import { OnboardingPage } from "../pages/OnboardingPage";
@@ -228,6 +230,7 @@ function StudentApp() {
   const showTabs = route && (view.name === "route" || view.name === "support");
   return (
     <div className={`app ${showTabs ? "app--tabs" : ""}`}>
+      <OfflineBanner />
       {content}
       {showTabs ? (
         <nav className="tabs" aria-label={t("Разделы", "Sections")}>

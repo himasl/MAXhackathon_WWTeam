@@ -9,9 +9,7 @@ from app.scenarios.loader import ScenarioLoader
 
 
 def write_scenario(directory: Path, data: dict[str, Any]) -> None:
-    directory.joinpath("student_relocation_v1.json").write_text(
-        json.dumps(data), encoding="utf-8"
-    )
+    directory.joinpath("student_relocation_v1.json").write_text(json.dumps(data), encoding="utf-8")
 
 
 def scenario_data() -> dict[str, Any]:

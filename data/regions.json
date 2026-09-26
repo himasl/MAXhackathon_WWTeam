@@ -4,447 +4,536 @@
     {
       "code": "77",
       "title": "Москва",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "78",
       "title": "Санкт-Петербург",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "50",
       "title": "Московская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "16",
       "title": "Республика Татарстан",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "66",
       "title": "Свердловская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "54",
       "title": "Новосибирская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Asia/Novosibirsk"
     },
     {
       "code": "23",
       "title": "Краснодарский край",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "52",
       "title": "Нижегородская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "63",
       "title": "Самарская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Samara"
     },
     {
       "code": "61",
       "title": "Ростовская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "74",
       "title": "Челябинская область",
-      "popular": true
+      "popular": true,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "02",
       "title": "Республика Башкортостан",
-      "popular": true
+      "popular": true,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "01",
       "title": "Республика Адыгея",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "03",
       "title": "Республика Бурятия",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Irkutsk"
     },
     {
       "code": "04",
       "title": "Республика Алтай",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Barnaul"
     },
     {
       "code": "05",
       "title": "Республика Дагестан",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "06",
       "title": "Республика Ингушетия",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "07",
       "title": "Кабардино-Балкарская Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "08",
       "title": "Республика Калмыкия",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "09",
       "title": "Карачаево-Черкесская Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "10",
       "title": "Республика Карелия",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "11",
       "title": "Республика Коми",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "12",
       "title": "Республика Марий Эл",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "13",
       "title": "Республика Мордовия",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "14",
       "title": "Республика Саха (Якутия)",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yakutsk"
     },
     {
       "code": "15",
       "title": "Республика Северная Осетия — Алания",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "17",
       "title": "Республика Тыва",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Krasnoyarsk"
     },
     {
       "code": "18",
       "title": "Удмуртская Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Samara"
     },
     {
       "code": "19",
       "title": "Республика Хакасия",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Krasnoyarsk"
     },
     {
       "code": "20",
       "title": "Чеченская Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "21",
       "title": "Чувашская Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "22",
       "title": "Алтайский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Barnaul"
     },
     {
       "code": "24",
       "title": "Красноярский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Krasnoyarsk"
     },
     {
       "code": "25",
       "title": "Приморский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Vladivostok"
     },
     {
       "code": "26",
       "title": "Ставропольский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "27",
       "title": "Хабаровский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Vladivostok"
     },
     {
       "code": "28",
       "title": "Амурская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yakutsk"
     },
     {
       "code": "29",
       "title": "Архангельская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "30",
       "title": "Астраханская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Astrakhan"
     },
     {
       "code": "31",
       "title": "Белгородская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "32",
       "title": "Брянская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "33",
       "title": "Владимирская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "34",
       "title": "Волгоградская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "35",
       "title": "Вологодская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "36",
       "title": "Воронежская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "37",
       "title": "Ивановская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "38",
       "title": "Иркутская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Irkutsk"
     },
     {
       "code": "39",
       "title": "Калининградская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Kaliningrad"
     },
     {
       "code": "40",
       "title": "Калужская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "41",
       "title": "Камчатский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Kamchatka"
     },
     {
       "code": "42",
       "title": "Кемеровская область — Кузбасс",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Novokuznetsk"
     },
     {
       "code": "43",
       "title": "Кировская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "44",
       "title": "Костромская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "45",
       "title": "Курганская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "46",
       "title": "Курская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "47",
       "title": "Ленинградская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "48",
       "title": "Липецкая область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "49",
       "title": "Магаданская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Magadan"
     },
     {
       "code": "51",
       "title": "Мурманская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "53",
       "title": "Новгородская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "55",
       "title": "Омская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Omsk"
     },
     {
       "code": "56",
       "title": "Оренбургская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "57",
       "title": "Орловская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "58",
       "title": "Пензенская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "59",
       "title": "Пермский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "60",
       "title": "Псковская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "62",
       "title": "Рязанская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "64",
       "title": "Саратовская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Saratov"
     },
     {
       "code": "65",
       "title": "Сахалинская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Sakhalin"
     },
     {
       "code": "67",
       "title": "Смоленская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "68",
       "title": "Тамбовская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "69",
       "title": "Тверская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "70",
       "title": "Томская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Tomsk"
     },
     {
       "code": "71",
       "title": "Тульская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "72",
       "title": "Тюменская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "73",
       "title": "Ульяновская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Ulyanovsk"
     },
     {
       "code": "75",
       "title": "Забайкальский край",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Chita"
     },
     {
       "code": "76",
       "title": "Ярославская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "79",
       "title": "Еврейская автономная область",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Vladivostok"
     },
     {
       "code": "83",
       "title": "Ненецкий автономный округ",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "86",
       "title": "Ханты-Мансийский автономный округ — Югра",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "87",
       "title": "Чукотский автономный округ",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Anadyr"
     },
     {
       "code": "89",
       "title": "Ямало-Ненецкий автономный округ",
-      "popular": false
+      "popular": false,
+      "timezone": "Asia/Yekaterinburg"
     },
     {
       "code": "90",
       "title": "Запорожская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "91",
       "title": "Республика Крым",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "92",
       "title": "Севастополь",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "93",
       "title": "Донецкая Народная Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "94",
       "title": "Луганская Народная Республика",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     },
     {
       "code": "95",
       "title": "Херсонская область",
-      "popular": false
+      "popular": false,
+      "timezone": "Europe/Moscow"
     }
   ]
 }

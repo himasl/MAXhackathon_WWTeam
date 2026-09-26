@@ -24,4 +24,3 @@ async def test_step_detail_contains_sources(
             "checked_at": None,
         }
     ]
-

@@ -1,5 +1,6 @@
 import os
 from collections.abc import AsyncIterator
+from datetime import datetime
 from typing import cast
 
 os.environ.setdefault(
@@ -127,3 +128,13 @@ async def active_scenario() -> Scenario:
         session.add(scenario)
         await session.commit()
     return scenario
+
+
+def awake(moment: "datetime", zone: str = "Europe/Moscow") -> "datetime":
+    """The first moment at or after ``moment`` outside the bot's quiet hours (22:00–9:00)."""
+    from datetime import timedelta
+    from zoneinfo import ZoneInfo
+
+    while not 9 <= moment.astimezone(ZoneInfo(zone)).hour < 22:
+        moment += timedelta(minutes=30)
+    return moment
