@@ -29,6 +29,7 @@ ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
     403: {"model": ErrorResponse},
     404: {"model": ErrorResponse},
     409: {"model": ErrorResponse},
+    429: {"model": ErrorResponse},
     422: {"model": ErrorResponse},
     503: {"model": ErrorResponse},
 }
@@ -43,7 +44,11 @@ def error_response(status_code: int, code: str, message: str) -> JSONResponse:
 
 async def application_error_handler(_: Request, error: Exception) -> JSONResponse:
     assert isinstance(error, ApplicationError)
-    return error_response(error.status_code, error.code, error.message)
+    response = error_response(error.status_code, error.code, error.message)
+    retry_after = getattr(error, "retry_after", None)
+    if retry_after:
+        response.headers["Retry-After"] = str(retry_after)
+    return response
 
 
 async def validation_error_handler(_: Request, __: Exception) -> JSONResponse:

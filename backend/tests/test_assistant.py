@@ -152,3 +152,23 @@ def test_health_tells_which_assistant_answers() -> None:
     from fastapi.testclient import TestClient
 
     assert TestClient(fastapi_app).get("/health").json()["assistant"] == "stub"
+
+
+async def test_questions_are_rate_limited(client: AsyncClient) -> None:
+    await route_for(client, region_code="77")
+    for _ in range(10):
+        assert (await client.post("/api/v1/ask", json={"question": "где МФЦ"})).status_code == 200
+    limited = await client.post("/api/v1/ask", json={"question": "где МФЦ"})
+    assert limited.status_code == 429
+    assert limited.json()["error"]["code"] == "RATE_LIMITED"
+    assert limited.headers["Retry-After"] == "60"
+
+
+def test_rate_limiter_window() -> None:
+    from app.core.rate_limit import RateLimiter
+
+    limiter = RateLimiter(limit=2, window_seconds=60)
+    assert limiter.allow("u", now=0) and limiter.allow("u", now=1)
+    assert not limiter.allow("u", now=2)
+    assert limiter.allow("other", now=2)
+    assert limiter.allow("u", now=61)

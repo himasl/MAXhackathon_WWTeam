@@ -12,6 +12,7 @@ from app.core.exceptions import (
     InvalidOperationError,
     RouteStepNotFoundError,
 )
+from app.core.rate_limit import report_limiter
 from app.feedback.schemas import StepReportRequest, StepReportResponse
 from app.notifications.service import NotificationService, tr
 from app.routes.schemas import (
@@ -238,6 +239,7 @@ async def report_step(
     """«Сообщить о неточности». Notes reach the team (SUPPORT_MAX_USER_IDS) once a day in a
     digest with the step, scenario version, region and sources. A repeat of the same note
     about the same step within a day is accepted but not stored twice."""
+    report_limiter.check(str(user.id))
     report = await RouteService(session).report(
         user, route_id, step_id, payload.kind, payload.comment
     )

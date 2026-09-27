@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.admin.activity import record_activity
 from app.assistant.service import AssistantService
 from app.core.exceptions import ApplicationError, InvalidOperationError
+from app.core.rate_limit import ask_limiter
 from app.notifications.max_sender import parse_step_payload
 from app.notifications.service import NotificationService, tr
 from app.routes.models import RouteStatus
@@ -145,6 +146,16 @@ class BotHandler:
             user = await UserRepository(session).get_by_max_user_id(max_user_id)
             if user is None or len(question) < 3:
                 await self.notifications.help(max_user_id, lang, free_text=True)
+                return
+            if not ask_limiter.allow(str(user.id)):
+                await self.notifications.send_plain(
+                    max_user_id,
+                    tr(
+                        lang,
+                        "Слишком много вопросов подряд. Подождите минуту и спросите снова.",
+                        "Too many questions in a row. Wait a minute and ask again.",
+                    ),
+                )
                 return
             answer = await AssistantService(session, lang).ask(user, question)
         await self.notifications.answer(max_user_id, answer, lang)

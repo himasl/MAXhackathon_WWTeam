@@ -53,6 +53,12 @@ class ForbiddenError(ApplicationError):
         super().__init__("FORBIDDEN", message, 403)
 
 
+class RateLimitedError(ApplicationError):
+    def __init__(self, retry_after: int = 60) -> None:
+        super().__init__("RATE_LIMITED", "Too many requests, try again later", 429)
+        self.retry_after = retry_after
+
+
 class AuthUnavailableError(ApplicationError):
     def __init__(self, message: str) -> None:
         super().__init__("AUTH_UNAVAILABLE", message, 503)

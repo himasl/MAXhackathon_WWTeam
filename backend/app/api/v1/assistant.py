@@ -4,6 +4,7 @@ from app.api.dependencies import CurrentUserDependency, LanguageDependency, Sess
 from app.api.errors import ERROR_RESPONSES
 from app.assistant.schemas import AskRequest, AskResponse
 from app.assistant.service import AssistantService
+from app.core.rate_limit import ask_limiter
 
 router = APIRouter(tags=["assistant"], responses=ERROR_RESPONSES)
 
@@ -18,4 +19,5 @@ async def ask(
     """A question about the route or a step. Answered by the RAG service (``RAG_URL``)
     or, without it, by the built-in search over the student's route; every answer comes
     with official sources."""
+    ask_limiter.check(str(user.id))
     return await AssistantService(session, lang).ask(user, payload.question, payload.step_id)

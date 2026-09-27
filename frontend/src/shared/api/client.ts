@@ -196,6 +196,49 @@ export const api = {
     }),
 };
 
+/** The server's error codes in the interface language: its own messages are English. */
+function knownError(error: ApiError): string | null {
+  switch (error.code) {
+    case "ROUTE_NOT_FOUND":
+      return t("Маршрут не найден. Откройте актуальный маршрут.", "Route not found. Open your current route.");
+    case "ROUTE_STEP_NOT_FOUND":
+      return t(
+        "Этого шага нет в вашем текущем маршруте — возможно, маршрут обновился.",
+        "This step is not in your current route — it may have been updated.",
+      );
+    case "PROFILE_NOT_FOUND":
+      return t("Сначала ответьте на вопросы анкеты.", "Please answer the questionnaire first.");
+    case "SCENARIO_NOT_FOUND":
+      return t("Сценарий временно недоступен. Попробуйте позже.", "The scenario is unavailable. Try later.");
+    case "UNKNOWN_REGION":
+      return t("Выберите регион из списка.", "Choose a region from the list.");
+    case "UNKNOWN_UNIVERSITY":
+      return t("Этого вуза нет в выбранном регионе. Выберите другой.", "This university is not in the chosen region.");
+    case "VALIDATION_ERROR":
+      return t("Проверьте введённые данные.", "Please check the data you entered.");
+    case "INVALID_OPERATION":
+      return /already completed/i.test(error.message)
+        ? t("Этот шаг уже выполнен.", "This step is already done.")
+        : t(
+            "Это действие сейчас недоступно. Обновите страницу и попробуйте снова.",
+            "This action is not available now. Reload the page and try again.",
+          );
+    case "FORBIDDEN":
+      return t("Раздел доступен только команде проекта.", "Available to the project team only.");
+    case "RATE_LIMITED":
+      return t(
+        "Слишком много запросов подряд. Подождите минуту и попробуйте снова.",
+        "Too many requests. Wait a minute and try again.",
+      );
+    case "SOURCE_NOT_FOUND":
+    case "REPORT_NOT_FOUND":
+    case "NOT_FOUND":
+      return t("Не найдено. Обновите страницу.", "Not found. Reload the page.");
+    default:
+      return null;
+  }
+}
+
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     if (error.status === 0)
@@ -210,7 +253,7 @@ export function errorMessage(error: unknown): string {
       const code = error.requestId ? ` ${t("Код для поддержки", "Support code")}: ${error.requestId}.` : "";
       return t("Сервис временно недоступен. Попробуйте ещё раз.", "The service is unavailable. Try again.") + code;
     }
-    return error.message;
+    return knownError(error) ?? t("Что-то пошло не так. Попробуйте ещё раз.", "Something went wrong. Try again.");
   }
   return t("Что-то пошло не так. Попробуйте ещё раз.", "Something went wrong. Try again.");
 }

@@ -161,7 +161,7 @@ python3 tools/run_data_api.py --base-url https://marshrut-tf5o.onrender.com --to
 6. Под сообщением бота «✅ Выполнено» → сообщение меняется на подтверждение, прогресс в приложении растёт.
 7. После всех шагов — «Маршрут завершён 6 / 6» и поздравление в чате.
 
-**Автотесты** (141: правила, данные, маршруты, API, авторизация, бот и фоновые задачи):
+**Автотесты** (143: правила, данные, маршруты, API, авторизация, бот и фоновые задачи):
 
 ```bash
 cd backend && DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/marshrut_test .venv/bin/pytest

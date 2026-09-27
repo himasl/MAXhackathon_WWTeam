@@ -138,3 +138,12 @@ def awake(moment: "datetime", zone: str = "Europe/Moscow") -> "datetime":
     while not 9 <= moment.astimezone(ZoneInfo(zone)).hour < 22:
         moment += timedelta(minutes=30)
     return moment
+
+
+@pytest_asyncio.fixture(autouse=True)
+async def reset_rate_limits() -> AsyncIterator[None]:
+    from app.core.rate_limit import ask_limiter, report_limiter
+
+    ask_limiter.reset()
+    report_limiter.reset()
+    yield
