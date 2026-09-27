@@ -133,11 +133,25 @@ class NotificationService:
             ),
         )
 
-    async def help(self, max_user_id: int, lang: str = "ru") -> bool:
+    async def help(self, max_user_id: int, lang: str = "ru", free_text: bool = False) -> bool:
+        text = HELP_TEXT[tr(lang, "ru", "en")]
+        if free_text:
+            # A question or any other text the bot does not parse: point to the route.
+            text = (
+                tr(
+                    lang,
+                    "Вопросы текстом я пока не разбираю. Ответ, скорее всего, уже есть "
+                    "в шагах вашего маршрута — откройте его кнопкой ниже или напишите /next.",
+                    "I can't read free-text questions yet. The answer is most likely in the "
+                    "steps of your route — open it with the button below or send /next.",
+                )
+                + "\n\n"
+                + text
+            )
         return await self.sender.send(
             max_user_id,
             OutgoingMessage(
-                text=HELP_TEXT[tr(lang, "ru", "en")],
+                text=text,
                 button_text=tr(lang, "Открыть маршрут", "Open the route"),
                 lang=lang,
             ),

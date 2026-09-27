@@ -8,7 +8,7 @@ from app.users.models import Citizenship, EducationType, HousingType
 class ProfilePayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    age: StrictInt
+    age: StrictInt = Field(ge=14, le=100)
     region_code: StrictStr
     education_type: EducationType
     housing_type: HousingType
@@ -19,7 +19,8 @@ class ProfilePayload(BaseModel):
 
 
 class ProfileResponse(ProfilePayload):
-    pass
+    # Stored profiles are returned as they are; the 14–100 bound applies to input only.
+    age: StrictInt
 
 
 class CurrentUserResponse(BaseModel):
@@ -28,6 +29,7 @@ class CurrentUserResponse(BaseModel):
 
 
 class UserContext(ProfilePayload):
+    age: StrictInt
 
     def rule_value(self, field: str) -> object:
         return self.model_dump(mode="json")[field]

@@ -1746,6 +1746,8 @@ components:
       properties:
         age:
           type: integer
+          maximum: 100.0
+          minimum: 14.0
           title: Age
         region_code:
           type: string

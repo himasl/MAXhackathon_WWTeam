@@ -117,7 +117,7 @@ function buildQuestions(regions: Region[], universities: University[]): Question
       id: "age",
       title: t("Сколько вам лет?", "How old are you?"),
       hint: t("Возраст влияет на доступные программы, например «Пушкинскую карту».", "Age affects available programmes, such as the Pushkin Card."),
-      isAnswered: (d) => typeof d.age === "number" && d.age >= 14 && d.age <= 100,
+      isAnswered: (d) => typeof d.age === "number" && Number.isInteger(d.age) && d.age >= 14 && d.age <= 100,
       render: (d, set) => (
         <input
           className="input"
@@ -125,6 +125,7 @@ function buildQuestions(regions: Region[], universities: University[]): Question
           inputMode="numeric"
           min={14}
           max={100}
+          step={1}
           placeholder={t("Например, 18", "For example, 18")}
           value={d.age ?? ""}
           onChange={(event) => {

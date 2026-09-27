@@ -40,3 +40,14 @@ async def test_validation_error_uses_error_format(client: AsyncClient) -> None:
     assert response.json() == {
         "error": {"code": "VALIDATION_ERROR", "message": "Request validation failed"}
     }
+
+
+async def test_age_outside_14_100_is_rejected(client: AsyncClient) -> None:
+    for age in (-5, 0, 13, 101, 300):
+        response = await client.put("/api/v1/profile", json={**PROFILE, "age": age})
+        assert response.status_code == 422, age
+        assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+    for age in (14, 100):
+        response = await client.put("/api/v1/profile", json={**PROFILE, "age": age})
+        assert response.status_code == 200, age

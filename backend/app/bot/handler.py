@@ -6,6 +6,7 @@ and deep-links into the app.
 """
 
 import logging
+import re
 from collections.abc import Callable
 from typing import Any
 
@@ -23,8 +24,20 @@ from app.users.repository import UserRepository
 
 logger = logging.getLogger(__name__)
 
-NEXT_COMMANDS = {"/next", "следующий шаг", "что дальше", "дальше"}
+NEXT_COMMANDS = {
+    "/next", "следующий шаг", "что дальше", "дальше", "next", "what next", "whats next",
+}
 START_COMMANDS = {"/start", "начать", "старт"}
+GREETINGS = {
+    "привет", "приветик", "здравствуйте", "здравствуй", "добрый день", "добрый вечер",
+    "доброе утро", "хай", "hi", "hello", "hey",
+}
+_PUNCTUATION = re.compile(r"[^\w\s/@]")
+
+
+def _normalize(text: str) -> str:
+    """Lower-case text without punctuation and emoji: «Что дальше?!» -> «что дальше»."""
+    return " ".join(_PUNCTUATION.sub(" ", text.lower()).split())
 
 
 def _user_id(value: Any) -> int | None:
@@ -79,11 +92,15 @@ class BotHandler:
             await self.notifications.send_plain(user_id, f"MAX ID: {user_id}")
         elif command == "/stats" and user_id in self.support_ids:
             await self.notifications.send_plain(user_id, await self._stats_text())
-        elif text.lower() in NEXT_COMMANDS or command in NEXT_COMMANDS:
+        elif _normalize(text) in NEXT_COMMANDS or command in NEXT_COMMANDS:
             await self.send_next_step(user_id)
-        else:
-            # /help and any other text: answer with the command list.
+        elif _normalize(text) in GREETINGS:
+            await self.welcome(user_id, None, lang)
+        elif command == "/help" or not _normalize(text):
             await self.notifications.help(user_id, lang)
+        else:
+            # A question or any other text: say we don't parse it and point to the route.
+            await self.notifications.help(user_id, lang, free_text=True)
 
     async def _stats_text(self) -> str:
         async with self.session_factory() as session:

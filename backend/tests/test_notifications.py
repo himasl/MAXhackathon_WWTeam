@@ -238,3 +238,28 @@ async def test_link_mode_sends_signed_login_link(client: AsyncClient) -> None:
     assert me.status_code == 200
     assert me.json()["max_user_id"] == 4242
     await max_client.close()
+
+
+async def test_bot_understands_punctuation_greetings_and_free_text(
+    client: AsyncClient, sender: RecordingSender
+) -> None:
+    runtime: BotRuntime = fastapi_app.state.bot
+    user_id = settings.dev_max_user_id
+    await seeded_route(client)
+
+    async def say(text: str) -> str:
+        await runtime.handler.handle(
+            {
+                "update_type": "message_created",
+                "message": {"sender": {"user_id": user_id}, "body": {"text": text}},
+            }
+        )
+        return sender.sent[-1][1].text
+
+    assert "Следующий шаг" in await say("Что дальше?!")
+    assert "Следующий шаг" in await say("дальше.")
+    assert (await say("Привет!")).startswith("Привет!")
+    free = await say("как сделать регистрацию?")
+    assert free.startswith("Вопросы текстом я пока не разбираю")
+    assert (await say("🙂")).startswith("Команды:")
+    assert (await say("/help")).startswith("Команды:")
