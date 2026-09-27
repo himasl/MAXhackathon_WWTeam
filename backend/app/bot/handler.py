@@ -32,6 +32,8 @@ GREETINGS = {
     "привет", "приветик", "здравствуйте", "здравствуй", "добрый день", "добрый вечер",
     "доброе утро", "хай", "hi", "hello", "hey",
 }
+HELP_WORDS = {"help", "помощь", "помоги", "команды"}
+THANKS = {"спасибо", "спс", "благодарю", "thanks", "thank you", "thx"}
 _PUNCTUATION = re.compile(r"[^\w\s/@]")
 
 
@@ -85,18 +87,30 @@ class BotHandler:
         command, _, argument = text.partition(" ")
         command = command.split("@", 1)[0].lower()
         lang = await self._lang(user_id)
-        if command in START_COMMANDS:
+        plain = _normalize(text)
+        if command in START_COMMANDS or plain in START_COMMANDS:
             await self.welcome(user_id, argument.strip() or None, lang)
         elif command == "/id":
             # For the team: the id to put into SUPPORT_MAX_USER_IDS.
             await self.notifications.send_plain(user_id, f"MAX ID: {user_id}")
         elif command == "/stats" and user_id in self.support_ids:
             await self.notifications.send_plain(user_id, await self._stats_text())
-        elif _normalize(text) in NEXT_COMMANDS or command in NEXT_COMMANDS:
+        elif plain in NEXT_COMMANDS or command in NEXT_COMMANDS:
             await self.send_next_step(user_id)
-        elif _normalize(text) in GREETINGS:
+        elif plain in GREETINGS:
             await self.welcome(user_id, None, lang)
-        elif command == "/help" or not _normalize(text):
+        elif plain in THANKS:
+            await self.notifications.send_text(
+                user_id,
+                tr(
+                    lang,
+                    "Пожалуйста! Когда будете готовы к следующему делу — напишите /next.",
+                    "You're welcome! When you're ready for the next task, send /next.",
+                ),
+                lang,
+            )
+        elif command.startswith("/") or plain in HELP_WORDS or not plain:
+            # /help, an unknown command, an emoji or punctuation: the command list.
             await self.notifications.help(user_id, lang)
         else:
             # A question or any other text: say we don't parse it and point to the route.

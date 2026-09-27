@@ -263,3 +263,7 @@ async def test_bot_understands_punctuation_greetings_and_free_text(
     assert free.startswith("Вопросы текстом я пока не разбираю")
     assert (await say("🙂")).startswith("Команды:")
     assert (await say("/help")).startswith("Команды:")
+    assert (await say("помощь")).startswith("Команды:")
+    assert (await say("/unknown")).startswith("Команды:")
+    assert (await say("Начать!")).startswith("Привет!")
+    assert (await say("Спасибо!")).startswith("Пожалуйста!")
