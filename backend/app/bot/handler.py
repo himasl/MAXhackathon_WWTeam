@@ -13,6 +13,7 @@ from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.activity import record_activity
+from app.assistant.service import AssistantService
 from app.core.exceptions import ApplicationError, InvalidOperationError
 from app.notifications.max_sender import parse_step_payload
 from app.notifications.service import NotificationService, tr
@@ -84,7 +85,7 @@ class BotHandler:
         if update_type == "bot_started":
             user_id = _user_id(update.get("user"))
             if user_id is not None:
-                await self.welcome(user_id, update.get("payload"))
+                await self.welcome(user_id, update.get("payload"), await self._lang(user_id))
         elif update_type == "message_created":
             await self._on_message(update.get("message") or {})
         elif update_type == "message_callback":
@@ -135,8 +136,18 @@ class BotHandler:
             # /help, an unknown command, an emoji or punctuation: the command list.
             await self.notifications.help(user_id, lang)
         else:
-            # A question or any other text: say we don't parse it and point to the route.
-            await self.notifications.help(user_id, lang, free_text=True)
+            # A question or any other text: the assistant (RAG or the built-in stub) answers.
+            await self.answer_question(user_id, text, lang)
+
+    async def answer_question(self, max_user_id: int, text: str, lang: str) -> None:
+        question = text.strip()[:500]
+        async with self.session_factory() as session:
+            user = await UserRepository(session).get_by_max_user_id(max_user_id)
+            if user is None or len(question) < 3:
+                await self.notifications.help(max_user_id, lang, free_text=True)
+                return
+            answer = await AssistantService(session, lang).ask(user, question)
+        await self.notifications.answer(max_user_id, answer, lang)
 
     async def _stats_text(self) -> str:
         async with self.session_factory() as session:

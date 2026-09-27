@@ -228,3 +228,11 @@ export interface AdminReport {
   created_at: string;
   resolved_at: string | null;
 }
+
+export interface AskAnswer {
+  answer: string;
+  sources: { title: string; url: string; organization: string }[];
+  step_id: string | null;
+  provider: "rag" | "stub" | "none";
+  fallback: boolean;
+}

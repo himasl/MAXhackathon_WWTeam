@@ -218,6 +218,8 @@ class RouteService:
         step.status = RouteStepStatus.TODO
         step.completed_at = None
         step.completed_via = None
+        # A reopened step gets its deadline reminder again.
+        step.reminded_at = None
         if route.status == RouteStatus.COMPLETED:
             route.status = RouteStatus.ACTIVE
             route.completed_at = None

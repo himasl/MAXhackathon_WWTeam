@@ -107,7 +107,8 @@ class RouteRepository:
                 joinedload(UserRouteStep.scenario_step),
             )
             .order_by(UserRouteStep.deadline)
-            .limit(100)
+            # Steps of users in quiet hours are skipped after the query: keep the batch wide.
+            .limit(1000)
         )
         return list(await self.session.scalars(query))
 

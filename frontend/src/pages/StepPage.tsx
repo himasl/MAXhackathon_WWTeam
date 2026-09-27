@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { AskQuestion } from "../features/AskQuestion";
 import { NearbyPlace } from "../features/NearbyPlace";
 import { ReportStep } from "../features/ReportStep";
 import { api, errorMessage } from "../shared/api/client";
@@ -16,9 +17,18 @@ interface Props {
   regionTitle: string | null;
   onRouteChanged: (route: Route, completedStepId: string | null) => void;
   onBack: () => void;
+  onOpenStep: (stepId: string) => void;
 }
 
-export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRouteChanged, onBack }: Props) {
+export function StepPage({
+  routeId,
+  stepId,
+  routeIsArchived,
+  regionTitle,
+  onRouteChanged,
+  onBack,
+  onOpenStep,
+}: Props) {
   const [step, setStep] = useState<StepDetail | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -231,6 +241,10 @@ export function StepPage({ routeId, stepId, routeIsArchived, regionTitle, onRout
             )}
           </div>
         ))}
+      </Section>
+
+      <Section title={t("Остались вопросы?", "Any questions?")}>
+        <AskQuestion stepId={stepId} onOpenStep={onOpenStep} />
       </Section>
 
       <ReportStep routeId={routeId} stepId={stepId} />

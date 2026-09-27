@@ -15,6 +15,7 @@ from sqlalchemy import text
 
 from app.api.errors import add_exception_handlers, error_response
 from app.api.v1.router import router as api_v1_router
+from app.assistant.service import assistant_mode
 from app.bot.runtime import WEBHOOK_PATH, BotRuntime
 from app.core.config import settings
 from app.core.database import engine
@@ -76,7 +77,7 @@ async def health(request: Request) -> dict[str, str]:
     """Liveness for monitoring and reviewers.
 
     ``bot``: how the MAX bot is connected (off, polling, webhook, webhook_failed);
-    ``database``: ok / unavailable; ``version``: commit of the running build, to check it
+    ``database``: ok / unavailable; ``assistant``: rag (RAG_URL set) or stub; ``version``: commit of the running build, to check it
     matches the submitted commit hash.
     """
     runtime: BotRuntime = request.app.state.bot
@@ -92,6 +93,7 @@ async def health(request: Request) -> dict[str, str]:
         "bot": runtime.status,
         "database": database,
         "version": settings.version,
+        "assistant": assistant_mode(),
     }
 
 
@@ -101,6 +103,9 @@ async def max_webhook(
     background: BackgroundTasks,
     x_max_bot_api_secret: Annotated[str | None, Header()] = None,
 ) -> Response:
+    if settings.is_production and not settings.max_webhook_secret:
+        # Without a secret anyone could post fake updates: in production require one.
+        return error_response(401, "UNAUTHORIZED", "WEBHOOK_SECRET is not configured")
     if settings.max_webhook_secret and not hmac.compare_digest(
         x_max_bot_api_secret or "", settings.max_webhook_secret
     ):

@@ -1948,6 +1948,79 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Service Unavailable
+  /api/v1/ask:
+    post:
+      tags:
+      - assistant
+      summary: Ask
+      description: 'A question about the route or a step. Answered by the RAG service
+        (``RAG_URL``)
+
+        or, without it, by the built-in search over the student''s route; every answer
+        comes
+
+        with official sources.'
+      operationId: ask_api_v1_ask_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: accept-language
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accept-Language
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AskResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
   /health:
     get:
       tags:
@@ -1958,8 +2031,8 @@ paths:
 
         ``bot``: how the MAX bot is connected (off, polling, webhook, webhook_failed);
 
-        ``database``: ok / unavailable; ``version``: commit of the running build,
-        to check it
+        ``database``: ok / unavailable; ``assistant``: rag (RAG_URL set) or stub;
+        ``version``: commit of the running build, to check it
 
         matches the submitted commit hash.'
       operationId: health_health_get
@@ -2185,6 +2258,23 @@ components:
       - edited_at
       - steps
       title: AdminSource
+    AnswerSource:
+      properties:
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+        organization:
+          type: string
+          title: Organization
+          default: ''
+      type: object
+      required:
+      - title
+      - url
+      title: AnswerSource
     AppConfigResponse:
       properties:
         bot_username:
@@ -2202,6 +2292,57 @@ components:
       - bot_username
       - bot_url
       title: AppConfigResponse
+    AskRequest:
+      properties:
+        question:
+          type: string
+          maxLength: 500
+          minLength: 3
+          title: Question
+        step_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Step Id
+      additionalProperties: false
+      type: object
+      required:
+      - question
+      title: AskRequest
+    AskResponse:
+      properties:
+        answer:
+          type: string
+          title: Answer
+        sources:
+          items:
+            $ref: '#/components/schemas/AnswerSource'
+          type: array
+          title: Sources
+        step_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Step Id
+        provider:
+          type: string
+          enum:
+          - rag
+          - stub
+          - none
+          title: Provider
+        fallback:
+          type: boolean
+          title: Fallback
+          default: false
+      type: object
+      required:
+      - answer
+      - sources
+      - provider
+      title: AskResponse
     AuthResponse:
       properties:
         access_token:

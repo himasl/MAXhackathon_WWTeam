@@ -7,6 +7,7 @@ from typing import Any
 from sqlalchemy import Select, and_, case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.admin import access
 from app.core.config import settings
 from app.feedback.models import StepReport
 from app.routes.models import RouteStatus, RouteStepStatus, UserRoute, UserRouteStep
@@ -19,9 +20,14 @@ SECONDS_PER_DAY = 86400
 
 
 class StatsService:
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(self, session: AsyncSession, excluded: list[int] | None = None) -> None:
         self.session = session
-        self.excluded = sorted(set(settings.test_access_tokens.values()))
+        # Reviewer test accounts and the team (SUPPORT_MAX_USER_IDS) are not students.
+        self.excluded = (
+            excluded
+            if excluded is not None
+            else sorted(set(settings.test_access_tokens.values()) | access.admin_ids())
+        )
 
     def _real_users(self, query: Select[Any]) -> Select[Any]:
         if not self.excluded:

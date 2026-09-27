@@ -95,7 +95,7 @@ class AdminService:
 
     async def overview(self, now: datetime | None = None) -> AdminOverview:
         now = now or datetime.now(UTC)
-        stats = await StatsService(self.session).collect()
+        stats = await StatsService(self.session, self.excluded).collect()
         users = await self._users(now)
         funnel = await self._funnel(users)
         steps = await self._steps()

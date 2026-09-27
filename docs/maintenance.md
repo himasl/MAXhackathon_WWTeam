@@ -29,7 +29,7 @@
    python3 tools/check_sources.py --candidates --promote  # перенести открывшиеся кандидаты
    ```
    Скрипт проверяет только, что страница отвечает. Что сайт официальный, а текст шага совпадает со страницей, проверяет человек.
-4. Перед push прогоните тесты (`cd backend && pytest -q`), затем `git push` — Render выкатит новую версию автоматически.
+4. Перед push прогоните тесты (`cd backend && DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/marshrut_test .venv/bin/pytest -q`, нужен запущенный PostgreSQL), затем `git push` — Render выкатит новую версию автоматически.
 
 ## Отзывы пользователей «Сообщить о неточности»
 

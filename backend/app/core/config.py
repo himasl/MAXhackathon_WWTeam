@@ -81,12 +81,16 @@ class Settings:
     # open_app: buttons open the Mini App registered for the bot (needs its URL set on
     # business.max.ru). link: buttons open PUBLIC_URL with a signed per-user login link.
     max_button_mode: str = os.getenv("MAX_BUTTON_MODE", "link").lower()
-    link_token_ttl_seconds: int = int(os.getenv("LINK_TOKEN_TTL_SECONDS", "2592000"))
+    link_token_ttl_seconds: int = int(os.getenv("LINK_TOKEN_TTL_SECONDS", "604800"))
     max_bot_username: str = os.getenv("MAX_BOT_USERNAME", "").lstrip("@")
     bot_mode: str = os.getenv("BOT_MODE", "off").lower()
     webhook_secret: str = os.getenv("WEBHOOK_SECRET", "")
     reminders_enabled: bool = _bool("REMINDERS_ENABLED", "true")
     reminder_interval_seconds: int = int(os.getenv("REMINDER_INTERVAL_SECONDS", "3600"))
+    # External RAG service for questions (docs/rag.md). Empty: the built-in stub answers.
+    rag_url: str = os.getenv("RAG_URL", "").strip()
+    rag_token: str | None = os.getenv("RAG_TOKEN") or None
+    rag_timeout_seconds: float = float(os.getenv("RAG_TIMEOUT_SECONDS", "8"))
 
     @property
     def is_production(self) -> bool:

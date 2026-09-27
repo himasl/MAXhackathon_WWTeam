@@ -1390,3 +1390,34 @@ ul.checklist {
 .admin-summary {
   white-space: pre-wrap;
 }
+
+/* ---------- «Задать вопрос по шагу» ---------- */
+
+.ask,
+.ask__form {
+  display: grid;
+  gap: 10px;
+}
+
+.ask__label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.ask__answer {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--surface-soft);
+}
+
+.ask__text {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.ask__note {
+  margin: 0;
+  font-size: 13px;
+}

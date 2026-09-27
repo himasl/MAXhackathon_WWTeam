@@ -5,6 +5,7 @@ import type {
   AdminSource,
   AdminSourceKind,
   AppConfig,
+  AskAnswer,
   AuthResponse,
   Checklist,
   HelpTopic,
@@ -83,6 +84,8 @@ export function consumeLinkToken(): string | null {
   const token = url.searchParams.get("t");
   if (!token) return null;
   url.searchParams.delete("t");
+  // The start parameter was read already; a reload must not reopen the same step.
+  url.searchParams.delete("start");
   window.history.replaceState(null, "", url.pathname + url.search + url.hash);
   return token;
 }
@@ -117,6 +120,11 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export const api = {
   getMe: () => request<Me>("/api/v1/me"),
+  ask: (question: string, stepId: string | null) =>
+    request<AskAnswer>("/api/v1/ask", {
+      method: "POST",
+      body: JSON.stringify({ question, step_id: stepId }),
+    }),
   loginWithMax: (initData: string) =>
     request<AuthResponse>("/api/v1/auth/max", {
       method: "POST",

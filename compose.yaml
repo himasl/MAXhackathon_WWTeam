@@ -29,6 +29,9 @@ services:
       BOT_MODE: ${BOT_MODE:-polling}
     ports:
       - "8000:8000"
+    # Lets RAG_URL=http://host.docker.internal:8090/ask reach tools/fake_rag.py on the host.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy

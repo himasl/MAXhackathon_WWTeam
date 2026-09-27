@@ -38,3 +38,8 @@ services:
         sync: false
       - key: SUPPORT_MAX_USER_IDS
         sync: false
+      # Optional: the team's RAG service (docs/rag.md). Empty — the built-in search answers.
+      - key: RAG_URL
+        sync: false
+      - key: RAG_TOKEN
+        sync: false

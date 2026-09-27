@@ -235,13 +235,14 @@ class BotRuntime:
         return sent
 
     async def send_team_digest(self, now: datetime | None = None, force: bool = False) -> int:
-        """Once a day at 10:00 Moscow time: new «Сообщить о неточности» notes; on Mondays
+        """Once a day from 10:00 Moscow time (the first check after 10, so a slow loop never
+        skips a day): new «Сообщить о неточности» notes; on Mondays
         also sources checked more than 90 days ago. Sent to SUPPORT_MAX_USER_IDS."""
         support = self.settings.support_max_user_ids
         current = now or datetime.now(UTC)
         local = current.astimezone(MOSCOW)
         if not support or (
-            not force and (local.hour != 10 or self._team_digest_day == local.date())
+            not force and (local.hour < 10 or self._team_digest_day == local.date())
         ):
             return 0
         self._team_digest_day = local.date()

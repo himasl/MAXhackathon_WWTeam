@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { LanguageSwitch } from "../features/LanguageSwitch";
-import { api } from "../shared/api/client";
+import { api, errorMessage } from "../shared/api/client";
 import type { HelpTopic } from "../shared/api/types";
 import { t } from "../shared/i18n";
 import { SOURCE_LABELS } from "../shared/labels";
 import { maxBridge } from "../shared/max/maxBridge";
-import { Loading, Screen, Section } from "../shared/ui";
+import { ErrorState, Loading, Screen, Section } from "../shared/ui";
 
 function HelpCard({ topic }: { topic: HelpTopic }) {
   return (
@@ -48,10 +48,15 @@ function HelpCard({ topic }: { topic: HelpTopic }) {
 
 export function SupportPage() {
   const [topics, setTopics] = useState<HelpTopic[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    api.getHelp().then(setTopics, () => setTopics([]));
+  const load = useCallback(() => {
+    setError(null);
+    setTopics(null);
+    api.getHelp().then(setTopics, (failure) => setError(errorMessage(failure)));
   }, []);
+
+  useEffect(load, [load]);
 
   return (
     <Screen>
@@ -67,7 +72,13 @@ export function SupportPage() {
             "Short instructions for when you need to act fast.",
           )}
         </p>
-        {topics === null ? <Loading /> : topics.map((topic) => <HelpCard key={topic.code} topic={topic} />)}
+        {error ? (
+          <ErrorState message={error} onRetry={load} />
+        ) : topics === null ? (
+          <Loading />
+        ) : (
+          topics.map((topic) => <HelpCard key={topic.code} topic={topic} />)
+        )}
       </Section>
 
       <Section title={t("Что такое «Маршрут»", "What is Marshrut")}>

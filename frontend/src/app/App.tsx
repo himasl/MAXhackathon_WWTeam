@@ -209,6 +209,7 @@ function StudentApp() {
         regionTitle={regionTitle}
         onRouteChanged={onRouteChanged}
         onBack={goBack}
+        onOpenStep={(id) => navigate({ name: "step", stepId: id })}
       />
     );
   } else if (view.name === "done") {

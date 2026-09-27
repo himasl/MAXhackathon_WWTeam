@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from typing import Protocol
 from uuid import UUID
 
+from app.assistant.schemas import AskResponse
 from app.routes.schemas import RouteResponse, RouteStepSummary
 
 logger = logging.getLogger(__name__)
@@ -153,6 +154,26 @@ class NotificationService:
             OutgoingMessage(
                 text=text,
                 button_text=tr(lang, "Открыть маршрут", "Open the route"),
+                lang=lang,
+            ),
+        )
+
+    async def answer(self, max_user_id: int, answer: AskResponse, lang: str = "ru") -> bool:
+        """The assistant's answer to a free-text question, with official sources as links."""
+        note = tr(
+            lang,
+            "\n\nОтвет может быть неточным — проверяйте по официальному источнику.",
+            "\n\nThe answer may be inaccurate — check the official source.",
+        )
+        return await self.sender.send(
+            max_user_id,
+            OutgoingMessage(
+                text=answer.answer + (note if answer.sources else ""),
+                button_text=tr(lang, "Открыть шаг", "Open the step")
+                if answer.step_id
+                else tr(lang, "Открыть маршрут", "Open the route"),
+                start_param=step_start_param(answer.step_id) if answer.step_id else None,
+                extra_links=[(source.title[:60], source.url) for source in answer.sources[:3]],
                 lang=lang,
             ),
         )

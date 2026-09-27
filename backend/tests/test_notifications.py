@@ -260,10 +260,22 @@ async def test_bot_understands_punctuation_greetings_and_free_text(
     assert "Следующий шаг" in await say("дальше.")
     assert (await say("Привет!")).startswith("Привет!")
     free = await say("как сделать регистрацию?")
-    assert free.startswith("Вопросы текстом я пока не разбираю")
+    assert free.startswith("Похоже, это про шаг")
     assert (await say("🙂")).startswith("Команды:")
     assert (await say("/help")).startswith("Команды:")
     assert (await say("помощь")).startswith("Команды:")
     assert (await say("/unknown")).startswith("Команды:")
     assert (await say("Начать!")).startswith("Привет!")
     assert (await say("Спасибо!")).startswith("Пожалуйста!")
+
+
+async def test_webhook_without_secret_is_closed_in_production(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import dataclasses
+
+    monkeypatch.setattr(
+        "app.main.settings", dataclasses.replace(settings, app_env="production", webhook_secret="")
+    )
+    response = await client.post("/max/webhook", json={"update_type": "bot_started"})
+    assert response.status_code == 401
