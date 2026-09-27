@@ -12,6 +12,7 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.admin.activity import record_activity
 from app.core.exceptions import ApplicationError, InvalidOperationError
 from app.notifications.max_sender import parse_step_payload
 from app.notifications.service import NotificationService, tr
@@ -25,12 +26,27 @@ from app.users.repository import UserRepository
 logger = logging.getLogger(__name__)
 
 NEXT_COMMANDS = {
-    "/next", "следующий шаг", "что дальше", "дальше", "next", "what next", "whats next",
+    "/next",
+    "следующий шаг",
+    "что дальше",
+    "дальше",
+    "next",
+    "what next",
+    "whats next",
 }
 START_COMMANDS = {"/start", "начать", "старт"}
 GREETINGS = {
-    "привет", "приветик", "здравствуйте", "здравствуй", "добрый день", "добрый вечер",
-    "доброе утро", "хай", "hi", "hello", "hey",
+    "привет",
+    "приветик",
+    "здравствуйте",
+    "здравствуй",
+    "добрый день",
+    "добрый вечер",
+    "доброе утро",
+    "хай",
+    "hi",
+    "hello",
+    "hey",
 }
 HELP_WORDS = {"help", "помощь", "помоги", "команды"}
 THANKS = {"спасибо", "спс", "благодарю", "thanks", "thank you", "thx"}
@@ -75,9 +91,13 @@ class BotHandler:
             await self._on_callback(update.get("callback") or {})
 
     async def _lang(self, max_user_id: int) -> str:
+        """The user's language; also counts the user as active in the bot today."""
         async with self.session_factory() as session:
             user = await UserRepository(session).get_by_max_user_id(max_user_id)
-            return user.lang if user else "ru"
+        if user is None:
+            return "ru"
+        await record_activity(user.id, "bot")
+        return user.lang
 
     async def _on_message(self, message: dict[str, Any]) -> None:
         user_id = _user_id(message.get("sender"))
@@ -95,6 +115,8 @@ class BotHandler:
             await self.notifications.send_plain(user_id, f"MAX ID: {user_id}")
         elif command == "/stats" and user_id in self.support_ids:
             await self.notifications.send_plain(user_id, await self._stats_text())
+        elif command == "/admin" and user_id in self.support_ids:
+            await self.notifications.admin_panel(user_id)
         elif plain in NEXT_COMMANDS or command in NEXT_COMMANDS:
             await self.send_next_step(user_id)
         elif plain in GREETINGS:

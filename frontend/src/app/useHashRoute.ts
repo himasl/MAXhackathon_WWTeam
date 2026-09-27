@@ -7,6 +7,7 @@ export type View =
   | { name: "support" }
   | { name: "done" }
   | { name: "checklist" }
+  | { name: "admin" }
   | { name: "step"; stepId: string };
 
 export function parseHash(hash: string): View {
@@ -18,7 +19,8 @@ export function parseHash(hash: string): View {
     head === "onboarding" ||
     head === "support" ||
     head === "done" ||
-    head === "checklist"
+    head === "checklist" ||
+    head === "admin"
   ) {
     return { name: head };
   }

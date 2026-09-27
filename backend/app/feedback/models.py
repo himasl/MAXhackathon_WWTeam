@@ -33,3 +33,5 @@ class StepReport(UUIDPrimaryKeyMixin, Base):
     summary: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
     # Set when the report went out in the team's daily digest.
     notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Set when the team marks the report as handled in the panel.
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

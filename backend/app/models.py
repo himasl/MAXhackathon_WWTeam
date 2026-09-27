@@ -1,3 +1,4 @@
+from app.admin.models import UserActivity
 from app.documents.models import Document, ScenarioStepDocument
 from app.feedback.models import StepReport
 from app.routes.models import UserRoute, UserRouteStep
@@ -16,8 +17,8 @@ __all__ = [
     "StepReport",
     "University",
     "User",
+    "UserActivity",
     "UserProfile",
     "UserRoute",
     "UserRouteStep",
 ]
-

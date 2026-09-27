@@ -256,7 +256,9 @@ class BotRuntime:
                 )
             )
             if reports:
-                parts.append(f"📝 Отзывы о шагах за сутки: {len(reports)}")
+                parts.append(
+                    f"📝 Отзывы о шагах за сутки: {len(reports)} (разобрать: /admin → «Отзывы»)"
+                )
                 parts.extend(
                     f"\n{index}. {report.summary}" for index, report in enumerate(reports, 1)
                 )
@@ -277,8 +279,8 @@ class BotRuntime:
                 if stale:
                     parts.append(
                         f"\n🕰 Источники, проверенные больше {STALE_SOURCE_DAYS} дней назад: "
-                        f"{len(stale)}. Проверьте ссылки (tools/check_sources.py) и обновите "
-                        "checked_at:"
+                        f"{len(stale)}. Проверьте и отметьте их в панели команды (/admin → "
+                        "«Источники»):"
                     )
                     parts.extend(f"• {source.title} — {source.url}" for source in stale)
             await session.commit()

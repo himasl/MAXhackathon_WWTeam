@@ -1,9 +1,14 @@
 import { lang, t } from "../i18n";
 import type {
+  AdminOverview,
+  AdminReport,
+  AdminSource,
+  AdminSourceKind,
   AppConfig,
   AuthResponse,
   Checklist,
   HelpTopic,
+  Me,
   Profile,
   Region,
   ReportKind,
@@ -111,6 +116,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  getMe: () => request<Me>("/api/v1/me"),
   loginWithMax: (initData: string) =>
     request<AuthResponse>("/api/v1/auth/max", {
       method: "POST",
@@ -152,6 +158,30 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ kind, comment }),
     }),
+  admin: {
+    overview: () => request<AdminOverview>("/api/v1/admin/overview"),
+    sources: (filter: { region_code?: string; kind?: AdminSourceKind; stale?: boolean }) => {
+      const query = new URLSearchParams();
+      if (filter.region_code) query.set("region_code", filter.region_code);
+      if (filter.kind) query.set("kind", filter.kind);
+      if (filter.stale) query.set("stale", "true");
+      return request<AdminSource[]>(`/api/v1/admin/sources?${query}`);
+    },
+    updateSource: (
+      id: string,
+      change: { url?: string; organization?: string; title?: string; mark_checked?: boolean },
+    ) =>
+      request<AdminSource>(`/api/v1/admin/sources/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(change),
+      }),
+    reports: (resolved: boolean) =>
+      request<AdminReport[]>(`/api/v1/admin/reports?resolved=${resolved}`),
+    setResolved: (id: string, resolved: boolean) =>
+      request<null>(`/api/v1/admin/reports/${id}/${resolved ? "resolve" : "reopen"}`, {
+        method: "POST",
+      }),
+  },
   remind: (routeId: string) =>
     request<{ sent: boolean; step_id: string | null }>(`/api/v1/routes/${routeId}/remind`, {
       method: "POST",

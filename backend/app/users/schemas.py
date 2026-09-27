@@ -26,6 +26,8 @@ class ProfileResponse(ProfilePayload):
 class CurrentUserResponse(BaseModel):
     id: UUID
     max_user_id: int
+    # True for the project team: the app then shows the team panel.
+    is_admin: bool = False
 
 
 class UserContext(ProfilePayload):
@@ -33,4 +35,3 @@ class UserContext(ProfilePayload):
 
     def rule_value(self, field: str) -> object:
         return self.model_dump(mode="json")[field]
-

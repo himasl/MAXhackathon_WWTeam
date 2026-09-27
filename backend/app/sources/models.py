@@ -4,7 +4,18 @@ from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, String, Table, Text, Uuid, func
+from sqlalchemy import (
+    BigInteger,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    String,
+    Table,
+    Text,
+    Uuid,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base, UUIDPrimaryKeyMixin
@@ -53,6 +64,9 @@ class Source(UUIDPrimaryKeyMixin, Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+    # Set when the team edits the source in the panel: the seed then keeps the edit.
+    edited_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    edited_by: Mapped[int | None] = mapped_column(BigInteger)
 
     scenario_steps: Mapped[list[ScenarioStep]] = relationship(
         secondary=scenario_step_sources, back_populates="sources"

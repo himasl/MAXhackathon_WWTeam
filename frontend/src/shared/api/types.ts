@@ -146,3 +146,85 @@ export interface HelpTopic {
 }
 
 export type ReportKind = "OUTDATED" | "NOT_APPLICABLE" | "OTHER";
+
+export interface Me {
+  id: string;
+  max_user_id: number;
+  is_admin: boolean;
+}
+
+export interface AdminCount {
+  code: string;
+  title: string;
+  users: number;
+  completed: number;
+}
+
+export interface AdminOverview {
+  generated_at: string;
+  users: { total: number; with_profile: number; with_route: number; new_7d: number; new_30d: number };
+  activity: {
+    dau: number;
+    wau: number;
+    mau: number;
+    stickiness: number;
+    returning_share: number;
+    bot_share: number;
+    daily: { day: string; app: number; bot: number; total: number }[];
+  };
+  funnel: { code: string; title: string; users: number }[];
+  engagement: {
+    steps_done: number;
+    steps_skipped: number;
+    done_from_chat_share: number;
+    reminders_sent: number;
+    reminder_conversion: number;
+    avg_steps_per_route: number;
+    completion_rate: number;
+    route_median_days: number | null;
+    registration_median_days: number | null;
+  };
+  by_region: AdminCount[];
+  by_university: AdminCount[];
+  by_scenario: AdminCount[];
+  by_housing: AdminCount[];
+  by_language: AdminCount[];
+  problem_steps: {
+    code: string;
+    title: string;
+    in_routes: number;
+    done: number;
+    skipped: number;
+    reports: number;
+    completion_rate: number;
+  }[];
+  data: { regional_sources: number; stale_sources: number; edited_sources: number; open_reports: number };
+}
+
+export type AdminSourceKind = "mfc" | "tfoms" | "transport" | "regional" | "federal";
+
+export interface AdminSource {
+  id: string;
+  code: string | null;
+  kind: AdminSourceKind;
+  title: string;
+  organization: string;
+  url: string;
+  region_code: string | null;
+  region_title: string | null;
+  checked_at: string | null;
+  stale: boolean;
+  edited_at: string | null;
+  steps: number;
+}
+
+export interface AdminReport {
+  id: string;
+  kind: ReportKind;
+  comment: string;
+  summary: string;
+  step_title: string;
+  region_code: string | null;
+  created_at: string;
+  resolved_at: string | null;
+}

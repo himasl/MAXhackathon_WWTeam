@@ -48,7 +48,11 @@ class UnauthorizedError(ApplicationError):
         super().__init__("UNAUTHORIZED", message, 401)
 
 
+class ForbiddenError(ApplicationError):
+    def __init__(self, message: str = "Available to the project team only") -> None:
+        super().__init__("FORBIDDEN", message, 403)
+
+
 class AuthUnavailableError(ApplicationError):
     def __init__(self, message: str) -> None:
         super().__init__("AUTH_UNAVAILABLE", message, 503)
-

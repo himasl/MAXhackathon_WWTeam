@@ -19,6 +19,7 @@ def test_model_registry_contains_all_tables() -> None:
         "sources",
         "step_reports",
         "universities",
+        "user_activity",
         "user_profiles",
         "user_route_steps",
         "user_routes",
@@ -29,7 +30,9 @@ def test_model_registry_contains_all_tables() -> None:
 def test_database_types_match_specification() -> None:
     tables = Base.metadata.tables
 
-    for table_name in set(tables) - {"scenario_step_sources", "scenario_step_documents"}:
+    # Link tables and the per-day activity log have composite primary keys.
+    composite = {"scenario_step_sources", "scenario_step_documents", "user_activity"}
+    for table_name in set(tables) - composite:
         assert isinstance(tables[table_name].c.id.type, Uuid)
 
     assert isinstance(tables["rules"].c.value.type, JSONB)

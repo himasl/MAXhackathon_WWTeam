@@ -157,6 +157,16 @@ class NotificationService:
             ),
         )
 
+    async def admin_panel(self, max_user_id: int) -> bool:
+        return await self.sender.send(
+            max_user_id,
+            OutgoingMessage(
+                text="Панель команды: статистика, ссылки по регионам и отзывы пользователей.",
+                button_text="Открыть панель",
+                start_param="admin",
+            ),
+        )
+
     async def no_route(self, max_user_id: int, lang: str = "ru") -> bool:
         return await self.sender.send(
             max_user_id,

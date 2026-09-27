@@ -38,6 +38,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
           content:
@@ -77,6 +83,12 @@ paths:
                 $ref: '#/components/schemas/CurrentUserResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -128,6 +140,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -187,6 +205,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -229,6 +253,12 @@ paths:
           description: Successful Response
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -291,6 +321,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -345,6 +381,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -413,6 +455,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -481,6 +529,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -553,6 +607,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -621,6 +681,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -679,6 +745,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -746,6 +818,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -809,6 +887,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -864,6 +948,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -911,6 +1001,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Not Found
           content:
@@ -948,6 +1044,12 @@ paths:
           description: Successful Response
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -1027,6 +1129,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -1067,6 +1175,12 @@ paths:
                 $ref: '#/components/schemas/AppConfigResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -1120,6 +1234,12 @@ paths:
                 title: Response List Regions Api V1 Regions Get
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -1181,6 +1301,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -1224,6 +1350,12 @@ paths:
                 $ref: '#/components/schemas/StatsResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -1277,6 +1409,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -1336,6 +1474,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -1393,6 +1537,393 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/admin/overview:
+    get:
+      tags:
+      - admin
+      summary: Get Overview
+      description: 'Business metrics: audience, activity by day, funnel, segments,
+        problem steps.'
+      operationId: get_overview_api_v1_admin_overview_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminOverview'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/admin/sources:
+    get:
+      tags:
+      - admin
+      summary: List Sources
+      description: Official sources, filtered by region, kind or «not checked for
+        90+ days».
+      operationId: list_sources_api_v1_admin_sources_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: region_code
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Code
+      - name: kind
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - enum:
+            - mfc
+            - tfoms
+            - transport
+            - regional
+            - federal
+            type: string
+          - type: 'null'
+          title: Kind
+      - name: stale
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Stale
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminSource'
+                title: Response List Sources Api V1 Admin Sources Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/admin/sources/{source_id}:
+    patch:
+      tags:
+      - admin
+      summary: Update Source
+      description: 'Fix a link or organisation and/or mark the source as checked today.
+
+
+        The edit wins over the data files: the next deploy does not overwrite it.'
+      operationId: update_source_api_v1_admin_sources__source_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Source Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminSource'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/admin/reports:
+    get:
+      tags:
+      - admin
+      summary: List Reports
+      description: Users' notes that a step is outdated or does not fit, newest first.
+      operationId: list_reports_api_v1_admin_reports_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: resolved
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Resolved
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminReport'
+                title: Response List Reports Api V1 Admin Reports Get
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/admin/reports/{report_id}/resolve:
+    post:
+      tags:
+      - admin
+      summary: Resolve Report
+      operationId: resolve_report_api_v1_admin_reports__report_id__resolve_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Report Id
+      responses:
+        '204':
+          description: Successful Response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Conflict
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unprocessable Content
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Service Unavailable
+  /api/v1/admin/reports/{report_id}/reopen:
+    post:
+      tags:
+      - admin
+      summary: Reopen Report
+      operationId: reopen_report_api_v1_admin_reports__report_id__reopen_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Report Id
+      responses:
+        '204':
+          description: Successful Response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden
         '404':
           content:
             application/json:
@@ -1444,6 +1975,216 @@ paths:
                 title: Response Health Health Get
 components:
   schemas:
+    ActivityBlock:
+      properties:
+        dau:
+          type: integer
+          title: Dau
+        wau:
+          type: integer
+          title: Wau
+        mau:
+          type: integer
+          title: Mau
+        stickiness:
+          type: number
+          title: Stickiness
+        returning_share:
+          type: number
+          title: Returning Share
+        bot_share:
+          type: number
+          title: Bot Share
+        daily:
+          items:
+            $ref: '#/components/schemas/DayActivity'
+          type: array
+          title: Daily
+      type: object
+      required:
+      - dau
+      - wau
+      - mau
+      - stickiness
+      - returning_share
+      - bot_share
+      - daily
+      title: ActivityBlock
+    AdminOverview:
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        users:
+          $ref: '#/components/schemas/UsersBlock'
+        activity:
+          $ref: '#/components/schemas/ActivityBlock'
+        funnel:
+          items:
+            $ref: '#/components/schemas/FunnelStage'
+          type: array
+          title: Funnel
+        engagement:
+          $ref: '#/components/schemas/EngagementBlock'
+        by_region:
+          items:
+            $ref: '#/components/schemas/Count'
+          type: array
+          title: By Region
+        by_university:
+          items:
+            $ref: '#/components/schemas/Count'
+          type: array
+          title: By University
+        by_scenario:
+          items:
+            $ref: '#/components/schemas/Count'
+          type: array
+          title: By Scenario
+        by_housing:
+          items:
+            $ref: '#/components/schemas/Count'
+          type: array
+          title: By Housing
+        by_language:
+          items:
+            $ref: '#/components/schemas/Count'
+          type: array
+          title: By Language
+        problem_steps:
+          items:
+            $ref: '#/components/schemas/StepProblem'
+          type: array
+          title: Problem Steps
+        data:
+          $ref: '#/components/schemas/DataBlock'
+      type: object
+      required:
+      - generated_at
+      - users
+      - activity
+      - funnel
+      - engagement
+      - by_region
+      - by_university
+      - by_scenario
+      - by_housing
+      - by_language
+      - problem_steps
+      - data
+      title: AdminOverview
+      description: Business metrics for the team. Aggregates only; test accounts are
+        excluded.
+    AdminReport:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        kind:
+          $ref: '#/components/schemas/ReportKind'
+        comment:
+          type: string
+          title: Comment
+        summary:
+          type: string
+          title: Summary
+        step_title:
+          type: string
+          title: Step Title
+        region_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Code
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        resolved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Resolved At
+      type: object
+      required:
+      - id
+      - kind
+      - comment
+      - summary
+      - step_title
+      - region_code
+      - created_at
+      - resolved_at
+      title: AdminReport
+    AdminSource:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+        kind:
+          type: string
+          title: Kind
+        title:
+          type: string
+          title: Title
+        organization:
+          type: string
+          title: Organization
+        url:
+          type: string
+          title: Url
+        region_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Code
+        region_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Title
+        checked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Checked At
+        stale:
+          type: boolean
+          title: Stale
+        edited_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Edited At
+        steps:
+          type: integer
+          title: Steps
+      type: object
+      required:
+      - id
+      - code
+      - kind
+      - title
+      - organization
+      - url
+      - region_code
+      - region_title
+      - checked_at
+      - stale
+      - edited_at
+      - steps
+      title: AdminSource
     AppConfigResponse:
       properties:
         bot_username:
@@ -1549,6 +2290,27 @@ components:
       - RU
       - FOREIGN
       title: Citizenship
+    Count:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        users:
+          type: integer
+          title: Users
+        completed:
+          type: integer
+          title: Completed
+          default: 0
+      type: object
+      required:
+      - code
+      - title
+      - users
+      title: Count
     CurrentUserResponse:
       properties:
         id:
@@ -1558,17 +2320,109 @@ components:
         max_user_id:
           type: integer
           title: Max User Id
+        is_admin:
+          type: boolean
+          title: Is Admin
+          default: false
       type: object
       required:
       - id
       - max_user_id
       title: CurrentUserResponse
+    DataBlock:
+      properties:
+        regional_sources:
+          type: integer
+          title: Regional Sources
+        stale_sources:
+          type: integer
+          title: Stale Sources
+        edited_sources:
+          type: integer
+          title: Edited Sources
+        open_reports:
+          type: integer
+          title: Open Reports
+      type: object
+      required:
+      - regional_sources
+      - stale_sources
+      - edited_sources
+      - open_reports
+      title: DataBlock
+    DayActivity:
+      properties:
+        day:
+          type: string
+          format: date
+          title: Day
+        app:
+          type: integer
+          title: App
+        bot:
+          type: integer
+          title: Bot
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - day
+      - app
+      - bot
+      - total
+      title: DayActivity
     EducationType:
       type: string
       enum:
       - FULL_TIME
       - PART_TIME
       title: EducationType
+    EngagementBlock:
+      properties:
+        steps_done:
+          type: integer
+          title: Steps Done
+        steps_skipped:
+          type: integer
+          title: Steps Skipped
+        done_from_chat_share:
+          type: number
+          title: Done From Chat Share
+        reminders_sent:
+          type: integer
+          title: Reminders Sent
+        reminder_conversion:
+          type: number
+          title: Reminder Conversion
+        avg_steps_per_route:
+          type: number
+          title: Avg Steps Per Route
+        completion_rate:
+          type: number
+          title: Completion Rate
+        route_median_days:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Route Median Days
+        registration_median_days:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Registration Median Days
+      type: object
+      required:
+      - steps_done
+      - steps_skipped
+      - done_from_chat_share
+      - reminders_sent
+      - reminder_conversion
+      - avg_steps_per_route
+      - completion_rate
+      - route_median_days
+      - registration_median_days
+      title: EngagementBlock
     ErrorDetail:
       properties:
         code:
@@ -1590,6 +2444,23 @@ components:
       required:
       - error
       title: ErrorResponse
+    FunnelStage:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        users:
+          type: integer
+          title: Users
+      type: object
+      required:
+      - code
+      - title
+      - users
+      title: FunnelStage
     GroupStats:
       properties:
         code:
@@ -2241,6 +3112,37 @@ components:
       - MOCK
       - OTHER
       title: SourceType
+    SourceUpdate:
+      properties:
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Url
+        organization:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 2
+          - type: 'null'
+          title: Organization
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 2
+          - type: 'null'
+          title: Title
+        mark_checked:
+          type: boolean
+          title: Mark Checked
+          default: true
+      additionalProperties: false
+      type: object
+      title: SourceUpdate
     StatsResponse:
       properties:
         generated_at:
@@ -2311,6 +3213,39 @@ components:
       - description
       - required
       title: StepDocumentResponse
+    StepProblem:
+      properties:
+        code:
+          type: string
+          title: Code
+        title:
+          type: string
+          title: Title
+        in_routes:
+          type: integer
+          title: In Routes
+        done:
+          type: integer
+          title: Done
+        skipped:
+          type: integer
+          title: Skipped
+        reports:
+          type: integer
+          title: Reports
+        completion_rate:
+          type: number
+          title: Completion Rate
+      type: object
+      required:
+      - code
+      - title
+      - in_routes
+      - done
+      - skipped
+      - reports
+      - completion_rate
+      title: StepProblem
     StepReportRequest:
       properties:
         kind:
@@ -2395,6 +3330,31 @@ components:
       - partner
       - popular
       title: UniversityResponse
+    UsersBlock:
+      properties:
+        total:
+          type: integer
+          title: Total
+        with_profile:
+          type: integer
+          title: With Profile
+        with_route:
+          type: integer
+          title: With Route
+        new_7d:
+          type: integer
+          title: New 7D
+        new_30d:
+          type: integer
+          title: New 30D
+      type: object
+      required:
+      - total
+      - with_profile
+      - with_route
+      - new_7d
+      - new_30d
+      title: UsersBlock
   securitySchemes:
     HTTPBearer:
       type: http

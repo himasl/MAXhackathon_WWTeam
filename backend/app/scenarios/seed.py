@@ -2,7 +2,8 @@
 
 A scenario is identified by ``(code, version)``. Existing versions are never rewritten,
 because user routes reference their steps; publish a new ``version`` to change content.
-Sources and documents are upserted by ``code``.
+Sources and documents are upserted by ``code``; a source the team edited in the panel
+(``edited_at`` is set) keeps the edit.
 """
 
 import asyncio
@@ -41,6 +42,9 @@ async def _upsert_sources(
         if source is None:
             source = Source(code=item.code)
             session.add(source)
+        elif source.edited_at is not None:
+            result[item.code] = source
+            continue
         source.title = item.title
         source.url = str(item.url)
         source.organization = item.organization
@@ -68,9 +72,7 @@ async def _upsert_documents(
     return result
 
 
-async def upsert_universities(
-    session: AsyncSession, items: list[UniversityDefinition]
-) -> None:
+async def upsert_universities(session: AsyncSession, items: list[UniversityDefinition]) -> None:
     for position, item in enumerate(items):
         university = await session.scalar(select(University).where(University.code == item.code))
         if university is None:
