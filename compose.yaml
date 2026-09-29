@@ -57,6 +57,9 @@ services:
       QDRANT_URL: http://qdrant:6333
       OLLAMA_HOST: http://ollama:11434
       LLM_MODEL: ${LLM_MODEL:-qwen3:8b}
+      # Ollama Cloud instead of the local ollama service: OLLAMA_API_KEY + LLM_MODEL=gpt-oss:20b
+      OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-BAAI/bge-m3}
       RAG_TOKEN: ${RAG_TOKEN:-}
     volumes:
       - rag_models:/models

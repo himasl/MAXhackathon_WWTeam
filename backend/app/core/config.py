@@ -91,6 +91,14 @@ class Settings:
     rag_url: str = os.getenv("RAG_URL", "").strip()
     rag_token: str | None = os.getenv("RAG_TOKEN") or None
     rag_timeout_seconds: float = float(os.getenv("RAG_TIMEOUT_SECONDS", "8"))
+    # Light RAG inside this service (app/assistant/cloud_rag.py): the team's knowledge base
+    # plus a model in Ollama Cloud. Used when OLLAMA_API_KEY is set and RAG_URL is not.
+    ollama_api_key: str = os.getenv("OLLAMA_API_KEY", "").strip()
+    ollama_host: str = os.getenv("OLLAMA_HOST", "https://ollama.com").strip()
+    llm_model: str = os.getenv("LLM_MODEL", "gpt-oss:20b").strip()
+    # Reasoning effort: "low" / "medium" / "high" for gpt-oss, "false" for other models.
+    llm_think: str = os.getenv("LLM_THINK", "low").strip()
+    llm_timeout_seconds: float = float(os.getenv("LLM_TIMEOUT_SECONDS", "30"))
 
     @property
     def is_production(self) -> bool:

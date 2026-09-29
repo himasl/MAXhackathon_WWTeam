@@ -9,9 +9,8 @@ import json
 import uuid
 from pathlib import Path
 
-from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
-from rag import COLLECTION_NAME, QDRANT_URL, embedding_model
+from rag import COLLECTION_NAME, embedding_model, qdrant
 
 KNOWLEDGE_BASE = Path(__file__).parent / "knowledge_base"
 
@@ -27,7 +26,7 @@ def main() -> None:
     records = load_records()
     texts = [f"{item['title']}\n{item['summary']}\n{item['content']}" for item in records]
     vectors = embedding_model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
-    client = QdrantClient(url=QDRANT_URL)
+    client = qdrant
     if client.collection_exists(COLLECTION_NAME):
         client.delete_collection(COLLECTION_NAME)
     client.create_collection(
@@ -46,7 +45,7 @@ def main() -> None:
             for item, vector in zip(records, vectors, strict=True)
         ],
     )
-    print(f"Loaded {len(records)} records into {COLLECTION_NAME} at {QDRANT_URL}")
+    print(f"Loaded {len(records)} records into {COLLECTION_NAME}")
 
 
 if __name__ == "__main__":

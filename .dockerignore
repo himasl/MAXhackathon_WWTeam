@@ -13,5 +13,8 @@ frontend/dist
 frontend/*.tsbuildinfo
 backend/tests
 docs
-# The RAG service is built separately (backend/app/ai/Dockerfile).
-backend/app/ai
+# The full RAG service is built separately (backend/app/ai/Dockerfile); the backend image
+# needs only its knowledge base and prompt (light RAG, app/assistant/cloud_rag.py).
+backend/app/ai/*
+!backend/app/ai/knowledge_base
+!backend/app/ai/prompt.py

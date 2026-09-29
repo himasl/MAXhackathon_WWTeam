@@ -43,3 +43,8 @@ services:
         sync: false
       - key: RAG_TOKEN
         sync: false
+      # Light RAG inside this service: the team's knowledge base + a model in Ollama Cloud.
+      - key: OLLAMA_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: gpt-oss:20b

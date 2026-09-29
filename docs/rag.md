@@ -1,6 +1,24 @@
 # Подключение RAG
 
-Вопросы студентов работают в двух местах: кнопка «Задать вопрос по шагу» в карточке шага и любой вопрос текстом боту. Отвечает RAG-помощник команды (`backend/app/ai`), если бэкенду задан его адрес в `RAG_URL`. Без него, а также если RAG не ответил вовремя, отвечает встроенный поиск по шагам маршрута.
+Вопросы студентов работают в двух местах: кнопка «Задать вопрос по шагу» в карточке шага и любой вопрос текстом боту. Бэкенд выбирает, кто отвечает:
+
+| Настройка | Кто отвечает | `/health` → `assistant` |
+|---|---|---|
+| `RAG_URL` | Полный RAG-сервис команды (`backend/app/ai`: bge-m3, Qdrant, LLM) | `rag` |
+| `OLLAMA_API_KEY` (без `RAG_URL`) | Облегчённый RAG внутри бэкенда: поиск по словам (BM25) в той же базе знаний и модель в Ollama Cloud (`LLM_MODEL`, по умолчанию `gpt-oss:20b`) с тем же промптом | `rag-cloud` |
+| ничего | Встроенный поиск по шагам маршрута | `stub` |
+
+Если RAG не ответил, ответил «нет информации» или вернул ответ не по формату, отвечает встроенный поиск.
+
+## Облегчённый RAG на Render (без отдельного сервера)
+
+Нужен только ключ Ollama Cloud: ollama.com → Settings → Keys. В Render → Environment задайте:
+
+- `OLLAMA_API_KEY=<ключ>`;
+- `LLM_MODEL=gpt-oss:20b` (имя модели для API — без `-cloud`, список есть на `https://ollama.com/api/tags`);
+- `LLM_TIMEOUT_SECONDS=30`.
+
+После перезапуска `/health` покажет `"assistant": "rag-cloud"`. Код — `backend/app/assistant/cloud_rag.py`. База знаний и промпт общие с полным RAG: `backend/app/ai/knowledge_base` и `backend/app/ai/prompt.py`.
 
 ## RAG-помощник команды
 
@@ -21,6 +39,22 @@ docker compose --profile rag up --build
 Поднимаются Qdrant, Ollama и сервис `rag`. При первом старте `rag` скачивает модель в Ollama и bge-m3 (вместе около 7 ГБ) и загружает базу знаний в Qdrant. Модель задаётся переменной `LLM_MODEL`: для слабой машины подойдёт `qwen3:1.7b`.
 
 **Скорость.** На процессоре без GPU ответ занимает около минуты (проверено на 2 CPU с `qwen3:1.7b`). Поэтому для RAG `RAG_TIMEOUT_SECONDS` нужно поднять. На проде нужен сервер с GPU или LLM по API, тогда ответ приходит за секунды.
+
+**Модель в Ollama Cloud (рекомендуется для прода).** Если задан `OLLAMA_API_KEY`, ответ генерирует облачная модель Ollama, например `LLM_MODEL=gpt-oss:20b`, а локальная LLM не нужна. Ключ создаётся на ollama.com в настройках аккаунта. Имя модели для API — без суффикса `-cloud`: список доступных моделей отдаёт `https://ollama.com/api/tags`. На сервере остаются только эмбеддинги bge-m3 и Qdrant, это около 2 ГБ памяти. Qdrant можно не запускать отдельно: с `QDRANT_PATH` база хранится в папке внутри контейнера.
+
+**Развёртывание на маленькой ВМ** (например, бесплатная ВМ Cloud.ru на 2 vCPU и 4 ГБ). На ВМ нужны Docker и папка `backend/app/ai`:
+
+```bash
+docker build -t marshrut-rag backend/app/ai
+docker run -d --name rag --restart unless-stopped -p 8090:8090 \
+  -e QDRANT_PATH=/data/qdrant -e HF_HOME=/data/models \
+  -e OLLAMA_API_KEY=<ключ Ollama> -e LLM_MODEL=gpt-oss:20b \
+  -e RAG_TOKEN=<случайный токен> \
+  -v rag_data:/data marshrut-rag
+curl http://localhost:8090/health
+```
+
+Первый старт скачивает bge-m3 (около 2,3 ГБ) и загружает базу знаний. В Render задайте `RAG_URL=http://<IP ВМ>:8090/ask`, тот же `RAG_TOKEN` и `RAG_TIMEOUT_SECONDS=30`.
 
 **После изменения базы знаний** перезапустите сервис с `RAG_REINGEST=1` или выполните `python ingest.py` в `backend/app/ai`.
 

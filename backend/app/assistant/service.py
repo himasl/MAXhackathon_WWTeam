@@ -11,6 +11,7 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.assistant.cloud_rag import CloudRagAssistant
 from app.assistant.providers import Assistant, RagAssistant, StubAssistant
 from app.assistant.schemas import AnswerSource, AskResponse, RagRequest, RagStep
 from app.core.config import Settings, settings
@@ -28,13 +29,29 @@ def build_assistants(config: Settings = settings) -> list[Assistant]:
     chain: list[Assistant] = []
     if config.rag_url:
         chain.append(RagAssistant(config.rag_url, config.rag_token, config.rag_timeout_seconds))
+    elif config.ollama_api_key:
+        think: bool | str = {"false": False, "true": True}.get(
+            config.llm_think.lower(), config.llm_think
+        )
+        chain.append(
+            CloudRagAssistant(
+                config.ollama_api_key,
+                config.llm_model,
+                config.ollama_host,
+                config.llm_timeout_seconds,
+                think,
+            )
+        )
     chain.append(StubAssistant())
     return chain
 
 
 def assistant_mode(config: Settings = settings) -> str:
-    """For /health: "rag" when an external service is configured, otherwise "stub"."""
-    return "rag" if config.rag_url else "stub"
+    """For /health: "rag" (external service), "rag-cloud" (knowledge base + Ollama Cloud)
+    or "stub" (search over the student's route only)."""
+    if config.rag_url:
+        return "rag"
+    return "rag-cloud" if config.ollama_api_key else "stub"
 
 
 class AssistantService:
