@@ -5,10 +5,6 @@ from qdrant_client import QdrantClient
 import ollama
 
 
-# ============================================================
-# CONFIG
-# ============================================================
-
 QDRANT_URL = "http://localhost:6333"
 COLLECTION_NAME = "student_knowledge"
 
@@ -17,10 +13,6 @@ LLM_MODEL = "qwen3:8b"
 
 TOP_K = 2
 
-
-# ============================================================
-# SYSTEM PROMPT
-# ============================================================
 
 SYSTEM_PROMPT = """
 Ты — информационный помощник для студентов.
@@ -335,28 +327,16 @@ USER PROFILE содержит данные о конкретном пользо�
 """
 
 
-# ============================================================
-# INIT
-# ============================================================
-
-print("Loading embedding model...")
-
 embedding_model = SentenceTransformer(
     EMBEDDING_MODEL
 )
 
-print("Connecting to Qdrant...")
 
 qdrant = QdrantClient(
     url=QDRANT_URL
 )
 
-print("Ready.")
 
-
-# ============================================================
-# RETRIEVAL
-# ============================================================
 
 def retrieve(question: str, top_k: int = TOP_K):
     """
@@ -377,10 +357,6 @@ def retrieve(question: str, top_k: int = TOP_K):
 
     return results
 
-
-# ============================================================
-# CONTEXT BUILDER
-# ============================================================
 
 def build_context(results):
     """
@@ -418,10 +394,6 @@ def build_context(results):
 
     return "\n\n".join(context_parts)
 
-
-# ============================================================
-# GENERATION
-# ============================================================
 
 def generate_answer(
     question: str,
@@ -517,10 +489,6 @@ QUESTION:
     }
 
 
-# ============================================================
-# SOURCES
-# ============================================================
-
 def get_sources(results, source_ids):
     """
     Converts source IDs selected by the LLM into actual URLs.
@@ -546,10 +514,6 @@ def get_sources(results, source_ids):
 
     return sources
 
-
-# ============================================================
-# MAIN RAG FUNCTION
-# ============================================================
 
 def ask_question(
     question: str,
