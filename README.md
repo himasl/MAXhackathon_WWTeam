@@ -85,7 +85,9 @@ docker compose up --build        # http://localhost:8000
 | **Остановка** | `docker compose down`. Сброс данных: `docker compose down -v` |
 | **Повторный запуск** | `docker compose up -d` |
 | **Что происходит при старте** | Применяются миграции, загружаются данные, запускается API |
-| **Сборка** | 1–2 минуты |
+| **Сборка** | 1–2 минуты (чистая сборка без кэша ≈ 35 секунд плюс загрузка базовых образов) |
+| **Требования** | Docker Desktop (macOS Intel и Apple Silicon, Windows) или Docker Engine с Compose 2.24+ |
+| **Windows** | `copy .env.example .env` в cmd (в PowerShell работает и `cp`); `tools/make_release.sh` — из Git Bash |
 | **Зависимости** | `backend/requirements.txt`, `frontend/package-lock.json` |
 
 Вне MAX вход выполняется за тестового пользователя: `DEV_AUTH_ENABLED=true`, в production вход отключён. Если вписать в `.env` токен бота, бот заработает локально через long polling.

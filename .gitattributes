@@ -1,0 +1,5 @@
+# Keep LF in the repo and on checkout (Windows too): shell scripts break with CRLF.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.crt binary
