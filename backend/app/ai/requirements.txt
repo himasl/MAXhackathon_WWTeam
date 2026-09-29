@@ -1,0 +1,7 @@
+# RAG service only (not needed by the «Маршрут» backend). CPU build of torch:
+#   pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
+fastapi==0.141.1
+uvicorn==0.54.0
+sentence-transformers==5.7.0
+qdrant-client==1.19.1
+ollama==0.6.3

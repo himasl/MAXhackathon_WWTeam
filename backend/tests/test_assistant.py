@@ -102,8 +102,9 @@ async def test_rag_gets_the_context_and_its_answer_is_used(
         lambda request: httpx.Response(500, json={"error": "boom"}),
         lambda request: httpx.Response(200, json={"unexpected": True}),
         lambda request: (_ for _ in ()).throw(httpx.ReadTimeout("slow", request=request)),
+        lambda request: httpx.Response(204),
     ],
-    ids=["server-error", "bad-contract", "timeout"],
+    ids=["server-error", "bad-contract", "timeout", "no-answer"],
 )
 async def test_rag_failure_falls_back_to_the_stub(
     client: AsyncClient, monkeypatch: pytest.MonkeyPatch, failure: Any

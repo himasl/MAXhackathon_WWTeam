@@ -1,29 +1,19 @@
 import json
 import os
 
-from sentence_transformers import SentenceTransformer
-from qdrant_client import QdrantClient
 import ollama
+from qdrant_client import QdrantClient
+from sentence_transformers import SentenceTransformer
 
+# Settings come from the environment (Docker, HF Spaces); defaults are for a local run.
+# Ollama reads OLLAMA_HOST itself (default http://localhost:11434).
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
+COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "student_knowledge")
 
-QDRANT_URL = "http://localhost:6333"
-COLLECTION_NAME = "student_knowledge"
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
+LLM_MODEL = os.getenv("LLM_MODEL", "qwen3:8b")
 
-EMBEDDING_MODEL = "BAAI/bge-m3"
-LLM_MODEL = "gpt-oss:20b-cloud"
-OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
-
-if not OLLAMA_API_KEY:
-    raise RuntimeError("OLLAMA_API_KEY is not set")
-
-ollama_client = ollama.Client(
-    host="https://ollama.com",
-    headers={
-        "Authorization": f"Bearer {OLLAMA_API_KEY}"
-    },
-)
-
-TOP_K = 2
+TOP_K = int(os.getenv("RAG_TOP_K", "2"))
 
 
 SYSTEM_PROMPT = """
@@ -441,7 +431,7 @@ QUESTION:
 {question}
 """.strip()
 
-    response = ollama_client.chat(
+    response = ollama.chat(
         model=LLM_MODEL,
         messages=[
             {
@@ -478,11 +468,12 @@ QUESTION:
     valid_source_ids = []
 
     for source_id in source_ids:
-
-        if isinstance(source_id, int):
-            if 1 <= source_id <= TOP_K:
-                if source_id not in valid_source_ids:
-                    valid_source_ids.append(source_id)
+        if (
+            isinstance(source_id, int)
+            and 1 <= source_id <= TOP_K
+            and source_id not in valid_source_ids
+        ):
+            valid_source_ids.append(source_id)
 
     if not answer:
         answer = "В доступной базе знаний нет точной информации по этому вопросу."
@@ -503,7 +494,7 @@ QUESTION:
 
 def get_sources(results, source_ids):
     """
-    Converts source IDs selected by the LLM into actual URLs.
+    Converts source IDs selected by the LLM into sources: {"title", "url"}.
 
     The LLM never generates URLs itself.
     """
@@ -521,8 +512,13 @@ def get_sources(results, source_ids):
 
         source_url = payload.get("source_url")
 
-        if source_url and source_url not in sources:
-            sources.append(source_url)
+        if source_url and all(item["url"] != source_url for item in sources):
+            sources.append(
+                {
+                    "title": payload.get("title") or "Официальный источник",
+                    "url": source_url,
+                }
+            )
 
     return sources
 

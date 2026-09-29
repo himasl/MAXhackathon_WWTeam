@@ -36,5 +36,36 @@ services:
       postgres:
         condition: service_healthy
 
+  # Optional RAG assistant (docs/rag.md): docker compose --profile rag up --build
+  # and set RAG_URL=http://rag:8090/ask (plus RAG_TIMEOUT_SECONDS) in .env.
+  qdrant:
+    image: qdrant/qdrant:v1.19.1
+    profiles: ["rag"]
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  ollama:
+    image: ollama/ollama:0.34.4
+    profiles: ["rag"]
+    volumes:
+      - ollama_data:/root/.ollama
+
+  rag:
+    build: ./backend/app/ai
+    profiles: ["rag"]
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_HOST: http://ollama:11434
+      LLM_MODEL: ${LLM_MODEL:-qwen3:8b}
+      RAG_TOKEN: ${RAG_TOKEN:-}
+    volumes:
+      - rag_models:/models
+    depends_on:
+      - qdrant
+      - ollama
+
 volumes:
   postgres_data:
+  qdrant_data:
+  ollama_data:
+  rag_models:

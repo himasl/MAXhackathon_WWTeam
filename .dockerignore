@@ -13,3 +13,5 @@ frontend/dist
 frontend/*.tsbuildinfo
 backend/tests
 docs
+# The RAG service is built separately (backend/app/ai/Dockerfile).
+backend/app/ai

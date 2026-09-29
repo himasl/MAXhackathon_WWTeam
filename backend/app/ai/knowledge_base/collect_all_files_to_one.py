@@ -1,5 +1,5 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 source_dir = Path('./knowledge_base')
 output_file = Path('knowledge_base_all.json')
