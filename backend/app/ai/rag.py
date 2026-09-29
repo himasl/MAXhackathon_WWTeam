@@ -1,4 +1,5 @@
 import json
+import os
 
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
@@ -9,7 +10,18 @@ QDRANT_URL = "http://localhost:6333"
 COLLECTION_NAME = "student_knowledge"
 
 EMBEDDING_MODEL = "BAAI/bge-m3"
-LLM_MODEL = "qwen3:8b"
+LLM_MODEL = "gpt-oss:20b-cloud"
+OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
+
+if not OLLAMA_API_KEY:
+    raise RuntimeError("OLLAMA_API_KEY is not set")
+
+ollama_client = ollama.Client(
+    host="https://ollama.com",
+    headers={
+        "Authorization": f"Bearer {OLLAMA_API_KEY}"
+    },
+)
 
 TOP_K = 2
 
@@ -429,7 +441,7 @@ QUESTION:
 {question}
 """.strip()
 
-    response = ollama.chat(
+    response = ollama_client.chat(
         model=LLM_MODEL,
         messages=[
             {
